@@ -29,12 +29,23 @@ const blockAttrs: NodeSpec["attrs"] = {
  */
 const EMPTY_CONTENT_TYPES: ReadonlySet<BlockType> = new Set(["dual_dialogue", "page_break"]);
 
+/**
+ * A plain, unstyled `<p data-block-type="...">` for every block — this
+ * package only owns structure/behavior, not visual formatting (indent,
+ * width, spacing come from a FormatProfile and are E2-6's concern). The
+ * `data-block-type`/`data-block-id` attributes are what any later CSS or
+ * DOM-inspecting code (including Playwright selectors) hooks into.
+ */
 function blockNodeSpec(type: BlockType): NodeSpec {
   return {
     content: EMPTY_CONTENT_TYPES.has(type) ? "" : "text*",
     group: "block",
     attrs: blockAttrs,
     marks: "bold italic underline strike revision",
+    toDOM(node) {
+      return ["p", { "data-block-type": type, "data-block-id": node.attrs.id as string }, 0];
+    },
+    parseDOM: [{ tag: `p[data-block-type="${type}"]` }],
   };
 }
 
@@ -45,12 +56,17 @@ nodes.doc = { content: "block+" };
 nodes.text = { group: "inline" };
 
 const marks: Record<string, MarkSpec> = {
-  bold: {},
-  italic: {},
-  underline: {},
-  strike: {},
+  bold: { toDOM: () => ["strong", 0], parseDOM: [{ tag: "strong" }, { tag: "b" }] },
+  italic: { toDOM: () => ["em", 0], parseDOM: [{ tag: "em" }, { tag: "i" }] },
+  underline: { toDOM: () => ["u", 0], parseDOM: [{ tag: "u" }] },
+  strike: { toDOM: () => ["s", 0], parseDOM: [{ tag: "s" }] },
   /** Dormant until Phase 4 (revision tracking) — the mark exists and round-trips, but no editor behavior sets it yet. */
-  revision: { attrs: { revisionColor: { default: null } } },
+  revision: {
+    attrs: { revisionColor: { default: null } },
+    toDOM(mark) {
+      return ["span", { "data-revision-color": (mark.attrs.revisionColor as string | null) ?? "" }, 0];
+    },
+  },
 };
 
 /** The ProseMirror schema mirroring screenplay-core's Block model: one top-level node type per `BlockType`, attrs mirroring `BlockAttrs`, and bold/italic/underline/strike/revision marks. */

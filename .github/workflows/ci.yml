@@ -125,3 +125,20 @@ jobs:
           name: golden-conformance-report
           path: packages/screenplay-core/golden-conformance-report.json
           retention-days: 90
+
+      # E2-2 accept criterion: Playwright tests scripting real keystrokes
+      # against the rendered <ScriptEditor> — see apps/web/e2e/README.md for
+      # why these exist alongside packages/editor's headless plugin tests.
+      - name: Install Playwright browser
+        run: corepack pnpm --filter @fylym/web exec playwright install --with-deps chromium
+
+      - name: Editor E2E (Playwright)
+        run: corepack pnpm --filter @fylym/web test:e2e
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: apps/web/playwright-report/
+          retention-days: 30
