@@ -206,17 +206,26 @@ function fillPages(chunks: Chunk[], rules: PaginationRules): Page[] {
 }
 
 /**
+ * Layout + chunk + fill, without (MORE)/(CONT'D) synthesis — the part of
+ * the pipeline that only ever depends on the blocks it's given, never on
+ * anything before them. Exported for incremental.ts, which reruns exactly
+ * this (cheaply, on a small suffix) rather than the full document.
+ */
+export function paginateWithoutSynthesis(doc: ScreenplayDocument, profile: FormatProfile): Page[] {
+  const flat = flattenForSolver(layoutDocument(doc, profile));
+  const chunks = buildChunks(flat, profile.pagination);
+  return fillPages(chunks, profile.pagination);
+}
+
+/**
  * The full-paginate entrypoint (E1-5): lays out every block against the
  * format profile, decides page-break points honoring the keep-together
  * rules above (reserving space for a dialogue split's (MORE)/(CONT'D)
  * markers as part of that decision), then inserts the marker lines
  * themselves. Deterministic — the same document and profile always produce
- * a byte-identical PageMap. Incremental repagination is the next checklist
- * item, layered on top of this.
+ * a byte-identical PageMap.
  */
 export function paginate(doc: ScreenplayDocument, profile: FormatProfile): PageMap {
-  const flat = flattenForSolver(layoutDocument(doc, profile));
-  const chunks = buildChunks(flat, profile.pagination);
-  const pageMap: PageMap = { pages: fillPages(chunks, profile.pagination) };
+  const pageMap: PageMap = { pages: paginateWithoutSynthesis(doc, profile) };
   return synthesizeMoreAndContd(doc, pageMap, profile);
 }
