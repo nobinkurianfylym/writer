@@ -1,0 +1,46 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. COURTROOM - DAY",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "character",
+      "text": "WITNESS",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "parenthetical",
+      "text": "hesitating",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "dialogue",
+      "text": "I saw him leave around midnight.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b5",
+      "type": "parenthetical",
+      "text": "beat",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b6",
+      "type": "dialogue",
+      "text": "But I can't be completely sure.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

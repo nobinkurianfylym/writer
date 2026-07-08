@@ -9,8 +9,10 @@ function renderBlock(block: Block): string | null {
   switch (block.type) {
     case "title_page":
       return block.text;
-    case "scene_heading":
-      return `.${emphasized(block)}`;
+    case "scene_heading": {
+      const sceneNumber = block.attrs.sceneNumber !== undefined ? ` #${block.attrs.sceneNumber}#` : "";
+      return `.${emphasized(block)}${sceneNumber}`;
+    }
     case "action":
     case "shot": // Fountain has no dedicated shot syntax (§8) — round-trips as forced action.
       return `!${emphasized(block)}`;
@@ -51,11 +53,19 @@ function renderBlock(block: Block): string | null {
   }
 }
 
-/** Adjacent pairs that must have *no* blank line between them to stay in the same dialogue exchange. */
+/**
+ * Adjacent pairs that must have *no* blank line between them to stay in the
+ * same dialogue exchange. Includes "dialogue>parenthetical" for a second
+ * parenthetical aside mid-speech (e.g. character, parenthetical, dialogue,
+ * parenthetical, dialogue) — without it, the blank line Fountain would
+ * otherwise need ends parseFountain's dialogue-tracking state, and the
+ * second parenthetical/dialogue pair gets misread as a plain action line.
+ */
 const TIGHT_PAIRS: ReadonlySet<string> = new Set([
   "character>dialogue",
   "character>parenthetical",
   "parenthetical>dialogue",
+  "dialogue>parenthetical",
 ]);
 
 /**

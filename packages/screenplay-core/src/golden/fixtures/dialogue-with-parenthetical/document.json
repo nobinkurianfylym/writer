@@ -1,0 +1,39 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. OFFICE - DAY",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "action",
+      "text": "Tom stares at the phone.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "character",
+      "text": "TOM",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "parenthetical",
+      "text": "quietly",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b5",
+      "type": "dialogue",
+      "text": "Fine. I'll do it.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

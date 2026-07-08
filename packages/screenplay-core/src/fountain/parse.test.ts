@@ -23,6 +23,19 @@ describe("parseFountain: scene headings", () => {
   it("does not treat a double-period line as a forced scene heading", () => {
     expect(types("...ellipsis action line")).toEqual(["action"]);
   });
+
+  it("extracts a trailing #N# as sceneNumber, both forced and naturally-detected", () => {
+    const forced = parseFountain(".INT. HOUSE - DAY #114A#");
+    expect(forced.blocks[0]).toMatchObject({ text: "INT. HOUSE - DAY", attrs: { sceneNumber: "114A" } });
+
+    const natural = parseFountain("INT. HOUSE - DAY #2#");
+    expect(natural.blocks[0]).toMatchObject({ text: "INT. HOUSE - DAY", attrs: { sceneNumber: "2" } });
+  });
+
+  it("leaves a scene heading with no trailing #N# with no sceneNumber attr", () => {
+    const doc = parseFountain("INT. HOUSE - DAY");
+    expect(doc.blocks[0]?.attrs.sceneNumber).toBeUndefined();
+  });
 });
 
 describe("parseFountain: action", () => {
@@ -80,6 +93,25 @@ describe("parseFountain: character and dialogue", () => {
   it("joins multiple consecutive dialogue lines into one block", () => {
     const doc = parseFountain("MAYA\nLine one.\nLine two.");
     expect(doc.blocks[1]).toMatchObject({ type: "dialogue", text: "Line one. Line two." });
+  });
+
+  it("parses a second parenthetical/dialogue pair mid-exchange, not just the first", () => {
+    const doc = parseFountain("MAYA\n(beat)\nFirst line.\n(then)\nSecond line.");
+    expect(doc.blocks.map((b) => ({ type: b.type, text: b.text }))).toEqual([
+      { type: "character", text: "MAYA" },
+      { type: "parenthetical", text: "beat" },
+      { type: "dialogue", text: "First line." },
+      { type: "parenthetical", text: "then" },
+      { type: "dialogue", text: "Second line." },
+    ]);
+  });
+
+  it("does not let dialogue content starting with a forced-marker character (., !, @, #, =, ~) be misread as a new element while an exchange is still open", () => {
+    for (const char of [".", "!", "@", "#", "=", "~"]) {
+      const doc = parseFountain(`MAYA\n${char} not actually a marker, just dialogue.`);
+      expect(doc.blocks.map((b) => b.type)).toEqual(["character", "dialogue"]);
+      expect(doc.blocks[1]?.text).toBe(`${char} not actually a marker, just dialogue.`);
+    }
   });
 });
 

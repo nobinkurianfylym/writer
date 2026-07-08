@@ -1,0 +1,74 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. DINER - NIGHT",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "action",
+      "text": "Three old friends around a booth.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "character",
+      "text": "ANA",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "dialogue",
+      "text": "So what did he say?",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b5",
+      "type": "character",
+      "text": "BEN",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b6",
+      "type": "dialogue",
+      "text": "Nothing. That's the problem.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b7",
+      "type": "character",
+      "text": "CARLA",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b8",
+      "type": "dialogue",
+      "text": "He never says anything.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b9",
+      "type": "character",
+      "text": "ANA",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b10",
+      "type": "dialogue",
+      "text": "Exactly.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "section",
+      "text": "ACT ONE",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "synopsis",
+      "text": "Our hero discovers the letter and decides to leave home.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "scene_heading",
+      "text": "INT. FARMHOUSE - MORNING",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "action",
+      "text": "Dust motes turn in the light over the kitchen table.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b5",
+      "type": "section",
+      "text": "ACT TWO",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b6",
+      "type": "synopsis",
+      "text": "The road tests everything she thought she knew.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b7",
+      "type": "scene_heading",
+      "text": "EXT. HIGHWAY - DAY",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b8",
+      "type": "action",
+      "text": "An endless line of asphalt.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

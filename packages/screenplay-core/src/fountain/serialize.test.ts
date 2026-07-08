@@ -35,6 +35,16 @@ describe("serializeFountain: forced markers", () => {
     const out = serializeFountain(doc([block({ type: "shot", text: "ANGLE ON" })]));
     expect(out).toBe("!ANGLE ON");
   });
+
+  it("appends a scene heading's sceneNumber as a trailing #N# (§8)", () => {
+    const out = serializeFountain(doc([block({ type: "scene_heading", text: "INT. HOUSE - DAY", attrs: { sceneNumber: "114A" } })]));
+    expect(out).toBe(".INT. HOUSE - DAY #114A#");
+  });
+
+  it("omits the trailing #N# entirely when sceneNumber is absent", () => {
+    const out = serializeFountain(doc([block({ type: "scene_heading", text: "INT. HOUSE - DAY" })]));
+    expect(out).toBe(".INT. HOUSE - DAY");
+  });
 });
 
 describe("serializeFountain: wrapping syntax", () => {

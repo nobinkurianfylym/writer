@@ -1,0 +1,18 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. GARAGE - DAY",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "action",
+      "text": "An old car under a sheet.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

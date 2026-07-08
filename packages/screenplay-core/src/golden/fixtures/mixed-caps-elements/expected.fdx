@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. CONTROL ROOM - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>ON THE MONITOR</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Static, then a signal.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>MATCH CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. SATELLITE DISH - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>It slowly rotates to track the signal.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

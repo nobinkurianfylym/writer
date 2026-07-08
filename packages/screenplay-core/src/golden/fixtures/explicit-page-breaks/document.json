@@ -1,0 +1,60 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. ROOM A - DAY",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "action",
+      "text": "Something small happens.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "page_break",
+      "text": "",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "scene_heading",
+      "text": "INT. ROOM B - DAY",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b5",
+      "type": "action",
+      "text": "Something else, deliberately starting fresh.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b6",
+      "type": "page_break",
+      "text": "",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b7",
+      "type": "scene_heading",
+      "text": "INT. ROOM C - DAY",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b8",
+      "type": "action",
+      "text": "And a third.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

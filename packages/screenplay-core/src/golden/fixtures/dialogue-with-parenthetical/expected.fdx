@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. OFFICE - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Tom stares at the phone.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>TOM</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>quietly</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Fine. I&apos;ll do it.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

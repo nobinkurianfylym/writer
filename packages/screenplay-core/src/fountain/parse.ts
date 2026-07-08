@@ -11,6 +11,17 @@ function makeBlock(type: BlockType, rawText: string): Block {
   return { id: newId(), type, text, marks, attrs: {} };
 }
 
+/** A trailing `#114#`-style scene number (§8), stripped before emphasis decoding so it never contributes to the heading's own mark offsets. */
+const SCENE_NUMBER_RE = /^(.*?)\s*#([^#\s][^#]*)#$/;
+
+function makeSceneHeadingBlock(rawText: string): Block {
+  const match = SCENE_NUMBER_RE.exec(rawText);
+  if (!match) return makeBlock("scene_heading", rawText);
+  const block = makeBlock("scene_heading", match[1] ?? "");
+  block.attrs.sceneNumber = match[2];
+  return block;
+}
+
 /**
  * Extracts `[[notes]]` and `/* boneyard *‍/` (both become `note` blocks — see
  * §8) out of the raw source before line-based parsing, replacing each with a
@@ -212,6 +223,33 @@ export function parseFountain(source: string): ScreenplayDocument {
       continue;
     }
 
+    // While a dialogue exchange is still open (no blank line since the
+    // character cue), only a parenthetical or another blank line can end
+    // it — checked here, ahead of every forced-marker/structural check
+    // below, so dialogue content that happens to start with one of those
+    // marker characters (".", "!", "@", "#", "=", ">", "~") is never
+    // misread as a new element. Real screenplays always separate distinct
+    // elements with a blank line, so this never shadows a legitimate forced
+    // marker — see the dual-dialogue fixtures, which all have that blank
+    // line before the next cue.
+    if (inDialogue && /^\(.*\)$/.test(line.trim())) {
+      const trimmed = line.trim();
+      pushDialogueGroupBlock("parenthetical", trimmed.slice(1, -1));
+      i++;
+      continue;
+    }
+
+    if (inDialogue) {
+      const collected = [line];
+      i++;
+      while (i < lines.length && (lines[i] ?? "").trim() !== "" && !/^\(.*\)$/.test((lines[i] ?? "").trim())) {
+        collected.push(lines[i] ?? "");
+        i++;
+      }
+      pushDialogueGroupBlock("dialogue", collected.join(" ").trim());
+      continue;
+    }
+
     if (/^={3,}$/.test(line.trim())) {
       blocks.push(makeBlock("page_break", ""));
       i++;
@@ -231,13 +269,13 @@ export function parseFountain(source: string): ScreenplayDocument {
     }
 
     if (line.trimStart().startsWith(".") && !line.trimStart().startsWith("..")) {
-      blocks.push(makeBlock("scene_heading", line.trimStart().slice(1).trim()));
+      blocks.push(makeSceneHeadingBlock(line.trimStart().slice(1).trim()));
       i++;
       continue;
     }
 
     if (looksLikeSceneHeading(line)) {
-      blocks.push(makeBlock("scene_heading", line.trim()));
+      blocks.push(makeSceneHeadingBlock(line.trim()));
       i++;
       continue;
     }
@@ -295,13 +333,6 @@ export function parseFountain(source: string): ScreenplayDocument {
       continue;
     }
 
-    if (inDialogue && /^\(.*\)$/.test(line.trim())) {
-      const trimmed = line.trim();
-      pushDialogueGroupBlock("parenthetical", trimmed.slice(1, -1));
-      i++;
-      continue;
-    }
-
     if (
       !inDialogue &&
       looksLikeCharacterCue(line) &&
@@ -317,17 +348,6 @@ export function parseFountain(source: string): ScreenplayDocument {
       pushDialogueGroupBlock("character", cueText);
       inDialogue = true;
       i++;
-      continue;
-    }
-
-    if (inDialogue) {
-      const collected = [line];
-      i++;
-      while (i < lines.length && (lines[i] ?? "").trim() !== "" && !/^\(.*\)$/.test((lines[i] ?? "").trim())) {
-        collected.push(lines[i] ?? "");
-        i++;
-      }
-      pushDialogueGroupBlock("dialogue", collected.join(" ").trim());
       continue;
     }
 

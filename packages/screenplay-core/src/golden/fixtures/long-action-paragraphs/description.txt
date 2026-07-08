@@ -1,0 +1,1 @@
+Word-wrap stress: several very long single action blocks with no internal breaks.

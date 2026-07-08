@@ -1,0 +1,1 @@
+Required stress category: 200 short scenes in sequence, each with a scene number, brief action, and one exchange.

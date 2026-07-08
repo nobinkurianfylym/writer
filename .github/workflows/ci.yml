@@ -102,5 +102,20 @@ jobs:
       - name: Build
         run: corepack pnpm build
 
-      # The golden corpus conformance suite (E1-9) becomes a required check
-      # here once packages/screenplay-core/src/golden exists.
+      # The golden corpus conformance suite (src/golden) is already a
+      # required check via the Test step above (vitest picks up
+      # golden.test.ts along with everything else in the package). This
+      # extra run is solely to produce the JSON conformance report as a
+      # reviewable CI artifact — it re-runs already-green tests, so it
+      # should never itself introduce a failure the Test step didn't
+      # already catch.
+      - name: Golden corpus conformance report
+        run: corepack pnpm --filter @fylym/screenplay-core test:golden:report
+
+      - name: Upload golden conformance report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: golden-conformance-report
+          path: packages/screenplay-core/golden-conformance-report.json
+          retention-days: 90

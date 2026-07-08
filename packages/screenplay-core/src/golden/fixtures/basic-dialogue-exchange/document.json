@@ -1,0 +1,32 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. KITCHEN - MORNING",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "action",
+      "text": "Sarah pours coffee, watching the door.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "character",
+      "text": "SARAH",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "dialogue",
+      "text": "You're up early.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

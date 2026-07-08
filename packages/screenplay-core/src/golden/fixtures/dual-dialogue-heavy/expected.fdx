@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. CROWDED PARTY - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>The room is a wall of overlapping voices.</Text>
+    </Paragraph>
+    <Paragraph>
+      <DualDialogue>
+        <Paragraph Type="Character" FylymDualColumn="left">
+          <Text>GUEST 1A</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="left">
+          <Text>That&apos;s the 1st time I&apos;ve heard that story.</Text>
+        </Paragraph>
+        <Paragraph Type="Character" FylymDualColumn="right">
+          <Text>GUEST 1B</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="right">
+          <Text>Well it&apos;s true every time.</Text>
+        </Paragraph>
+      </DualDialogue>
+    </Paragraph>
+    <Paragraph>
+      <DualDialogue>
+        <Paragraph Type="Character" FylymDualColumn="left">
+          <Text>GUEST 2A</Text>
+        </Paragraph>
+        <Paragraph Type="Parenthetical" FylymDualColumn="left">
+          <Text>laughing</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="left">
+          <Text>That&apos;s the 2th time I&apos;ve heard that story.</Text>
+        </Paragraph>
+        <Paragraph Type="Character" FylymDualColumn="right">
+          <Text>GUEST 2B</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="right">
+          <Text>Well it&apos;s true every time.</Text>
+        </Paragraph>
+      </DualDialogue>
+    </Paragraph>
+    <Paragraph>
+      <DualDialogue>
+        <Paragraph Type="Character" FylymDualColumn="left">
+          <Text>GUEST 3A</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="left">
+          <Text>That&apos;s the 3th time I&apos;ve heard that story.</Text>
+        </Paragraph>
+        <Paragraph Type="Character" FylymDualColumn="right">
+          <Text>GUEST 3B</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="right">
+          <Text>Well it&apos;s true every time.</Text>
+        </Paragraph>
+      </DualDialogue>
+    </Paragraph>
+    <Paragraph>
+      <DualDialogue>
+        <Paragraph Type="Character" FylymDualColumn="left">
+          <Text>GUEST 4A</Text>
+        </Paragraph>
+        <Paragraph Type="Parenthetical" FylymDualColumn="left">
+          <Text>laughing</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="left">
+          <Text>That&apos;s the 4th time I&apos;ve heard that story.</Text>
+        </Paragraph>
+        <Paragraph Type="Character" FylymDualColumn="right">
+          <Text>GUEST 4B</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="right">
+          <Text>Well it&apos;s true every time.</Text>
+        </Paragraph>
+      </DualDialogue>
+    </Paragraph>
+    <Paragraph>
+      <DualDialogue>
+        <Paragraph Type="Character" FylymDualColumn="left">
+          <Text>GUEST 5A</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="left">
+          <Text>That&apos;s the 5th time I&apos;ve heard that story.</Text>
+        </Paragraph>
+        <Paragraph Type="Character" FylymDualColumn="right">
+          <Text>GUEST 5B</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="right">
+          <Text>Well it&apos;s true every time.</Text>
+        </Paragraph>
+      </DualDialogue>
+    </Paragraph>
+    <Paragraph>
+      <DualDialogue>
+        <Paragraph Type="Character" FylymDualColumn="left">
+          <Text>GUEST 6A</Text>
+        </Paragraph>
+        <Paragraph Type="Parenthetical" FylymDualColumn="left">
+          <Text>laughing</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="left">
+          <Text>That&apos;s the 6th time I&apos;ve heard that story.</Text>
+        </Paragraph>
+        <Paragraph Type="Character" FylymDualColumn="right">
+          <Text>GUEST 6B</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="right">
+          <Text>Well it&apos;s true every time.</Text>
+        </Paragraph>
+      </DualDialogue>
+    </Paragraph>
+    <Paragraph>
+      <DualDialogue>
+        <Paragraph Type="Character" FylymDualColumn="left">
+          <Text>GUEST 7A</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="left">
+          <Text>That&apos;s the 7th time I&apos;ve heard that story.</Text>
+        </Paragraph>
+        <Paragraph Type="Character" FylymDualColumn="right">
+          <Text>GUEST 7B</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="right">
+          <Text>Well it&apos;s true every time.</Text>
+        </Paragraph>
+      </DualDialogue>
+    </Paragraph>
+    <Paragraph>
+      <DualDialogue>
+        <Paragraph Type="Character" FylymDualColumn="left">
+          <Text>GUEST 8A</Text>
+        </Paragraph>
+        <Paragraph Type="Parenthetical" FylymDualColumn="left">
+          <Text>laughing</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="left">
+          <Text>That&apos;s the 8th time I&apos;ve heard that story.</Text>
+        </Paragraph>
+        <Paragraph Type="Character" FylymDualColumn="right">
+          <Text>GUEST 8B</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="right">
+          <Text>Well it&apos;s true every time.</Text>
+        </Paragraph>
+      </DualDialogue>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>The party rolls on.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

@@ -1,0 +1,1 @@
+Outline-style section/synopsis blocks bracketing scene content.

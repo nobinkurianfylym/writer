@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. BATTLEFIELD - DAWN</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Smoke drifts across the field.</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>CLOSE ON A BOOT, half-buried in mud.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>It doesn&apos;t move.</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>WIDE - the full scale of it becomes clear.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

@@ -1,0 +1,25 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. THEATER - NIGHT",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "action",
+      "text": "The screen fades to black.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "centered",
+      "text": "THE END",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "section",
+      "text": "ACT ONE",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "scene_heading",
+      "text": "INT. PRECINCT - DAY",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "action",
+      "text": "The bullpen is already loud at 7am.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "character",
+      "text": "DET. ROSS",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b5",
+      "type": "dialogue",
+      "text": "Tell me you have something.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b6",
+      "type": "section",
+      "text": "ACT TWO",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b7",
+      "type": "scene_heading",
+      "text": "EXT. WAREHOUSE DISTRICT - NIGHT",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b8",
+      "type": "action",
+      "text": "Ross approaches alone, against every instinct.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b9",
+      "type": "character",
+      "text": "DET. ROSS",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b10",
+      "type": "dialogue",
+      "text": "I know you're in there.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

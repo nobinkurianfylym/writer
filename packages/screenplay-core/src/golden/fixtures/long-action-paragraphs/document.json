@@ -1,0 +1,25 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "EXT. DESERT - DAY",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "action",
+      "text": "The heat shimmers off the asphalt in waves that bend the horizon into something almost liquid, and for a moment it looks like the road itself might simply dissolve into the distance, the way everything out here eventually does, given enough time and enough sun and enough of the particular kind of nothing that fills the space between one town and the next.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "action",
+      "text": "Supercalifragilisticexpialidocious is not, strictly speaking, a word that belongs in a screenplay, but the wrapper needs at least one word longer than any reasonable measure width, and this is the one everybody already knows.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

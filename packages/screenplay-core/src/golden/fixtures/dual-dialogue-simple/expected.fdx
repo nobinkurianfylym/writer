@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. CAR - MOVING - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>They argue as the city blurs past.</Text>
+    </Paragraph>
+    <Paragraph>
+      <DualDialogue>
+        <Paragraph Type="Character" FylymDualColumn="left">
+          <Text>DRIVER</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="left">
+          <Text>I said I was sorry!</Text>
+        </Paragraph>
+        <Paragraph Type="Character" FylymDualColumn="right">
+          <Text>PASSENGER</Text>
+        </Paragraph>
+        <Paragraph Type="Dialogue" FylymDualColumn="right">
+          <Text>You always say that.</Text>
+        </Paragraph>
+      </DualDialogue>
+    </Paragraph>
+  </Content>
+</FinalDraft>

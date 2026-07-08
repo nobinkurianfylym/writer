@@ -1,0 +1,1 @@
+The smallest possible non-empty document: one scene heading, one action line.

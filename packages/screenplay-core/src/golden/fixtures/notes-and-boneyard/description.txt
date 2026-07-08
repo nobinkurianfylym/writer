@@ -1,0 +1,1 @@
+Production note blocks interspersed with normal content.

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>ACT ONE</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. PRECINCT - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>The bullpen is already loud at 7am.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>DET. ROSS</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Tell me you have something.</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>ACT TWO</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. WAREHOUSE DISTRICT - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Ross approaches alone, against every instinct.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>DET. ROSS</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>I know you&apos;re in there.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

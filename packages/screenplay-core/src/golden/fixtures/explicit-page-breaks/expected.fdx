@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. ROOM A - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Something small happens.</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. ROOM B - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Something else, deliberately starting fresh.</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. ROOM C - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>And a third.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

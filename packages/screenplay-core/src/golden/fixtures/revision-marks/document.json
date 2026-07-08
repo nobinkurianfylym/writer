@@ -1,0 +1,39 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. HALLWAY - DAY",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "action",
+      "text": "New line added on the blue revision.",
+      "marks": [
+        {
+          "kind": "revision",
+          "start": 0,
+          "end": 3,
+          "revisionColor": "Blue"
+        }
+      ],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "character",
+      "text": "MAYA",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "dialogue",
+      "text": "This line changed on pink.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

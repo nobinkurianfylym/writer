@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. STATION - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>She checks the departures board one more time.</Text>
+    </Paragraph>
+  </Content>
+  <TitlePage>
+    <Content>
+      <Paragraph Type="Text" Alignment="Center">
+        <Text>Title: THE LONG WAY HOME</Text>
+      </Paragraph>
+      <Paragraph Type="Text" Alignment="Center">
+        <Text>Credit: Written by</Text>
+      </Paragraph>
+      <Paragraph Type="Text" Alignment="Center">
+        <Text>Author: J. Author</Text>
+      </Paragraph>
+      <Paragraph Type="Text" Alignment="Center">
+        <Text>Contact: writer@example.com</Text>
+      </Paragraph>
+      <Paragraph Type="Text" Alignment="Center">
+        <Text>Draft: First Draft</Text>
+      </Paragraph>
+    </Content>
+  </TitlePage>
+</FinalDraft>

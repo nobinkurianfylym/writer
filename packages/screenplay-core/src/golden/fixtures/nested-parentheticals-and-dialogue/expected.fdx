@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. COURTROOM - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>WITNESS</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>hesitating</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>I saw him leave around midnight.</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>beat</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>But I can&apos;t be completely sure.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

@@ -1,0 +1,1 @@
+Every scene heading carries an explicit sceneNumber attribute.

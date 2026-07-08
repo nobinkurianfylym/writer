@@ -1,0 +1,1 @@
+Many one-line scenes back to back, stressing scene-heading orphan control and keep-together rules.

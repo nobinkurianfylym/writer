@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. HOUSE - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>A door closes.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. STREET - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Rain begins.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>DISSOLVE TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. CAR - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Headlights sweep the ceiling.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>SMASH CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>EXT. CLIFF - DAWN</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>The sun breaks over the water.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

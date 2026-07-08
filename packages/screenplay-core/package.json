@@ -20,6 +20,8 @@
     "dev": "tsc -p tsconfig.json --watch",
     "test": "vitest run",
     "test:golden": "vitest run --dir src/golden",
+    "test:golden:report": "vitest run --dir src/golden --reporter=json --reporter=default --outputFile=golden-conformance-report.json",
+    "golden:generate": "tsx src/golden/generate.ts",
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
@@ -31,6 +33,7 @@
   "devDependencies": {
     "@fylym/config": "workspace:*",
     "eslint": "^9.17.0",
+    "tsx": "^4.19.0",
     "typescript": "^5.7.0",
     "vitest": "^2.1.0"
   }

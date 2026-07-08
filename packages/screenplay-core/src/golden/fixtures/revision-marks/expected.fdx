@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. HALLWAY - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text Style="Revision" RevisionColor="Blue">New</Text>
+      <Text> line added on the blue revision.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>MAYA</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>This line changed on pink.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

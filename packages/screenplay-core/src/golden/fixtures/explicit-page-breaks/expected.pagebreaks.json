@@ -1,0 +1,20 @@
+[
+  {
+    "pageNumber": 1,
+    "lineCount": 6,
+    "firstContentBlockId": "b1",
+    "lastContentBlockId": "b2"
+  },
+  {
+    "pageNumber": 2,
+    "lineCount": 6,
+    "firstContentBlockId": "b4",
+    "lastContentBlockId": "b5"
+  },
+  {
+    "pageNumber": 3,
+    "lineCount": 6,
+    "firstContentBlockId": "b7",
+    "lastContentBlockId": "b8"
+  }
+]

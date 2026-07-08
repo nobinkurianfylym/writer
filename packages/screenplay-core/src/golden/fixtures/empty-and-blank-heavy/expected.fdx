@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. ROOM - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text> </Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>X</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>A normal line for contrast.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

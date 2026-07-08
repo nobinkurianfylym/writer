@@ -1,0 +1,18 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. ROOM - DAY",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "action",
+      "text": "Nothing happens.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

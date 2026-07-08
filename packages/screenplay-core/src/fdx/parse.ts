@@ -113,10 +113,17 @@ function parseParagraphOrDualDialogue(p: Record<string, unknown>): Block[] {
  */
 function parseTitlePage(titlePage: Record<string, unknown>): Block[] {
   const content = (titlePage.Content ?? {}) as Record<string, unknown>;
-  const paragraphs = (content.Paragraph ?? []) as Record<string, unknown>[];
-  if (paragraphs.length === 0) return [];
+  const rawParagraphs = (content.Paragraph ?? []) as Record<string, unknown>[];
+  if (rawParagraphs.length === 0) return [];
 
-  const lines = paragraphs.map((p) => (p.Text as FdxTextNode[] | undefined)?.map(textNodeValue).join("") ?? "");
+  const lines = rawParagraphs.map((p) => (p.Text as FdxTextNode[] | undefined)?.map(textNodeValue).join("") ?? "");
+
+  // Same pretty-print whitespace-node cleanup as parseParagraph's `extra`
+  // loop — without it, indentation between a title-page paragraph's own
+  // child elements gets stored as a bogus "#text" passthrough key.
+  const paragraphs = rawParagraphs.map((p) =>
+    Object.fromEntries(Object.entries(p).filter(([key, value]) => !isWhitespaceOnlyTextNode(key, value))),
+  );
 
   return [
     {

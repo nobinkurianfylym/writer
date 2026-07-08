@@ -1,0 +1,667 @@
+.INT. SCENEHEADING-BEFORE-SCENEHEADING - DAY
+
+.INT. SCENEHEADING-AFTER-SCENEHEADING - DAY
+
+.INT. SCENEHEADING-BEFORE-ACTION - DAY
+
+!action-after-sceneheading
+
+.INT. SCENEHEADING-BEFORE-CHARACTER - DAY
+
+@CHARACTER-AFTER-SCENEHEADING
+
+.INT. SCENEHEADING-BEFORE-DIALOGUE - DAY
+
+dialogue-after-sceneheading
+
+.INT. SCENEHEADING-BEFORE-PARENTHETICAL - DAY
+
+(parenthetical-after-sceneheading)
+
+.INT. SCENEHEADING-BEFORE-TRANSITION - DAY
+
+>TRANSITION-AFTER-SCENEHEADING:
+
+.INT. SCENEHEADING-BEFORE-SHOT - DAY
+
+!SHOT-AFTER-SCENEHEADING
+
+.INT. SCENEHEADING-BEFORE-LYRIC - DAY
+
+~lyric-after-sceneheading
+
+.INT. SCENEHEADING-BEFORE-CENTERED - DAY
+
+>centered-after-sceneheading<
+
+.INT. SCENEHEADING-BEFORE-NOTE - DAY
+
+[[note-after-sceneheading]]
+
+.INT. SCENEHEADING-BEFORE-SECTION - DAY
+
+# section-after-sceneheading
+
+.INT. SCENEHEADING-BEFORE-SYNOPSIS - DAY
+
+= synopsis-after-sceneheading
+
+.INT. SCENEHEADING-BEFORE-PAGEBREAK - DAY
+
+===
+
+!action-before-sceneheading
+
+.INT. SCENEHEADING-AFTER-ACTION - DAY
+
+!action-before-action
+
+!action-after-action
+
+!action-before-character
+
+@CHARACTER-AFTER-ACTION
+
+!action-before-dialogue
+
+dialogue-after-action
+
+!action-before-parenthetical
+
+(parenthetical-after-action)
+
+!action-before-transition
+
+>TRANSITION-AFTER-ACTION:
+
+!action-before-shot
+
+!SHOT-AFTER-ACTION
+
+!action-before-lyric
+
+~lyric-after-action
+
+!action-before-centered
+
+>centered-after-action<
+
+!action-before-note
+
+[[note-after-action]]
+
+!action-before-section
+
+# section-after-action
+
+!action-before-synopsis
+
+= synopsis-after-action
+
+!action-before-pagebreak
+
+===
+
+@CHARACTER-BEFORE-SCENEHEADING
+
+.INT. SCENEHEADING-AFTER-CHARACTER - DAY
+
+@CHARACTER-BEFORE-ACTION
+
+!action-after-character
+
+@CHARACTER-BEFORE-CHARACTER
+
+@CHARACTER-AFTER-CHARACTER
+
+@CHARACTER-BEFORE-DIALOGUE
+dialogue-after-character
+
+@CHARACTER-BEFORE-PARENTHETICAL
+(parenthetical-after-character)
+
+@CHARACTER-BEFORE-TRANSITION
+
+>TRANSITION-AFTER-CHARACTER:
+
+@CHARACTER-BEFORE-SHOT
+
+!SHOT-AFTER-CHARACTER
+
+@CHARACTER-BEFORE-LYRIC
+
+~lyric-after-character
+
+@CHARACTER-BEFORE-CENTERED
+
+>centered-after-character<
+
+@CHARACTER-BEFORE-NOTE
+
+[[note-after-character]]
+
+@CHARACTER-BEFORE-SECTION
+
+# section-after-character
+
+@CHARACTER-BEFORE-SYNOPSIS
+
+= synopsis-after-character
+
+@CHARACTER-BEFORE-PAGEBREAK
+
+===
+
+dialogue-before-sceneheading
+
+.INT. SCENEHEADING-AFTER-DIALOGUE - DAY
+
+dialogue-before-action
+
+!action-after-dialogue
+
+dialogue-before-character
+
+@CHARACTER-AFTER-DIALOGUE
+dialogue-before-dialogue
+
+dialogue-after-dialogue
+
+dialogue-before-parenthetical
+(parenthetical-after-dialogue)
+dialogue-before-transition
+
+>TRANSITION-AFTER-DIALOGUE:
+
+dialogue-before-shot
+
+!SHOT-AFTER-DIALOGUE
+
+dialogue-before-lyric
+
+~lyric-after-dialogue
+
+dialogue-before-centered
+
+>centered-after-dialogue<
+
+dialogue-before-note
+
+[[note-after-dialogue]]
+
+dialogue-before-section
+
+# section-after-dialogue
+
+dialogue-before-synopsis
+
+= synopsis-after-dialogue
+
+dialogue-before-pagebreak
+
+===
+
+(parenthetical-before-sceneheading)
+
+.INT. SCENEHEADING-AFTER-PARENTHETICAL - DAY
+
+(parenthetical-before-action)
+
+!action-after-parenthetical
+
+(parenthetical-before-character)
+
+@CHARACTER-AFTER-PARENTHETICAL
+(parenthetical-before-dialogue)
+dialogue-after-parenthetical
+(parenthetical-before-parenthetical)
+
+(parenthetical-after-parenthetical)
+
+(parenthetical-before-transition)
+
+>TRANSITION-AFTER-PARENTHETICAL:
+
+(parenthetical-before-shot)
+
+!SHOT-AFTER-PARENTHETICAL
+
+(parenthetical-before-lyric)
+
+~lyric-after-parenthetical
+
+(parenthetical-before-centered)
+
+>centered-after-parenthetical<
+
+(parenthetical-before-note)
+
+[[note-after-parenthetical]]
+
+(parenthetical-before-section)
+
+# section-after-parenthetical
+
+(parenthetical-before-synopsis)
+
+= synopsis-after-parenthetical
+
+(parenthetical-before-pagebreak)
+
+===
+
+>TRANSITION-BEFORE-SCENEHEADING:
+
+.INT. SCENEHEADING-AFTER-TRANSITION - DAY
+
+>TRANSITION-BEFORE-ACTION:
+
+!action-after-transition
+
+>TRANSITION-BEFORE-CHARACTER:
+
+@CHARACTER-AFTER-TRANSITION
+
+>TRANSITION-BEFORE-DIALOGUE:
+
+dialogue-after-transition
+
+>TRANSITION-BEFORE-PARENTHETICAL:
+
+(parenthetical-after-transition)
+
+>TRANSITION-BEFORE-TRANSITION:
+
+>TRANSITION-AFTER-TRANSITION:
+
+>TRANSITION-BEFORE-SHOT:
+
+!SHOT-AFTER-TRANSITION
+
+>TRANSITION-BEFORE-LYRIC:
+
+~lyric-after-transition
+
+>TRANSITION-BEFORE-CENTERED:
+
+>centered-after-transition<
+
+>TRANSITION-BEFORE-NOTE:
+
+[[note-after-transition]]
+
+>TRANSITION-BEFORE-SECTION:
+
+# section-after-transition
+
+>TRANSITION-BEFORE-SYNOPSIS:
+
+= synopsis-after-transition
+
+>TRANSITION-BEFORE-PAGEBREAK:
+
+===
+
+!SHOT-BEFORE-SCENEHEADING
+
+.INT. SCENEHEADING-AFTER-SHOT - DAY
+
+!SHOT-BEFORE-ACTION
+
+!action-after-shot
+
+!SHOT-BEFORE-CHARACTER
+
+@CHARACTER-AFTER-SHOT
+
+!SHOT-BEFORE-DIALOGUE
+
+dialogue-after-shot
+
+!SHOT-BEFORE-PARENTHETICAL
+
+(parenthetical-after-shot)
+
+!SHOT-BEFORE-TRANSITION
+
+>TRANSITION-AFTER-SHOT:
+
+!SHOT-BEFORE-SHOT
+
+!SHOT-AFTER-SHOT
+
+!SHOT-BEFORE-LYRIC
+
+~lyric-after-shot
+
+!SHOT-BEFORE-CENTERED
+
+>centered-after-shot<
+
+!SHOT-BEFORE-NOTE
+
+[[note-after-shot]]
+
+!SHOT-BEFORE-SECTION
+
+# section-after-shot
+
+!SHOT-BEFORE-SYNOPSIS
+
+= synopsis-after-shot
+
+!SHOT-BEFORE-PAGEBREAK
+
+===
+
+~lyric-before-sceneheading
+
+.INT. SCENEHEADING-AFTER-LYRIC - DAY
+
+~lyric-before-action
+
+!action-after-lyric
+
+~lyric-before-character
+
+@CHARACTER-AFTER-LYRIC
+
+~lyric-before-dialogue
+
+dialogue-after-lyric
+
+~lyric-before-parenthetical
+
+(parenthetical-after-lyric)
+
+~lyric-before-transition
+
+>TRANSITION-AFTER-LYRIC:
+
+~lyric-before-shot
+
+!SHOT-AFTER-LYRIC
+
+~lyric-before-lyric
+
+~lyric-after-lyric
+
+~lyric-before-centered
+
+>centered-after-lyric<
+
+~lyric-before-note
+
+[[note-after-lyric]]
+
+~lyric-before-section
+
+# section-after-lyric
+
+~lyric-before-synopsis
+
+= synopsis-after-lyric
+
+~lyric-before-pagebreak
+
+===
+
+>centered-before-sceneheading<
+
+.INT. SCENEHEADING-AFTER-CENTERED - DAY
+
+>centered-before-action<
+
+!action-after-centered
+
+>centered-before-character<
+
+@CHARACTER-AFTER-CENTERED
+
+>centered-before-dialogue<
+
+dialogue-after-centered
+
+>centered-before-parenthetical<
+
+(parenthetical-after-centered)
+
+>centered-before-transition<
+
+>TRANSITION-AFTER-CENTERED:
+
+>centered-before-shot<
+
+!SHOT-AFTER-CENTERED
+
+>centered-before-lyric<
+
+~lyric-after-centered
+
+>centered-before-centered<
+
+>centered-after-centered<
+
+>centered-before-note<
+
+[[note-after-centered]]
+
+>centered-before-section<
+
+# section-after-centered
+
+>centered-before-synopsis<
+
+= synopsis-after-centered
+
+>centered-before-pagebreak<
+
+===
+
+[[note-before-sceneheading]]
+
+.INT. SCENEHEADING-AFTER-NOTE - DAY
+
+[[note-before-action]]
+
+!action-after-note
+
+[[note-before-character]]
+
+@CHARACTER-AFTER-NOTE
+
+[[note-before-dialogue]]
+
+dialogue-after-note
+
+[[note-before-parenthetical]]
+
+(parenthetical-after-note)
+
+[[note-before-transition]]
+
+>TRANSITION-AFTER-NOTE:
+
+[[note-before-shot]]
+
+!SHOT-AFTER-NOTE
+
+[[note-before-lyric]]
+
+~lyric-after-note
+
+[[note-before-centered]]
+
+>centered-after-note<
+
+[[note-before-note]]
+
+[[note-after-note]]
+
+[[note-before-section]]
+
+# section-after-note
+
+[[note-before-synopsis]]
+
+= synopsis-after-note
+
+[[note-before-pagebreak]]
+
+===
+
+# section-before-sceneheading
+
+.INT. SCENEHEADING-AFTER-SECTION - DAY
+
+# section-before-action
+
+!action-after-section
+
+# section-before-character
+
+@CHARACTER-AFTER-SECTION
+
+# section-before-dialogue
+
+dialogue-after-section
+
+# section-before-parenthetical
+
+(parenthetical-after-section)
+
+# section-before-transition
+
+>TRANSITION-AFTER-SECTION:
+
+# section-before-shot
+
+!SHOT-AFTER-SECTION
+
+# section-before-lyric
+
+~lyric-after-section
+
+# section-before-centered
+
+>centered-after-section<
+
+# section-before-note
+
+[[note-after-section]]
+
+# section-before-section
+
+# section-after-section
+
+# section-before-synopsis
+
+= synopsis-after-section
+
+# section-before-pagebreak
+
+===
+
+= synopsis-before-sceneheading
+
+.INT. SCENEHEADING-AFTER-SYNOPSIS - DAY
+
+= synopsis-before-action
+
+!action-after-synopsis
+
+= synopsis-before-character
+
+@CHARACTER-AFTER-SYNOPSIS
+
+= synopsis-before-dialogue
+
+dialogue-after-synopsis
+
+= synopsis-before-parenthetical
+
+(parenthetical-after-synopsis)
+
+= synopsis-before-transition
+
+>TRANSITION-AFTER-SYNOPSIS:
+
+= synopsis-before-shot
+
+!SHOT-AFTER-SYNOPSIS
+
+= synopsis-before-lyric
+
+~lyric-after-synopsis
+
+= synopsis-before-centered
+
+>centered-after-synopsis<
+
+= synopsis-before-note
+
+[[note-after-synopsis]]
+
+= synopsis-before-section
+
+# section-after-synopsis
+
+= synopsis-before-synopsis
+
+= synopsis-after-synopsis
+
+= synopsis-before-pagebreak
+
+===
+
+===
+
+.INT. SCENEHEADING-AFTER-PAGEBREAK - DAY
+
+===
+
+!action-after-pagebreak
+
+===
+
+@CHARACTER-AFTER-PAGEBREAK
+
+===
+
+dialogue-after-pagebreak
+
+===
+
+(parenthetical-after-pagebreak)
+
+===
+
+>TRANSITION-AFTER-PAGEBREAK:
+
+===
+
+!SHOT-AFTER-PAGEBREAK
+
+===
+
+~lyric-after-pagebreak
+
+===
+
+>centered-after-pagebreak<
+
+===
+
+[[note-after-pagebreak]]
+
+===
+
+# section-after-pagebreak
+
+===
+
+= synopsis-after-pagebreak
+
+===
+
+===

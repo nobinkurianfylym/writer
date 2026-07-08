@@ -1,0 +1,81 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. HOUSE - DAY",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "action",
+      "text": "A door closes.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "transition",
+      "text": "CUT TO:",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "scene_heading",
+      "text": "EXT. STREET - DAY",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b5",
+      "type": "action",
+      "text": "Rain begins.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b6",
+      "type": "transition",
+      "text": "DISSOLVE TO:",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b7",
+      "type": "scene_heading",
+      "text": "INT. CAR - NIGHT",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b8",
+      "type": "action",
+      "text": "Headlights sweep the ceiling.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b9",
+      "type": "transition",
+      "text": "SMASH CUT TO:",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b10",
+      "type": "scene_heading",
+      "text": "EXT. CLIFF - DAWN",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b11",
+      "type": "action",
+      "text": "The sun breaks over the water.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

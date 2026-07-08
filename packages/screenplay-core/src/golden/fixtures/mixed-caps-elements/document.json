@@ -1,0 +1,46 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. CONTROL ROOM - NIGHT",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "shot",
+      "text": "ON THE MONITOR",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "action",
+      "text": "Static, then a signal.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "transition",
+      "text": "MATCH CUT TO:",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b5",
+      "type": "scene_heading",
+      "text": "EXT. SATELLITE DISH - NIGHT",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b6",
+      "type": "action",
+      "text": "It slowly rotates to track the signal.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

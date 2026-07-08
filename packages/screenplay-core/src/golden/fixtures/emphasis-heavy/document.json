@@ -1,0 +1,61 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. STUDY - NIGHT",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "action",
+      "text": "He reads the letter twice, then a third time.",
+      "marks": [
+        {
+          "kind": "bold",
+          "start": 3,
+          "end": 8
+        },
+        {
+          "kind": "italic",
+          "start": 0,
+          "end": 2
+        }
+      ],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "character",
+      "text": "HE",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "dialogue",
+      "text": "This changes everything.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b5",
+      "type": "action",
+      "text": "She doesn't look up.",
+      "marks": [
+        {
+          "kind": "strike",
+          "start": 4,
+          "end": 12
+        },
+        {
+          "kind": "underline",
+          "start": 0,
+          "end": 3
+        }
+      ],
+      "attrs": {}
+    }
+  ]
+}

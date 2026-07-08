@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. CAFÉ RÉNÉ - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>A chalkboard menu reads: “Plat du jour — café au lait, croissant.”</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>JOSÉ</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Ça va, mon ami? — I haven&apos;t seen you in years.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

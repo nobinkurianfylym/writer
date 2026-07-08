@@ -1,0 +1,1019 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-BEFORE-SCENEHEADING - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-AFTER-SCENEHEADING - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-BEFORE-ACTION - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-after-sceneheading</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-BEFORE-CHARACTER - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-AFTER-SCENEHEADING</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-BEFORE-DIALOGUE - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-after-sceneheading</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-BEFORE-PARENTHETICAL - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-after-sceneheading</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-BEFORE-TRANSITION - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-AFTER-SCENEHEADING:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-BEFORE-SHOT - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-AFTER-SCENEHEADING</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-BEFORE-LYRIC - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-after-sceneheading</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-BEFORE-CENTERED - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-after-sceneheading</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-BEFORE-NOTE - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-after-sceneheading</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-BEFORE-SECTION - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-after-sceneheading</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-BEFORE-SYNOPSIS - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-after-sceneheading</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-BEFORE-PAGEBREAK - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-before-sceneheading</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-AFTER-ACTION - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-before-action</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-after-action</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-before-character</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-AFTER-ACTION</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-before-dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-after-action</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-before-parenthetical</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-after-action</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-before-transition</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-AFTER-ACTION:</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-before-shot</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-AFTER-ACTION</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-before-lyric</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-after-action</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-before-centered</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-after-action</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-before-note</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-after-action</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-before-section</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-after-action</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-before-synopsis</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-after-action</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-before-pagebreak</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-BEFORE-SCENEHEADING</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-AFTER-CHARACTER - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-BEFORE-ACTION</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-after-character</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-BEFORE-CHARACTER</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-AFTER-CHARACTER</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-BEFORE-DIALOGUE</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-after-character</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-BEFORE-PARENTHETICAL</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-after-character</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-BEFORE-TRANSITION</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-AFTER-CHARACTER:</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-BEFORE-SHOT</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-AFTER-CHARACTER</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-BEFORE-LYRIC</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-after-character</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-BEFORE-CENTERED</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-after-character</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-BEFORE-NOTE</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-after-character</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-BEFORE-SECTION</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-after-character</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-BEFORE-SYNOPSIS</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-after-character</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-BEFORE-PAGEBREAK</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-before-sceneheading</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-AFTER-DIALOGUE - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-before-action</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-after-dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-before-character</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-AFTER-DIALOGUE</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-before-dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-after-dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-before-parenthetical</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-after-dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-before-transition</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-AFTER-DIALOGUE:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-before-shot</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-AFTER-DIALOGUE</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-before-lyric</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-after-dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-before-centered</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-after-dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-before-note</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-after-dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-before-section</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-after-dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-before-synopsis</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-after-dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-before-pagebreak</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-before-sceneheading</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-AFTER-PARENTHETICAL - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-before-action</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-after-parenthetical</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-before-character</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-AFTER-PARENTHETICAL</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-before-dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-after-parenthetical</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-before-parenthetical</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-after-parenthetical</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-before-transition</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-AFTER-PARENTHETICAL:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-before-shot</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-AFTER-PARENTHETICAL</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-before-lyric</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-after-parenthetical</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-before-centered</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-after-parenthetical</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-before-note</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-after-parenthetical</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-before-section</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-after-parenthetical</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-before-synopsis</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-after-parenthetical</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-before-pagebreak</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-BEFORE-SCENEHEADING:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-AFTER-TRANSITION - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-BEFORE-ACTION:</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-after-transition</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-BEFORE-CHARACTER:</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-AFTER-TRANSITION</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-BEFORE-DIALOGUE:</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-after-transition</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-BEFORE-PARENTHETICAL:</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-after-transition</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-BEFORE-TRANSITION:</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-AFTER-TRANSITION:</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-BEFORE-SHOT:</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-AFTER-TRANSITION</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-BEFORE-LYRIC:</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-after-transition</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-BEFORE-CENTERED:</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-after-transition</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-BEFORE-NOTE:</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-after-transition</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-BEFORE-SECTION:</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-after-transition</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-BEFORE-SYNOPSIS:</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-after-transition</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-BEFORE-PAGEBREAK:</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-BEFORE-SCENEHEADING</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-AFTER-SHOT - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-BEFORE-ACTION</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-after-shot</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-BEFORE-CHARACTER</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-AFTER-SHOT</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-BEFORE-DIALOGUE</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-after-shot</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-BEFORE-PARENTHETICAL</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-after-shot</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-BEFORE-TRANSITION</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-AFTER-SHOT:</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-BEFORE-SHOT</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-AFTER-SHOT</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-BEFORE-LYRIC</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-after-shot</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-BEFORE-CENTERED</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-after-shot</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-BEFORE-NOTE</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-after-shot</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-BEFORE-SECTION</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-after-shot</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-BEFORE-SYNOPSIS</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-after-shot</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-BEFORE-PAGEBREAK</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-before-sceneheading</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-AFTER-LYRIC - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-before-action</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-after-lyric</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-before-character</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-AFTER-LYRIC</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-before-dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-after-lyric</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-before-parenthetical</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-after-lyric</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-before-transition</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-AFTER-LYRIC:</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-before-shot</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-AFTER-LYRIC</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-before-lyric</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-after-lyric</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-before-centered</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-after-lyric</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-before-note</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-after-lyric</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-before-section</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-after-lyric</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-before-synopsis</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-after-lyric</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-before-pagebreak</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-before-sceneheading</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-AFTER-CENTERED - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-before-action</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-after-centered</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-before-character</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-AFTER-CENTERED</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-before-dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-after-centered</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-before-parenthetical</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-after-centered</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-before-transition</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-AFTER-CENTERED:</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-before-shot</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-AFTER-CENTERED</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-before-lyric</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-after-centered</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-before-centered</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-after-centered</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-before-note</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-after-centered</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-before-section</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-after-centered</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-before-synopsis</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-after-centered</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-before-pagebreak</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-before-sceneheading</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-AFTER-NOTE - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-before-action</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-after-note</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-before-character</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-AFTER-NOTE</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-before-dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-after-note</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-before-parenthetical</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-after-note</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-before-transition</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-AFTER-NOTE:</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-before-shot</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-AFTER-NOTE</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-before-lyric</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-after-note</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-before-centered</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-after-note</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-before-note</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-after-note</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-before-section</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-after-note</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-before-synopsis</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-after-note</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-before-pagebreak</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-before-sceneheading</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-AFTER-SECTION - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-before-action</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-after-section</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-before-character</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-AFTER-SECTION</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-before-dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-after-section</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-before-parenthetical</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-after-section</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-before-transition</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-AFTER-SECTION:</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-before-shot</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-AFTER-SECTION</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-before-lyric</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-after-section</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-before-centered</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-after-section</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-before-note</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-after-section</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-before-section</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-after-section</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-before-synopsis</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-after-section</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-before-pagebreak</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-before-sceneheading</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-AFTER-SYNOPSIS - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-before-action</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-after-synopsis</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-before-character</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-AFTER-SYNOPSIS</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-before-dialogue</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-after-synopsis</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-before-parenthetical</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-after-synopsis</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-before-transition</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-AFTER-SYNOPSIS:</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-before-shot</Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-AFTER-SYNOPSIS</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-before-lyric</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-after-synopsis</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-before-centered</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-after-synopsis</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-before-note</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-after-synopsis</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-before-section</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-after-synopsis</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-before-synopsis</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-after-synopsis</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-before-pagebreak</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. SCENEHEADING-AFTER-PAGEBREAK - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>action-after-pagebreak</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CHARACTER-AFTER-PAGEBREAK</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>dialogue-after-pagebreak</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>parenthetical-after-pagebreak</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>TRANSITION-AFTER-PAGEBREAK:</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Shot">
+      <Text>SHOT-AFTER-PAGEBREAK</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>lyric-after-pagebreak</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>centered-after-pagebreak</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>note-after-pagebreak</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="section">
+      <Text>section-after-pagebreak</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="synopsis">
+      <Text>synopsis-after-pagebreak</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="page_break">
+      <Text></Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

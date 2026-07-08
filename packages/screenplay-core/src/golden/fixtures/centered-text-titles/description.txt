@@ -1,0 +1,1 @@
+Centered text used for card-style titles, e.g. an ending card.

@@ -1,0 +1,1 @@
+Accented names, em-dashes, curly quotes, and other non-ASCII text throughout.

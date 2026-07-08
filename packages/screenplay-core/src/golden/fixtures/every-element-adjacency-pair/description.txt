@@ -1,0 +1,1 @@
+Required stress category: every ordinary block type placed adjacent to every other, in sequence, so the pagination/layout/serialization path sees each transition at least once.

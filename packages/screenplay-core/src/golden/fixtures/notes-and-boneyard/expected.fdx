@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. WAREHOUSE - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>Confirm this location is still available for the reshoot.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Boxes stacked to the ceiling.</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="note">
+      <Text>VFX: extend the warehouse in post.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>FOREMAN</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Careful with that one.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

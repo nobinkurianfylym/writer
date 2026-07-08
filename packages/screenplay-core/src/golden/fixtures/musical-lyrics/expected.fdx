@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. STAGE - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>The band strikes up. MARGO steps into the spotlight.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>MARGO</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>There&apos;s a light beyond the water,</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>and a road I&apos;ve never known,</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>every step a little further</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>from the life I used to own.</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>So I&apos;m singing to the harbor,</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>to the ships I&apos;ll never see,</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>and I&apos;m hoping that the chorus</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="lyric">
+      <Text>finds its way back home to me.</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>She holds the final note.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>MARGO</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Thank you. Goodnight.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

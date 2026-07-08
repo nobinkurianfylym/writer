@@ -1,0 +1,46 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. WAREHOUSE - NIGHT",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "note",
+      "text": "Confirm this location is still available for the reshoot.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "action",
+      "text": "Boxes stacked to the ceiling.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "note",
+      "text": "VFX: extend the warehouse in post.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b5",
+      "type": "character",
+      "text": "FOREMAN",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b6",
+      "type": "dialogue",
+      "text": "Careful with that one.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

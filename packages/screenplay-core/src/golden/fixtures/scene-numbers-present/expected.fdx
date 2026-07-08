@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading" Number="1">
+      <Text>INT. ROOM 1 - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Something happens in room 1.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading" Number="2">
+      <Text>INT. ROOM 2 - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Something happens in room 2.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading" Number="3">
+      <Text>INT. ROOM 3 - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Something happens in room 3.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading" Number="4">
+      <Text>INT. ROOM 4 - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Something happens in room 4.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading" Number="5">
+      <Text>INT. ROOM 5 - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Something happens in room 5.</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading" Number="6">
+      <Text>INT. ROOM 6 - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Something happens in room 6.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

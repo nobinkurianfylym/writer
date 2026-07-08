@@ -1,0 +1,32 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. CAFÉ RÉNÉ - DAY",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "action",
+      "text": "A chalkboard menu reads: “Plat du jour — café au lait, croissant.”",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "character",
+      "text": "JOSÉ",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "dialogue",
+      "text": "Ça va, mon ami? — I haven't seen you in years.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

@@ -1,0 +1,405 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. CROWDED PARTY - NIGHT",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "action",
+      "text": "The room is a wall of overlapping voices.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "dual_dialogue",
+      "text": "",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "character",
+      "text": "GUEST 1A",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b5",
+      "type": "dialogue",
+      "text": "That's the 1st time I've heard that story.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b6",
+      "type": "character",
+      "text": "GUEST 1B",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b7",
+      "type": "dialogue",
+      "text": "Well it's true every time.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b8",
+      "type": "dual_dialogue",
+      "text": "",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b9",
+      "type": "character",
+      "text": "GUEST 2A",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b10",
+      "type": "parenthetical",
+      "text": "laughing",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b11",
+      "type": "dialogue",
+      "text": "That's the 2th time I've heard that story.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b12",
+      "type": "character",
+      "text": "GUEST 2B",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b13",
+      "type": "dialogue",
+      "text": "Well it's true every time.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b14",
+      "type": "dual_dialogue",
+      "text": "",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b15",
+      "type": "character",
+      "text": "GUEST 3A",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b16",
+      "type": "dialogue",
+      "text": "That's the 3th time I've heard that story.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b17",
+      "type": "character",
+      "text": "GUEST 3B",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b18",
+      "type": "dialogue",
+      "text": "Well it's true every time.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b19",
+      "type": "dual_dialogue",
+      "text": "",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b20",
+      "type": "character",
+      "text": "GUEST 4A",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b21",
+      "type": "parenthetical",
+      "text": "laughing",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b22",
+      "type": "dialogue",
+      "text": "That's the 4th time I've heard that story.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b23",
+      "type": "character",
+      "text": "GUEST 4B",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b24",
+      "type": "dialogue",
+      "text": "Well it's true every time.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b25",
+      "type": "dual_dialogue",
+      "text": "",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b26",
+      "type": "character",
+      "text": "GUEST 5A",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b27",
+      "type": "dialogue",
+      "text": "That's the 5th time I've heard that story.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b28",
+      "type": "character",
+      "text": "GUEST 5B",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b29",
+      "type": "dialogue",
+      "text": "Well it's true every time.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b30",
+      "type": "dual_dialogue",
+      "text": "",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b31",
+      "type": "character",
+      "text": "GUEST 6A",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b32",
+      "type": "parenthetical",
+      "text": "laughing",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b33",
+      "type": "dialogue",
+      "text": "That's the 6th time I've heard that story.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b34",
+      "type": "character",
+      "text": "GUEST 6B",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b35",
+      "type": "dialogue",
+      "text": "Well it's true every time.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b36",
+      "type": "dual_dialogue",
+      "text": "",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b37",
+      "type": "character",
+      "text": "GUEST 7A",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b38",
+      "type": "dialogue",
+      "text": "That's the 7th time I've heard that story.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b39",
+      "type": "character",
+      "text": "GUEST 7B",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b40",
+      "type": "dialogue",
+      "text": "Well it's true every time.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b41",
+      "type": "dual_dialogue",
+      "text": "",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b42",
+      "type": "character",
+      "text": "GUEST 8A",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b43",
+      "type": "parenthetical",
+      "text": "laughing",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b44",
+      "type": "dialogue",
+      "text": "That's the 8th time I've heard that story.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b45",
+      "type": "character",
+      "text": "GUEST 8B",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b46",
+      "type": "dialogue",
+      "text": "Well it's true every time.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b47",
+      "type": "action",
+      "text": "The party rolls on.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

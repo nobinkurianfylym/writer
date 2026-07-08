@@ -1,0 +1,39 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "EXT. BATTLEFIELD - DAWN",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "action",
+      "text": "Smoke drifts across the field.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "shot",
+      "text": "CLOSE ON A BOOT, half-buried in mud.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "action",
+      "text": "It doesn't move.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b5",
+      "type": "shot",
+      "text": "WIDE - the full scale of it becomes clear.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

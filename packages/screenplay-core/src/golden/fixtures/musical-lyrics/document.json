@@ -1,0 +1,102 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. STAGE - NIGHT",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "action",
+      "text": "The band strikes up. MARGO steps into the spotlight.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "character",
+      "text": "MARGO",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "lyric",
+      "text": "There's a light beyond the water,",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b5",
+      "type": "lyric",
+      "text": "and a road I've never known,",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b6",
+      "type": "lyric",
+      "text": "every step a little further",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b7",
+      "type": "lyric",
+      "text": "from the life I used to own.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b8",
+      "type": "lyric",
+      "text": "So I'm singing to the harbor,",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b9",
+      "type": "lyric",
+      "text": "to the ships I'll never see,",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b10",
+      "type": "lyric",
+      "text": "and I'm hoping that the chorus",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b11",
+      "type": "lyric",
+      "text": "finds its way back home to me.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b12",
+      "type": "action",
+      "text": "She holds the final note.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b13",
+      "type": "character",
+      "text": "MARGO",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b14",
+      "type": "dialogue",
+      "text": "Thank you. Goodnight.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

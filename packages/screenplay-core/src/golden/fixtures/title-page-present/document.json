@@ -1,0 +1,25 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "title_page",
+      "text": "Title: THE LONG WAY HOME\nCredit: Written by\nAuthor: J. Author\nContact: writer@example.com\nDraft: First Draft",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "scene_heading",
+      "text": "INT. STATION - DAY",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "action",
+      "text": "She checks the departures board one more time.",
+      "marks": [],
+      "attrs": {}
+    }
+  ]
+}

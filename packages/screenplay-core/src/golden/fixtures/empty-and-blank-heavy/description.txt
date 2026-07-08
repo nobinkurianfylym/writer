@@ -1,0 +1,1 @@
+Edge-case stress: several blocks with minimal or whitespace-only text scattered through otherwise normal content.

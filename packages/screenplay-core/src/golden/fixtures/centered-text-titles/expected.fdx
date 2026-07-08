@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. THEATER - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>The screen fades to black.</Text>
+    </Paragraph>
+    <Paragraph Type="Action" FylymType="centered">
+      <Text>THE END</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

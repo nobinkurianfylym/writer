@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+  <Content>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. DINER - NIGHT</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>Three old friends around a booth.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>ANA</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>So what did he say?</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>BEN</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Nothing. That&apos;s the problem.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>CARLA</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>He never says anything.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>ANA</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text>Exactly.</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>

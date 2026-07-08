@@ -1,0 +1,61 @@
+{
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "scene_heading",
+      "text": "INT. CAR - MOVING - DAY",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b2",
+      "type": "action",
+      "text": "They argue as the city blurs past.",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b3",
+      "type": "dual_dialogue",
+      "text": "",
+      "marks": [],
+      "attrs": {}
+    },
+    {
+      "id": "b4",
+      "type": "character",
+      "text": "DRIVER",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b5",
+      "type": "dialogue",
+      "text": "I said I was sorry!",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "left"
+      }
+    },
+    {
+      "id": "b6",
+      "type": "character",
+      "text": "PASSENGER",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    },
+    {
+      "id": "b7",
+      "type": "dialogue",
+      "text": "You always say that.",
+      "marks": [],
+      "attrs": {
+        "dualColumn": "right"
+      }
+    }
+  ]
+}
