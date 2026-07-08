@@ -1,0 +1,13 @@
+{
+  "name": "@fylym/ai",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Stub for the Phase-5 AI service. Intentionally empty in Phase 1 (§2).",
+  "scripts": {
+    "build": "echo 'apps/ai: stub, nothing to build in Phase 1'",
+    "dev": "echo 'apps/ai: stub, nothing to run in Phase 1'",
+    "test": "echo 'apps/ai: stub, no tests in Phase 1'",
+    "lint": "echo 'apps/ai: stub, nothing to lint in Phase 1'",
+    "typecheck": "echo 'apps/ai: stub, nothing to typecheck in Phase 1'"
+  }
+}

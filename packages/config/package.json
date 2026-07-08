@@ -1,0 +1,32 @@
+{
+  "name": "@fylym/config",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    "./tsconfig/base.json": "./tsconfig/base.json",
+    "./tsconfig/node.json": "./tsconfig/node.json",
+    "./tsconfig/react.json": "./tsconfig/react.json",
+    "./eslint/base": "./eslint/base.mjs",
+    "./eslint/react": "./eslint/react.mjs",
+    "./prettier": "./prettier/index.mjs",
+    "./env": {
+      "types": "./env/index.d.ts",
+      "default": "./env/index.mjs"
+    }
+  },
+  "scripts": {
+    "build": "echo 'no build step'",
+    "lint": "echo 'no lint step'",
+    "test": "echo 'no test step'",
+    "typecheck": "echo 'no typecheck step'"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.37.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "typescript-eslint": "^8.18.0",
+    "zod": "^3.24.0"
+  }
+}

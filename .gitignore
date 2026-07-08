@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+.next/
+.turbo/
+coverage/
+*.log
+.env
+.env.local
+.DS_Store
+.pnpm-store/
+*.tsbuildinfo
+.vscode/*
+!.vscode/extensions.json
+Claude.dmg
