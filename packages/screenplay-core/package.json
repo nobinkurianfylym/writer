@@ -9,6 +9,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "default": "./dist/testing.js"
     }
   },
   "scripts": {
@@ -18,6 +22,9 @@
     "test:golden": "vitest run --dir src/golden",
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "fast-check": "^3.23.0"
   },
   "devDependencies": {
     "@fylym/config": "workspace:*",
