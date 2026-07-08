@@ -11,3 +11,16 @@ export {
 } from "./model.js";
 export { normalize } from "./normalize.js";
 export { isValid, validate } from "./validate.js";
+export {
+  parseFormatProfile,
+  FormatProfileSchema,
+  MarginsSchema,
+  ElementStyleSchema,
+  PaginationRulesSchema,
+  type FormatProfile,
+  type Margins,
+  type ElementStyle,
+  type PaginationRules,
+} from "./format-profile.js";
+export { usFeatureProfile } from "./profiles/us-feature.js";
+export { usTvOneHourProfile } from "./profiles/us-tv-onehour.js";

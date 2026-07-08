@@ -24,7 +24,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "fast-check": "^3.23.0"
+    "fast-check": "^3.23.0",
+    "zod": "^3.24.0"
   },
   "devDependencies": {
     "@fylym/config": "workspace:*",
