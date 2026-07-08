@@ -25,3 +25,11 @@ export {
 export { usFeatureProfile } from "./profiles/us-feature.js";
 export { usTvOneHourProfile } from "./profiles/us-tv-onehour.js";
 export { transition, type TransitionKey, type TransitionResult } from "./transition.js";
+export {
+  tokenizeSceneHeading,
+  tokenizeCharacterName,
+  isTransitionText,
+  type SceneType,
+  type SceneHeadingTokens,
+  type CharacterNameTokens,
+} from "./smart-type.js";
