@@ -33,3 +33,6 @@ export {
   type SceneHeadingTokens,
   type CharacterNameTokens,
 } from "./smart-type.js";
+export { paginate, type Page, type PageMap } from "./pagination/solver.js";
+export { repaginate, type ChangedRange } from "./pagination/incremental.js";
+export type { LayoutLine, LayoutUnit } from "./pagination/layout.js";
