@@ -36,3 +36,10 @@ export async function getBlocks(page: Page): Promise<DomBlock[]> {
     .evaluateAll((nodes) => nodes.map((n) => ({ type: n.getAttribute("data-block-type") ?? "", text: n.textContent ?? "" })));
   return raw.map((b) => ({ ...b, text: b.text.replace(/\u00a0/g, " ") }));
 }
+
+/** The currently-rendered ghost-text autocomplete suggestion (E2-3), or `null` if none is showing. */
+export async function getGhostText(page: Page): Promise<string | null> {
+  const locator = page.locator('[data-testid="autocomplete-ghost"]');
+  if ((await locator.count()) === 0) return null;
+  return locator.textContent();
+}
