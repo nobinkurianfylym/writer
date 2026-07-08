@@ -26,6 +26,9 @@ export interface LayoutLine {
   totalLinesInBlock: number;
   text: string;
   isBlank: boolean;
+  /** True only for a (MORE)/(CONT'D) marker line inserted by the pagination
+   * solver's MORE/CONT'D synthesis pass — never set by layoutBlock itself. */
+  synthetic?: true;
 }
 
 export interface LayoutUnit {

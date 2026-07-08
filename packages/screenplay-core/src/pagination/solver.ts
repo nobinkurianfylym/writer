@@ -1,15 +1,10 @@
 import type { BlockType, ScreenplayDocument } from "../model.js";
 import type { FormatProfile, PaginationRules } from "../format-profile.js";
 import { layoutDocument, type LayoutLine, type LayoutUnit } from "./layout.js";
+import { synthesizeMoreAndContd } from "./more-contd.js";
+import type { Page, PageMap } from "./types.js";
 
-export interface Page {
-  pageNumber: number;
-  lines: LayoutLine[];
-}
-
-export interface PageMap {
-  pages: Page[];
-}
+export type { Page, PageMap } from "./types.js";
 
 /**
  * Block types whose lines can be split across a page boundary (respecting
@@ -171,9 +166,18 @@ function fillPages(chunks: Chunk[], rules: PaginationRules): Page[] {
       continue;
     }
 
+    // A dialogue split gets (MORE)/(CONT'D) markers (checklist item 4) — the
+    // actual marker lines are inserted by a later pass, but the space for
+    // them must be reserved here, in the split decision itself: 1 line at
+    // the bottom of a page a dialogue chunk continues past, 1 line at the
+    // top of a page it continues onto. action/lyric splits get neither.
+    const isDialogue = chunk.blockType === "dialogue";
     let remaining = chunk.lines;
+    let isContinuation = false;
+
     while (remaining.length > 0) {
-      const spaceLeft = rules.linesPerPage - current.length;
+      const contdReserve = isDialogue && isContinuation ? 1 : 0;
+      const spaceLeft = rules.linesPerPage - current.length - contdReserve;
       if (spaceLeft <= 0) {
         closePage();
         continue;
@@ -184,7 +188,8 @@ function fillPages(chunks: Chunk[], rules: PaginationRules): Page[] {
         break;
       }
 
-      const splitAt = findValidSplit(remaining, spaceLeft, rules.minOrphanLines);
+      const moreReserve = isDialogue ? 1 : 0;
+      const splitAt = findValidSplit(remaining, spaceLeft - moreReserve, rules.minOrphanLines);
       if (splitAt <= 0) {
         closePage();
         continue;
@@ -192,6 +197,7 @@ function fillPages(chunks: Chunk[], rules: PaginationRules): Page[] {
       current.push(...remaining.slice(0, splitAt));
       remaining = remaining.slice(splitAt);
       closePage();
+      isContinuation = true;
     }
   }
 
@@ -201,13 +207,16 @@ function fillPages(chunks: Chunk[], rules: PaginationRules): Page[] {
 
 /**
  * The full-paginate entrypoint (E1-5): lays out every block against the
- * format profile, then decides page-break points honoring the keep-together
- * rules above. Deterministic — the same document and profile always produce
- * a byte-identical PageMap. Dialogue-split (MORE)/(CONT'D) synthesis and
- * incremental repagination are later checklist items layered on top of this.
+ * format profile, decides page-break points honoring the keep-together
+ * rules above (reserving space for a dialogue split's (MORE)/(CONT'D)
+ * markers as part of that decision), then inserts the marker lines
+ * themselves. Deterministic — the same document and profile always produce
+ * a byte-identical PageMap. Incremental repagination is the next checklist
+ * item, layered on top of this.
  */
 export function paginate(doc: ScreenplayDocument, profile: FormatProfile): PageMap {
   const flat = flattenForSolver(layoutDocument(doc, profile));
   const chunks = buildChunks(flat, profile.pagination);
-  return { pages: fillPages(chunks, profile.pagination) };
+  const pageMap: PageMap = { pages: fillPages(chunks, profile.pagination) };
+  return synthesizeMoreAndContd(doc, pageMap, profile);
 }
