@@ -24,6 +24,19 @@ pnpm typecheck    # turbo run typecheck across all packages
 pnpm docker:down  # stop local infra
 ```
 
+## CI
+
+`.github/workflows/ci.yml` runs on every PR and on push to `main`: install,
+lint, typecheck, test, build, with Postgres/Redis service containers wired up
+for future integration tests. Optional repo secrets `TURBO_TOKEN`/`TURBO_TEAM`
+enable genuine Turborepo remote caching; without them CI still gets a warm
+cache via `actions/cache` on the pnpm store and `.turbo`.
+
+Once this repo has a GitHub remote, turn on branch protection on `main`
+(Settings → Branches → Add rule): require the `lint, typecheck, test, build`
+check to pass and require at least one review before merging. This can't be
+set from the repo itself — it's a GitHub API/UI setting.
+
 ## Layout
 
 - `apps/web` — Next.js app (editor, dashboard)
