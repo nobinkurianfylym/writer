@@ -38,3 +38,5 @@ export { repaginate, type ChangedRange } from "./pagination/incremental.js";
 export type { LayoutLine, LayoutUnit } from "./pagination/layout.js";
 export { parseFountain } from "./fountain/parse.js";
 export { serializeFountain } from "./fountain/serialize.js";
+export { parseFdx } from "./fdx/parse.js";
+export { serializeFdx } from "./fdx/serialize.js";

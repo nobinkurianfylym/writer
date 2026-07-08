@@ -39,6 +39,13 @@ export interface BlockAttrs {
   locked?: boolean;
   dualColumn?: DualColumn;
   elementNumber?: string;
+  /**
+   * Opaque, import-format-specific data preserved verbatim so re-export
+   * doesn't destroy it (e.g. an FDX paragraph's unrecognized attributes or
+   * child elements — see fdx/parse.ts) — never interpreted by
+   * screenplay-core itself, and not touched by normalize().
+   */
+  passthrough?: Record<string, unknown>;
 }
 
 export interface Block {
@@ -62,4 +69,12 @@ export interface Block {
  */
 export interface ScreenplayDocument {
   blocks: Block[];
+  /**
+   * Opaque, import-format-specific document-level data preserved verbatim
+   * for re-export (e.g. an FDX file's unrecognized root attributes/elements
+   * — see fdx/parse.ts). Not guaranteed to survive an intermediate
+   * normalize() call, whose job is structural repair, not metadata
+   * preservation — only a direct parse-then-serialize round-trip is.
+   */
+  passthrough?: Record<string, unknown>;
 }
