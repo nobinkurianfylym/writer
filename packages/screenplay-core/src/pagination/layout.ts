@@ -1,6 +1,6 @@
-import type { Block, BlockType, ScreenplayDocument } from "../model.js";
+import type { Block, BlockType, MarkRange, ScreenplayDocument } from "../model.js";
 import type { ElementStyle, FormatProfile } from "../format-profile.js";
-import { wrapText } from "./line-metrics.js";
+import { wrapTextWithOffsets } from "./line-metrics.js";
 
 /**
  * Block types with no flowing text content of their own in the body page
@@ -29,6 +29,13 @@ export interface LayoutLine {
   /** True only for a (MORE)/(CONT'D) marker line inserted by the pagination
    * solver's MORE/CONT'D synthesis pass — never set by layoutBlock itself. */
   synthetic?: true;
+  /**
+   * This line's slice of the block's marks, rebased to offsets within `text`
+   * (not the original block.text) — what the PDF typesetter (E1-8) draws.
+   * Omitted (rather than `[]`) when empty, so it never appears in this
+   * package's own toEqual fixtures written before marks existed.
+   */
+  marks?: MarkRange[];
 }
 
 export interface LayoutUnit {
@@ -48,13 +55,27 @@ function blankLine(block: Block, totalLinesInBlock: number): LayoutLine {
   };
 }
 
+/** Clips `marks` to the [start, end) window and rebases each surviving range to be relative to that window, dropping ranges that don't intersect it at all. */
+function marksForWindow(marks: MarkRange[], start: number, end: number): MarkRange[] | undefined {
+  const clipped: MarkRange[] = [];
+  for (const m of marks) {
+    const clippedStart = Math.max(m.start, start);
+    const clippedEnd = Math.min(m.end, end);
+    if (clippedStart < clippedEnd) {
+      clipped.push({ ...m, start: clippedStart - start, end: clippedEnd - start });
+    }
+  }
+  return clipped.length > 0 ? clipped : undefined;
+}
+
 /** Lays out a single block: spaceBefore blanks + wrapped content + spaceAfter blanks. */
 export function layoutBlock(block: Block, style: ElementStyle): LayoutUnit {
-  const wrapped = STRUCTURAL_MARKER_TYPES.has(block.type) ? [] : wrapText(block.text, style.width);
+  const wrapped = STRUCTURAL_MARKER_TYPES.has(block.type) ? [] : wrapTextWithOffsets(block.text, style.width);
 
   const lines: LayoutLine[] = [];
   for (let i = 0; i < style.spaceBefore; i++) lines.push(blankLine(block, wrapped.length));
-  wrapped.forEach((text, lineIndexInBlock) => {
+  wrapped.forEach(({ text, start, end }, lineIndexInBlock) => {
+    const lineMarks = block.marks.length > 0 ? marksForWindow(block.marks, start, end) : undefined;
     lines.push({
       blockId: block.id,
       blockType: block.type,
@@ -62,6 +83,7 @@ export function layoutBlock(block: Block, style: ElementStyle): LayoutUnit {
       totalLinesInBlock: wrapped.length,
       text,
       isBlank: false,
+      ...(lineMarks ? { marks: lineMarks } : {}),
     });
   });
   for (let i = 0; i < style.spaceAfter; i++) lines.push(blankLine(block, wrapped.length));

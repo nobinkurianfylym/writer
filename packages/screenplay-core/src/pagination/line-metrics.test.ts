@@ -1,6 +1,6 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
-import { CHARS_PER_INCH, lineCount, maxCharsForWidth, wrapText } from "./line-metrics.js";
+import { CHARS_PER_INCH, lineCount, maxCharsForWidth, wrapText, wrapTextWithOffsets } from "./line-metrics.js";
 
 describe("maxCharsForWidth", () => {
   it("converts inches to characters at 10 chars/inch", () => {
@@ -116,5 +116,39 @@ describe("wrapText: never throws, never drops a character (property)", () => {
 describe("wrapText: CHARS_PER_INCH constant", () => {
   it("is the published 12pt Courier pitch", () => {
     expect(CHARS_PER_INCH).toBe(10);
+  });
+});
+
+describe("wrapTextWithOffsets: offset invariant (property)", () => {
+  it("is text-equivalent to wrapText and each line's offsets slice the matching content out of the original text", () => {
+    fc.assert(
+      fc.property(
+        fc.string({ maxLength: 200 }),
+        fc.double({ min: 0.1, max: 10, noNaN: true }),
+        (text, width) => {
+          const withOffsets = wrapTextWithOffsets(text, width);
+          expect(withOffsets.map((l) => l.text)).toEqual(wrapText(text, width));
+
+          for (const line of withOffsets) {
+            expect(line.start).toBeGreaterThanOrEqual(0);
+            expect(line.end).toBeGreaterThanOrEqual(line.start);
+            expect(line.end).toBeLessThanOrEqual(text.length);
+            // The slice may still carry the *original* (unnormalized) inter-word
+            // whitespace the wrapped line collapsed to single spaces.
+            const slice = text.slice(line.start, line.end).replace(/\s+/g, " ");
+            expect(slice).toBe(line.text);
+          }
+        },
+      ),
+      { numRuns: 5000 },
+    );
+  });
+
+  it("slices out each wrapped line's exact text for a known multi-line example", () => {
+    const text = "Maya walks slowly across the room toward the window.";
+    const lines = wrapTextWithOffsets(text, 2.0); // 20 chars/line
+    for (const line of lines) {
+      expect(text.slice(line.start, line.end)).toBe(line.text);
+    }
   });
 });

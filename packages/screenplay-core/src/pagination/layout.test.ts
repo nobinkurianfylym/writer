@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { Block, ScreenplayDocument } from "../model.js";
 import { usFeatureProfile } from "../profiles/us-feature.js";
 import { arbitraryBlock } from "../testing.js";
-import { wrapText } from "./line-metrics.js";
+import { wrapText, wrapTextWithOffsets } from "./line-metrics.js";
 import { STRUCTURAL_MARKER_TYPES, layoutBlock, layoutDocument } from "./layout.js";
 
 function block(overrides: Partial<Block>): Block {
@@ -101,6 +101,79 @@ describe("layoutDocument", () => {
 
   it("returns an empty array for an empty document", () => {
     expect(layoutDocument({ blocks: [] }, usFeatureProfile)).toEqual([]);
+  });
+});
+
+describe("layoutBlock: mark slicing across wrapped lines", () => {
+  it("omits `marks` entirely when the block has none", () => {
+    const b = block({ id: "a1", type: "action", text: "Maya walks in." });
+    const unit = layoutBlock(b, usFeatureProfile.elements.action);
+    for (const line of unit.lines) expect(line.marks).toBeUndefined();
+  });
+
+  it("rebases a mark spanning a wrap boundary onto each affected line, relative to that line's own text", () => {
+    // At the action element's 6in measure this wraps to three lines, with
+    // "window," ending line 1 and "watching" starting line 2 — so a mark
+    // from "window" through "watching" spans that boundary.
+    const text =
+      "Maya walks slowly across the room toward the window, watching the rain fall on the empty street below her apartment.";
+    const boldStart = text.indexOf("window");
+    const boldEnd = text.indexOf("watching") + "watching".length;
+    const b = block({
+      id: "a2",
+      type: "action",
+      text,
+      marks: [{ kind: "bold", start: boldStart, end: boldEnd }],
+    });
+    const style = usFeatureProfile.elements.action;
+    const unit = layoutBlock(b, style);
+    const content = unit.lines.filter((l) => !l.isBlank);
+    const wrapped = wrapTextWithOffsets(text, style.width);
+    expect(content.length).toBe(wrapped.length);
+
+    for (let i = 0; i < content.length; i++) {
+      const line = content[i]!;
+      const { start: lineGlobalStart, end: lineGlobalEnd } = wrapped[i]!;
+      const overlapStart = Math.max(boldStart, lineGlobalStart);
+      const overlapEnd = Math.min(boldEnd, lineGlobalEnd);
+      if (overlapStart < overlapEnd) {
+        expect(line.marks).toEqual([{ kind: "bold", start: overlapStart - lineGlobalStart, end: overlapEnd - lineGlobalStart }]);
+      } else {
+        expect(line.marks).toBeUndefined();
+      }
+    }
+    // Sanity: the mark actually does span a wrap boundary in this fixture.
+    expect(content.filter((l) => l.marks !== undefined).length).toBeGreaterThan(1);
+  });
+
+  it("property: every mark on a line, when sliced back out of that line's text, is non-empty and in range", () => {
+    fc.assert(
+      fc.property(
+        fc.string({ minLength: 1, maxLength: 200 }).filter((s) => /\S/.test(s)),
+        fc.array(fc.nat({ max: 199 }), { minLength: 0, maxLength: 4 }),
+        (text, offsets) => {
+          const maxIdx = text.length - 1;
+          const marks = offsets
+            .filter((o) => o <= maxIdx)
+            .map((o, i): { kind: "bold"; start: number; end: number } => ({
+              kind: "bold",
+              start: Math.min(o, maxIdx),
+              end: Math.min(o + 1 + (i % 5), text.length),
+            }))
+            .filter((m) => m.start < m.end);
+          const b = block({ id: "p", type: "action", text, marks });
+          const unit = layoutBlock(b, usFeatureProfile.elements.action);
+          for (const line of unit.lines.filter((l) => !l.isBlank)) {
+            for (const m of line.marks ?? []) {
+              expect(m.start).toBeGreaterThanOrEqual(0);
+              expect(m.end).toBeGreaterThan(m.start);
+              expect(m.end).toBeLessThanOrEqual(line.text.length);
+            }
+          }
+        },
+      ),
+      { numRuns: 2000 },
+    );
   });
 });
 
