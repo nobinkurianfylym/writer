@@ -4,8 +4,10 @@ import { BLOCK_TYPES, MARK_KINDS, type Block, type MarkRange, type ScreenplayDoc
 const ORDINARY_BLOCK_TYPES = BLOCK_TYPES.filter((type) => type !== "dual_dialogue");
 const COLUMN_BLOCK_TYPES = ["character", "dialogue", "parenthetical"] as const;
 
+/** A fast-check arbitrary over every BlockType except `dual_dialogue` (a structural marker, not a standalone block a generator should place freely). */
 export const arbitraryBlockType = fc.constantFrom(...ORDINARY_BLOCK_TYPES);
 
+/** A fast-check arbitrary over every MarkKind. */
 export const arbitraryMarkKind = fc.constantFrom(...MARK_KINDS);
 
 /** A mark range guaranteed valid (in-bounds, non-empty) for a given text length. Requires len > 0. */

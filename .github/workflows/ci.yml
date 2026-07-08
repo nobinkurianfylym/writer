@@ -102,6 +102,12 @@ jobs:
       - name: Build
         run: corepack pnpm build
 
+      # E1-10 accept criterion: "Typedoc builds warning-free in CI".
+      # typedoc.json sets treatWarningsAsErrors + validation.notDocumented,
+      # so a missing TSDoc comment on any exported symbol fails this step.
+      - name: API docs (typedoc)
+        run: corepack pnpm docs
+
       # The golden corpus conformance suite (src/golden) is already a
       # required check via the Test step above (vitest picks up
       # golden.test.ts along with everything else in the package). This

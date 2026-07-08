@@ -90,6 +90,7 @@ export function validate(doc: ScreenplayDocument): string[] {
   return violations;
 }
 
+/** Shorthand for `validate(doc).length === 0` — use `validate()` instead when you need to know *what's* wrong. */
 export function isValid(doc: ScreenplayDocument): boolean {
   return validate(doc).length === 0;
 }

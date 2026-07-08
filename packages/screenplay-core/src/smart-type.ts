@@ -1,10 +1,15 @@
+/** Which of INT./EXT./INT.-EXT. a scene heading opens with. */
 export type SceneType = "INT" | "EXT" | "INT/EXT";
 
+/** The parsed pieces of a scene heading, as tokenized by `tokenizeSceneHeading`. */
 export interface SceneHeadingTokens {
+  /** `null` when the heading has no recognizable INT./EXT. prefix. */
   sceneType: SceneType | null;
   /** The nested-location text, with any internal separators normalized to " - ". */
   location: string;
+  /** The trailing time-of-day text (e.g. "DAY", "NIGHT"), or `null` if absent. */
   time: string | null;
+  /** The original, untokenized heading text. */
   raw: string;
 }
 
@@ -94,10 +99,13 @@ export function tokenizeSceneHeading(raw: string): SceneHeadingTokens {
   return { sceneType, location: rest, time: null, raw };
 }
 
+/** The parsed pieces of a character cue, as tokenized by `tokenizeCharacterName`. */
 export interface CharacterNameTokens {
+  /** The bare character name, with extensions and dual-dialogue markers stripped. */
   name: string;
   /** Canonical extensions in original left-to-right order, e.g. ["V.O.", "CONT'D"]. */
   extensions: string[];
+  /** The original, untokenized cue text. */
   raw: string;
 }
 

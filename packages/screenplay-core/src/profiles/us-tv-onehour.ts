@@ -22,4 +22,5 @@ const raw = {
   },
 };
 
+/** US one-hour TV drama format: same page/margins as `usFeatureProfile`, but honors act breaks. */
 export const usTvOneHourProfile = parseFormatProfile(raw);

@@ -21,6 +21,7 @@ export {
   type Margins,
   type ElementStyle,
   type PaginationRules,
+  type PageDimensions,
 } from "./format-profile.js";
 export { usFeatureProfile } from "./profiles/us-feature.js";
 export { usTvOneHourProfile } from "./profiles/us-tv-onehour.js";

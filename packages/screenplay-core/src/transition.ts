@@ -1,8 +1,11 @@
 import { BLOCK_TYPES, type BlockType } from "./model.js";
 
+/** Which key drove a `transition()` call — Tab cycles element type in place; Enter advances to a new block. */
 export type TransitionKey = "Tab" | "Enter";
 
+/** What `transition()` says should happen next: which BlockType to move to, and whether that's a retype or a new block. */
 export interface TransitionResult {
+  /** The BlockType the caret should be in after this transition. */
   nextType: BlockType;
   /**
    * "retype": the current block's type changes in place, caret stays in it

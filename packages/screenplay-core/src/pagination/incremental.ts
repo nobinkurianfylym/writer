@@ -4,6 +4,7 @@ import { synthesizeMoreAndContd } from "./more-contd.js";
 import { paginate, paginateWithoutSynthesis } from "./solver.js";
 import type { Page, PageMap } from "./types.js";
 
+/** The single contiguous edit `repaginate()` needs to know about — see `fromBlockIndex`. */
 export interface ChangedRange {
   /**
    * Index, in the NEW document, of the first block that changed (edited,

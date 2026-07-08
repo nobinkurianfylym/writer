@@ -20,4 +20,5 @@ const raw = {
   },
 };
 
+/** Standard US feature-film format: 8.5"x11" page, 1"/1.5" margins, 55 lines/page, no act breaks. */
 export const usFeatureProfile = parseFormatProfile(raw);

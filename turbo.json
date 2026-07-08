@@ -19,6 +19,10 @@
       "dependsOn": ["^build"],
       "outputs": []
     },
+    "docs": {
+      "dependsOn": ["^build"],
+      "outputs": ["docs/api/**"]
+    },
     "lint": {
       "outputs": []
     },

@@ -17,14 +17,19 @@ export const STRUCTURAL_MARKER_TYPES: ReadonlySet<BlockType> = new Set([
   "title_page",
 ]);
 
+/** One physical row of the page grid: either a wrapped content line or a blank spacer, tagged with which block it came from. */
 export interface LayoutLine {
+  /** id of the `Block` this line belongs to. */
   blockId: string;
+  /** type of the `Block` this line belongs to. */
   blockType: BlockType;
   /** 0-based index into this block's own wrapped content lines; -1 for a spacer line. */
   lineIndexInBlock: number;
   /** Total content lines (excluding spacers) this block wraps to. */
   totalLinesInBlock: number;
+  /** This line's wrapped text; empty for a spacer line. */
   text: string;
+  /** True for a spaceBefore/spaceAfter spacer line with no content of its own. */
   isBlank: boolean;
   /** True only for a (MORE)/(CONT'D) marker line inserted by the pagination
    * solver's MORE/CONT'D synthesis pass — never set by layoutBlock itself. */
@@ -38,9 +43,13 @@ export interface LayoutLine {
   marks?: MarkRange[];
 }
 
+/** A single Block's own laid-out lines (spaceBefore blanks + wrapped content + spaceAfter blanks), before the pagination solver groups units across page boundaries. */
 export interface LayoutUnit {
+  /** id of the source `Block`. */
   blockId: string;
+  /** type of the source `Block`. */
   blockType: BlockType;
+  /** This block's spacer + content lines, in top-to-bottom order. */
   lines: LayoutLine[];
 }
 
