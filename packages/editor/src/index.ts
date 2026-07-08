@@ -25,3 +25,6 @@ export {
   twoCharacterAlternatingPair,
   exchangeOpeningCharacter,
 } from "./autocomplete/suggestions.js";
+export { paginationKey, paginationPlugin, type PaginationPluginState } from "./pagination/plugin.js";
+export { createPaginationHandler } from "./pagination/worker-handler.js";
+export type { PaginateRequest, PaginateResponse } from "./pagination/protocol.js";

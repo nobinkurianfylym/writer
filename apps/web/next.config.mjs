@@ -9,6 +9,12 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.output.workerPublicPath = "/_next/";
+    }
+    return config;
+  },
 };
 
 export default nextConfig;

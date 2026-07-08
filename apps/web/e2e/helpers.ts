@@ -37,6 +37,29 @@ export async function getBlocks(page: Page): Promise<DomBlock[]> {
   return raw.map((b) => ({ ...b, text: b.text.replace(/\u00a0/g, " ") }));
 }
 
+export interface PageBreak {
+  page: number;
+  moreTexts: string[];
+  contdTexts: string[];
+}
+
+/** All currently-rendered page-break decorations (E2-4), in document order. */
+export async function getPageBreaks(page: Page): Promise<PageBreak[]> {
+  return page.locator('[data-testid="page-break"]').evaluateAll((nodes) =>
+    nodes.map((n) => ({
+      page: parseInt(n.getAttribute("data-page") ?? "0", 10),
+      moreTexts: Array.from(n.querySelectorAll('[data-testid="page-more"]')).map((el) => el.textContent ?? ""),
+      contdTexts: Array.from(n.querySelectorAll('[data-testid="page-contd"]')).map((el) => el.textContent ?? ""),
+    })),
+  );
+}
+
+/** Navigates to the editor-dev page with a pre-generated multi-page document. */
+export async function gotoLargeEditor(page: Page, targetPages: number): Promise<void> {
+  await page.goto(`/editor-dev?pages=${targetPages}`);
+  await page.locator('[data-testid="script-editor-content"] .ProseMirror').waitFor();
+}
+
 /** The currently-rendered ghost-text autocomplete suggestion (E2-3), or `null` if none is showing. */
 export async function getGhostText(page: Page): Promise<string | null> {
   const locator = page.locator('[data-testid="autocomplete-ghost"]');

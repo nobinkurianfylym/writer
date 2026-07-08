@@ -7,12 +7,15 @@ import { usFeatureProfile, type BlockType, type FormatProfile, type ScreenplayDo
 import { EXPLICIT_SWITCH_ORDER, switchElementCommand } from "./commands.js";
 import { toBlocks, toPmDoc } from "./converters.js";
 import { elementBehaviorPlugins } from "./element-behavior-plugin.js";
+import { paginationPlugin } from "./pagination/plugin.js";
 
 export interface ScriptEditorProps {
   initialDocument: ScreenplayDocument;
   /** Governs page geometry, spacing, and which element types auto-caps — defaults to the standard US feature profile. */
   profile?: FormatProfile;
   onChange?: (doc: ScreenplayDocument) => void;
+  /** When provided, pagination runs in this Web Worker and page-break decorations appear. The editor degrades gracefully if the worker dies. */
+  paginationWorker?: Worker;
 }
 
 const ELEMENT_LABELS: Record<BlockType, string> = {
@@ -41,7 +44,7 @@ const ELEMENT_LABELS: Record<BlockType, string> = {
  * switching — the mouse-driven equivalent of ⌘1–⌘9, not a replacement for
  * it, since the ticket's exit test is "zero mouse interactions required."
  */
-export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onChange }: ScriptEditorProps) {
+export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onChange, paginationWorker }: ScriptEditorProps) {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const viewRef = useRef<EditorView | null>(null);
   const onChangeRef = useRef(onChange);
@@ -53,7 +56,9 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
     if (!mount) return;
 
     const doc = toPmDoc(initialDocument.blocks.length > 0 ? initialDocument.blocks : [{ id: crypto.randomUUID(), type: "action", text: "", marks: [], attrs: {} }]);
-    const state = EditorState.create({ doc, plugins: elementBehaviorPlugins(profile) });
+    const plugins = elementBehaviorPlugins(profile);
+    if (paginationWorker) plugins.push(paginationPlugin(paginationWorker));
+    const state = EditorState.create({ doc, plugins });
 
     const view = new EditorView(mount, {
       state,
