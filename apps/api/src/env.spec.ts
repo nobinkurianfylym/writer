@@ -6,6 +6,8 @@ describe("api env validation", () => {
     const env = getApiEnv({
       DATABASE_URL: "postgresql://localhost:5432/fylym",
       REDIS_URL: "redis://localhost:6379",
+      JWT_PRIVATE_KEY: "test-private-key",
+      JWT_PUBLIC_KEY: "test-public-key",
     });
     expect(env.PORT).toBe(3001);
   });

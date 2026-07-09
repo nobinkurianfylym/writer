@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
 import { Logger } from "nestjs-pino";
+import cookieParser from "cookie-parser";
 import { loadDotEnvIfPresent, reportEnvErrorAndExit } from "@fylym/config/env";
 import { AppModule } from "./app.module";
 import { HttpErrorFilter } from "./filters/http-error.filter";
@@ -18,6 +19,7 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
   app.useLogger(app.get(Logger));
+  app.use(cookieParser());
   app.useGlobalFilters(new HttpErrorFilter());
 
   await app.listen(env.PORT);
