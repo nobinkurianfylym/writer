@@ -14,9 +14,9 @@ test("⌘F opens find bar and searches across document", async ({ page }) => {
   await page.waitForTimeout(200);
 
   const countText = await page.locator('[data-testid="find-count"]').textContent();
-  expect(countText).toMatch(/^\d+\/\d+$/);
-  const [, total] = countText!.match(/(\d+)\/(\d+)/) ?? [];
-  expect(parseInt(total!)).toBeGreaterThan(0);
+  expect(countText).toMatch(/^\d+ of \d+ matches$/);
+  const total = parseInt(countText!.match(/of (\d+)/)![1]!);
+  expect(total).toBeGreaterThan(0);
 });
 
 test("find element-type filter narrows results", async ({ page }) => {
@@ -29,13 +29,13 @@ test("find element-type filter narrows results", async ({ page }) => {
   await page.waitForTimeout(200);
 
   const allCount = await page.locator('[data-testid="find-count"]').textContent();
-  const allTotal = parseInt(allCount!.split("/")[1]!);
+  const allTotal = parseInt(allCount!.match(/of (\d+)/)![1]!);
 
   await page.locator('[data-testid="find-element-filter"]').selectOption("scene_heading");
   await page.waitForTimeout(200);
 
   const filteredCount = await page.locator('[data-testid="find-count"]').textContent();
-  const filteredTotal = parseInt(filteredCount!.split("/")[1]!);
+  const filteredTotal = parseInt(filteredCount!.match(/of (\d+)/)![1]!);
 
   expect(filteredTotal).toBeGreaterThan(0);
   expect(filteredTotal).toBeLessThanOrEqual(allTotal);
@@ -51,17 +51,17 @@ test("find next/prev navigates between matches", async ({ page }) => {
   await page.waitForTimeout(200);
 
   const firstCount = await page.locator('[data-testid="find-count"]').textContent();
-  expect(firstCount).toMatch(/^1\//);
+  expect(firstCount).toMatch(/^1 of /);
 
   await page.locator('[data-testid="find-next"]').click();
   await page.waitForTimeout(100);
   const secondCount = await page.locator('[data-testid="find-count"]').textContent();
-  expect(secondCount).toMatch(/^2\//);
+  expect(secondCount).toMatch(/^2 of /);
 
   await page.locator('[data-testid="find-prev"]').click();
   await page.waitForTimeout(100);
   const backCount = await page.locator('[data-testid="find-count"]').textContent();
-  expect(backCount).toMatch(/^1\//);
+  expect(backCount).toMatch(/^1 of /);
 });
 
 test("Enter advances match, Shift+Enter goes back", async ({ page }) => {
@@ -76,12 +76,12 @@ test("Enter advances match, Shift+Enter goes back", async ({ page }) => {
   await page.locator('[data-testid="find-input"]').press("Enter");
   await page.waitForTimeout(100);
   const after = await page.locator('[data-testid="find-count"]').textContent();
-  expect(after).toMatch(/^2\//);
+  expect(after).toMatch(/^2 of /);
 
   await page.locator('[data-testid="find-input"]').press("Shift+Enter");
   await page.waitForTimeout(100);
   const back = await page.locator('[data-testid="find-count"]').textContent();
-  expect(back).toMatch(/^1\//);
+  expect(back).toMatch(/^1 of /);
 });
 
 test("Escape closes find bar", async ({ page }) => {

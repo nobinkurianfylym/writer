@@ -79,6 +79,26 @@ export const BASE_EDITOR_CSS = `
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .script-editor,
+  .script-editor * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
 .script-editor-gutter {
   display: flex;
   align-items: center;
@@ -119,7 +139,7 @@ export const BASE_EDITOR_CSS = `
 .script-editor[data-theme="light"] {
   --editor-bg: hsl(0, 0%, 100%);
   --editor-fg: hsl(240, 10%, 10%);
-  --editor-gutter-fg: hsl(240, 4%, 46%);
+  --editor-gutter-fg: hsl(240, 4%, 42%);
   --editor-gutter-bg: transparent;
   --editor-border: hsl(240, 6%, 90%);
   --editor-caret: hsl(240, 10%, 10%);

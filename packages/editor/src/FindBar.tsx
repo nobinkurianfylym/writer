@@ -42,12 +42,15 @@ export function FindBar({
     inputRef.current?.focus();
   }, []);
 
+  const statusText = matchCount > 0 ? `${currentMatch + 1} of ${matchCount} matches` : "No results";
+
   return (
-    <div className="find-bar" data-testid="find-bar">
+    <div className="find-bar" role="search" aria-label="Find in document" data-testid="find-bar">
       <input
         ref={inputRef}
         data-testid="find-input"
         type="text"
+        aria-label="Search text"
         placeholder="Find..."
         value={query}
         onChange={(e) => onQueryChange(e.target.value)}
@@ -62,6 +65,7 @@ export function FindBar({
         }}
       />
       <select
+        aria-label="Filter by element type"
         data-testid="find-element-filter"
         value={elementFilter ?? ""}
         onChange={(e) =>
@@ -74,16 +78,16 @@ export function FindBar({
           </option>
         ))}
       </select>
-      <button data-testid="find-prev" onClick={onPrev}>
+      <button aria-label="Previous match" data-testid="find-prev" onClick={onPrev}>
         ▲
       </button>
-      <button data-testid="find-next" onClick={onNext}>
+      <button aria-label="Next match" data-testid="find-next" onClick={onNext}>
         ▼
       </button>
-      <span className="find-count" data-testid="find-count">
-        {matchCount > 0 ? `${currentMatch + 1}/${matchCount}` : "No results"}
+      <span className="find-count" role="status" aria-live="polite" data-testid="find-count">
+        {statusText}
       </span>
-      <button className="find-close" data-testid="find-close" onClick={onClose}>
+      <button aria-label="Close find" className="find-close" data-testid="find-close" onClick={onClose}>
         ✕
       </button>
     </div>

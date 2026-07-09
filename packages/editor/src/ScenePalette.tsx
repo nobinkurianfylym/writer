@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useId } from "react";
 import type { SceneEntry } from "./find-navigate.js";
 
 export interface ScenePaletteProps {
@@ -14,6 +14,7 @@ export function ScenePalette({ scenes, onSelect, onClose }: ScenePaletteProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  const listId = useId();
 
   const filtered = filter
     ? scenes.filter((s) => s.text.toLowerCase().includes(filter.toLowerCase()))
@@ -57,28 +58,42 @@ export function ScenePalette({ scenes, onSelect, onClose }: ScenePaletteProps) {
     [filtered, selectedIndex, onSelect, onClose],
   );
 
+  const activeDescendant = filtered[selectedIndex]
+    ? `${listId}-item-${filtered[selectedIndex]!.blockIndex}`
+    : undefined;
+
   return (
     <div
       className="scene-palette-overlay"
       data-testid="scene-palette-overlay"
+      role="presentation"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="scene-palette" data-testid="scene-palette">
+      <div className="scene-palette" role="dialog" aria-label="Jump to scene" data-testid="scene-palette">
         <input
           ref={inputRef}
           data-testid="scene-palette-input"
           type="text"
+          role="combobox"
+          aria-label="Filter scenes"
+          aria-expanded="true"
+          aria-controls={listId}
+          aria-activedescendant={activeDescendant}
+          aria-autocomplete="list"
           placeholder="Jump to scene..."
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <ul ref={listRef} className="scene-palette-list" data-testid="scene-palette-list">
+        <ul ref={listRef} id={listId} role="listbox" className="scene-palette-list" data-testid="scene-palette-list">
           {filtered.map((scene, i) => (
             <li
               key={scene.blockIndex}
+              id={`${listId}-item-${scene.blockIndex}`}
+              role="option"
+              aria-selected={i === selectedIndex}
               data-testid="scene-palette-item"
               data-selected={i === selectedIndex ? "true" : undefined}
               onClick={() => {
@@ -93,7 +108,7 @@ export function ScenePalette({ scenes, onSelect, onClose }: ScenePaletteProps) {
             </li>
           ))}
           {filtered.length === 0 && (
-            <li className="scene-palette-empty">No scenes found</li>
+            <li role="option" aria-disabled="true" className="scene-palette-empty">No scenes found</li>
           )}
         </ul>
       </div>

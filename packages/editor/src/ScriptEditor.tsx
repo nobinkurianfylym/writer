@@ -74,6 +74,7 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
   const [currentType, setCurrentType] = useState<BlockType>(initialDocument.blocks[0]?.type ?? "action");
+  const [announcement, setAnnouncement] = useState("");
 
   const [theme, setTheme] = useState<ThemeMode>(() => loadTheme());
   const [writingMode, setWritingMode] = useState<WritingMode>(() => loadWritingMode());
@@ -112,7 +113,15 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
         view.updateState(newState);
 
         const $from = newState.selection.$from;
-        if ($from.depth > 0) setCurrentType($from.node($from.depth).type.name as BlockType);
+        if ($from.depth > 0) {
+          const newType = $from.node($from.depth).type.name as BlockType;
+          setCurrentType((prev) => {
+            if (prev !== newType) {
+              setAnnouncement(`Now editing: ${ELEMENT_LABELS[newType]}`);
+            }
+            return newType;
+          });
+        }
 
         if (tr.docChanged) onChangeRef.current?.({ blocks: toBlocks(newState.doc) });
 
@@ -306,8 +315,8 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
     >
       <style>{BASE_EDITOR_CSS}</style>
       <style>{editorCSS}</style>
-      <div className="script-editor-gutter" data-testid="element-indicator">
-        <span data-testid="current-element-label">{ELEMENT_LABELS[currentType]}</span>
+      <div className="script-editor-gutter" role="toolbar" aria-label="Editor toolbar" data-testid="element-indicator">
+        <span data-testid="current-element-label" aria-hidden="true">{ELEMENT_LABELS[currentType]}</span>
         <select
           aria-label="Switch element type"
           data-testid="element-dropdown"
@@ -320,9 +329,9 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
             </option>
           ))}
         </select>
-        <div className="mode-toolbar" data-testid="mode-toolbar">
+        <div className="mode-toolbar" role="group" aria-label="Writing mode" data-testid="mode-toolbar">
           <select
-            aria-label="Theme"
+            aria-label="Color theme"
             data-testid="theme-select"
             value={theme}
             onChange={(e) => handleThemeChange(e.target.value as ThemeMode)}
@@ -335,6 +344,8 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
             <button
               key={m}
               type="button"
+              aria-label={`${MODE_LABELS[m]} mode`}
+              aria-pressed={writingMode === m}
               data-testid={`mode-${m}`}
               data-active={writingMode === m ? "true" : undefined}
               onClick={() => handleModeChange(m)}
@@ -343,6 +354,9 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
             </button>
           ))}
         </div>
+      </div>
+      <div className="sr-only" role="status" aria-live="polite" aria-atomic="true" data-testid="sr-announcement">
+        {announcement}
       </div>
       {findVisible && (
         <FindBar
@@ -357,7 +371,7 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
           onClose={handleFindClose}
         />
       )}
-      <div ref={mountRef} className="script-editor-content" data-testid="script-editor-content" />
+      <div ref={mountRef} className="script-editor-content" role="document" aria-label="Screenplay editor" data-testid="script-editor-content" />
       {scenePaletteVisible && (
         <ScenePalette
           scenes={scenes}
