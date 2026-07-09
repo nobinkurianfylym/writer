@@ -1,12 +1,14 @@
 "use client";
 
-import { ScriptEditor } from "@fylym/editor";
+import { ScriptEditor, VirtualizedScriptEditor } from "@fylym/editor";
 import type { Block, ScreenplayDocument } from "@fylym/screenplay-core";
 import { useEffect, useState } from "react";
 
 const EMPTY_DOCUMENT: ScreenplayDocument = {
   blocks: [{ id: "seed", type: "action", text: "", marks: [], attrs: {} }],
 };
+
+const VIRTUALIZATION_THRESHOLD = 5000;
 
 function generateLargeDoc(targetPages: number): ScreenplayDocument {
   const blocks: Block[] = [];
@@ -36,12 +38,15 @@ function generateLargeDoc(targetPages: number): ScreenplayDocument {
 }
 
 export default function EditorDevPage() {
-  const [state, setState] = useState<{ doc: ScreenplayDocument; worker: Worker | null } | null>(null);
+  const [state, setState] = useState<{ doc: ScreenplayDocument; worker: Worker | null; virtualized: boolean } | null>(
+    null,
+  );
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const pages = parseInt(params.get("pages") ?? "0", 10);
     const doc = pages > 0 ? generateLargeDoc(pages) : EMPTY_DOCUMENT;
+    const virtualized = doc.blocks.length > VIRTUALIZATION_THRESHOLD;
 
     let worker: Worker | null = null;
     try {
@@ -50,7 +55,7 @@ export default function EditorDevPage() {
       // Worker creation failed — editor degrades gracefully (no page indicators)
     }
 
-    setState({ doc, worker });
+    setState({ doc, worker, virtualized });
     return () => worker?.terminate();
   }, []);
 
@@ -66,7 +71,17 @@ export default function EditorDevPage() {
   return (
     <main className="mx-auto max-w-3xl px-6 py-12">
       <h1 className="mb-6 text-2xl font-semibold">Editor dev harness</h1>
-      <ScriptEditor initialDocument={state.doc} paginationWorker={state.worker ?? undefined} />
+      {state.virtualized ? (
+        <VirtualizedScriptEditor
+          initialDocument={state.doc}
+          paginationWorker={state.worker ?? undefined}
+        />
+      ) : (
+        <ScriptEditor
+          initialDocument={state.doc}
+          paginationWorker={state.worker ?? undefined}
+        />
+      )}
     </main>
   );
 }

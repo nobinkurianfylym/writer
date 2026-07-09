@@ -102,15 +102,17 @@ function blockAttrsFromNode(node: PMNode): BlockAttrs {
   return attrs;
 }
 
+/** Converts a single Block into its ProseMirror node representation. */
+export function toPmNode(block: Block): PMNode {
+  const nodeType = screenplaySchema.nodes[block.type];
+  if (!nodeType) throw new Error(`No schema node type registered for BlockType "${block.type}"`);
+  const content = splitIntoRuns(block.text, block.marks).map((run) => screenplaySchema.text(run.text, pmMarksForRun(run)));
+  return nodeType.create(nodeAttrsFromBlock(block), content);
+}
+
 /** Builds a ProseMirror document from a flat Block[] — the exact inverse of `toBlocks`. */
 export function toPmDoc(blocks: Block[]): PMNode {
-  const blockNodes = blocks.map((block) => {
-    const nodeType = screenplaySchema.nodes[block.type];
-    if (!nodeType) throw new Error(`No schema node type registered for BlockType "${block.type}"`);
-    const content = splitIntoRuns(block.text, block.marks).map((run) => screenplaySchema.text(run.text, pmMarksForRun(run)));
-    return nodeType.create(nodeAttrsFromBlock(block), content);
-  });
-  return screenplaySchema.nodes.doc!.create(null, blockNodes);
+  return screenplaySchema.nodes.doc!.create(null, blocks.map(toPmNode));
 }
 
 /** Reconstructs each text-node child's marks into a block's flat `MarkRange[]`, gluing adjacent identically-marked text nodes into one range. */
@@ -157,19 +159,16 @@ function blockTextAndMarks(node: PMNode): { text: string; marks: MarkRange[] } {
   return { text, marks };
 }
 
+/** Converts a single ProseMirror node back into a Block. */
+export function toBlock(node: PMNode): Block {
+  const { text, marks } = blockTextAndMarks(node);
+  const id = typeof node.attrs.id === "string" ? node.attrs.id : newId();
+  return { id, type: node.type.name as BlockType, text, marks, attrs: blockAttrsFromNode(node) };
+}
+
 /** Flattens a ProseMirror document back into a Block[] — the exact inverse of `toPmDoc`. */
 export function toBlocks(doc: PMNode): Block[] {
   const blocks: Block[] = [];
-  doc.forEach((node) => {
-    const { text, marks } = blockTextAndMarks(node);
-    const id = typeof node.attrs.id === "string" ? node.attrs.id : newId();
-    blocks.push({
-      id,
-      type: node.type.name as BlockType,
-      text,
-      marks,
-      attrs: blockAttrsFromNode(node),
-    });
-  });
+  doc.forEach((node) => blocks.push(toBlock(node)));
   return blocks;
 }

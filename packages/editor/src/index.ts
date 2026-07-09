@@ -1,5 +1,5 @@
 export { screenplaySchema } from "./schema.js";
-export { toPmDoc, toBlocks } from "./converters.js";
+export { toPmDoc, toPmNode, toBlocks, toBlock } from "./converters.js";
 export {
   transitionCommand,
   backspaceMergeCommand,
@@ -28,3 +28,6 @@ export {
 export { paginationKey, paginationPlugin, type PaginationPluginState } from "./pagination/plugin.js";
 export { createPaginationHandler } from "./pagination/worker-handler.js";
 export type { PaginateRequest, PaginateResponse } from "./pagination/protocol.js";
+export { VirtualizedScriptEditor, type VirtualizedScriptEditorProps } from "./VirtualizedScriptEditor.js";
+export { VirtualViewport } from "./virtualization/viewport.js";
+export { HeightCache, estimateBlockHeight } from "./virtualization/height-estimator.js";
