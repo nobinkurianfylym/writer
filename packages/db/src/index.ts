@@ -1,5 +1,20 @@
-/**
- * Prisma schema + generated client live here (E4-1). This placeholder
- * establishes the package boundary ahead of that ticket.
- */
-export const DB_PACKAGE_VERSION = "0.0.0";
+export { PrismaClient } from ".prisma/client";
+export { createPrismaClient } from "./client.js";
+export type {
+  User,
+  OAuthAccount,
+  Session,
+  Organization,
+  Membership,
+  Project,
+  ProjectCollaborator,
+  Script,
+  SceneIndex,
+  Snapshot,
+  AuditLog,
+  Plan,
+  OrgRole,
+  ProjectRole,
+  ScriptFormat,
+  SnapshotKind,
+} from ".prisma/client";

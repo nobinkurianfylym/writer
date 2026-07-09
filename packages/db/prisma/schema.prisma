@@ -1,0 +1,232 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ── Enums ─────────────────────────────────────────────────────────
+
+enum Plan {
+  FREE
+  PRO
+  STUDIO
+  ENTERPRISE
+}
+
+enum OrgRole {
+  OWNER
+  ADMIN
+  MEMBER
+  GUEST
+}
+
+enum ProjectRole {
+  OWNER
+  WRITER
+  EDITOR
+  COMMENTER
+  READER
+}
+
+enum ScriptFormat {
+  FEATURE
+  TV_ONE_HOUR
+  SITCOM
+  STAGE_PLAY
+  RADIO
+  PODCAST
+  ANIMATION
+  GAME
+  COMIC
+  DOCUMENTARY
+  COMMERCIAL
+  AUDIO_DRAMA
+}
+
+enum SnapshotKind {
+  AUTO
+  MANUAL
+  REVISION
+  LOCKED
+}
+
+// ── Identity & Tenancy ────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(uuid(7))
+  email         String    @unique
+  emailVerified DateTime?
+  name          String
+  passwordHash  String?
+  totpSecret    String?
+  locale        String    @default("en")
+
+  memberships   Membership[]
+  oauthAccounts OAuthAccount[]
+  sessions      Session[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OAuthAccount {
+  id         String @id @default(uuid(7))
+  userId     String
+  provider   String
+  providerId String
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerId])
+}
+
+model Session {
+  id          String    @id @default(uuid(7))
+  userId      String
+  familyId    String
+  hashedToken String    @unique
+  ip          String?
+  userAgent   String?
+  expiresAt   DateTime
+  revokedAt   DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, familyId])
+}
+
+model Organization {
+  id                   String @id @default(uuid(7))
+  name                 String
+  slug                 String @unique
+  plan                 Plan   @default(FREE)
+  stripeCustomerId     String? @unique
+  stripeSubscriptionId String?
+  seatLimit            Int    @default(1)
+
+  memberships Membership[]
+  projects    Project[]
+  auditLogs   AuditLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Membership {
+  id     String  @id @default(uuid(7))
+  userId String
+  orgId  String
+  role   OrgRole
+
+  user User         @relation(fields: [userId], references: [id])
+  org  Organization @relation(fields: [orgId], references: [id])
+
+  @@unique([userId, orgId])
+}
+
+// ── Story Domain ──────────────────────────────────────────────────
+
+model Project {
+  id      String       @id @default(uuid(7))
+  orgId   String
+  title   String
+  logline String?
+  genre   String[]
+  format  ScriptFormat
+
+  org           Organization          @relation(fields: [orgId], references: [id])
+  scripts       Script[]
+  collaborators ProjectCollaborator[]
+
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model ProjectCollaborator {
+  id        String      @id @default(uuid(7))
+  projectId String
+  userId    String
+  role      ProjectRole
+
+  project Project @relation(fields: [projectId], references: [id])
+
+  @@unique([projectId, userId])
+}
+
+model Script {
+  id            String  @id @default(uuid(7))
+  projectId     String
+  title         String
+  branchOfId    String?
+  formatProfile String  @default("us-feature")
+  revisionColor String?
+  pagesLocked   Boolean @default(false)
+  ydocState     Bytes?
+  ydocVector    Bytes?
+
+  project   Project      @relation(fields: [projectId], references: [id])
+  scenes    SceneIndex[]
+  snapshots Snapshot[]
+
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model SceneIndex {
+  id           String  @id
+  scriptId     String
+  position     Int
+  heading      String
+  intExt       String?
+  locationId   String?
+  timeOfDay    String?
+  sceneNumber  String?
+  pageStart    Decimal?
+  pageEnd      Decimal?
+  wordCount    Int     @default(0)
+  characterIds String[]
+  status       String?
+  color        String?
+
+  script Script @relation(fields: [scriptId], references: [id])
+
+  @@index([scriptId, position])
+}
+
+model Snapshot {
+  id          String       @id @default(uuid(7))
+  scriptId    String
+  label       String?
+  kind        SnapshotKind
+  ydocState   Bytes
+  pdfKey      String?
+  createdById String
+
+  createdAt DateTime @default(now())
+  script    Script   @relation(fields: [scriptId], references: [id])
+
+  @@index([scriptId, createdAt])
+}
+
+// ── Audit ─────────────────────────────────────────────────────────
+
+model AuditLog {
+  id       BigInt   @id @default(autoincrement())
+  orgId    String
+  actorId  String?
+  action   String
+  target   String?
+  ip       String?
+  metadata Json?
+  prevHash Bytes?
+  hash     Bytes
+
+  createdAt DateTime     @default(now())
+  org       Organization @relation(fields: [orgId], references: [id])
+
+  @@index([orgId, createdAt])
+}

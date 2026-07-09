@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { DB_PACKAGE_VERSION } from "./index.js";
+import { PrismaClient } from "./index.js";
 
 describe("db package boundary", () => {
-  it("exports a version", () => {
-    expect(DB_PACKAGE_VERSION).toBe("0.0.0");
+  it("exports PrismaClient constructor", () => {
+    expect(PrismaClient).toBeDefined();
+    expect(typeof PrismaClient).toBe("function");
   });
 });
