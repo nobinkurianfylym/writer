@@ -32,3 +32,5 @@ export { VirtualizedScriptEditor, type VirtualizedScriptEditorProps } from "./Vi
 export { VirtualViewport } from "./virtualization/viewport.js";
 export { HeightCache, estimateBlockHeight } from "./virtualization/height-estimator.js";
 export { TitlePageEditor, type TitlePageEditorProps } from "./TitlePageEditor.js";
+export { generateEditorCSS, BASE_EDITOR_CSS, type WritingMode, type ThemeMode } from "./editor-styles.js";
+export { focusModePlugin, focusModeKey, FOCUS_MODE_META, loadTheme, saveTheme, loadWritingMode, saveWritingMode } from "./writing-modes.js";

@@ -2,19 +2,28 @@
 
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { usFeatureProfile, type BlockType, type FormatProfile, type ScreenplayDocument } from "@fylym/screenplay-core";
 import { EXPLICIT_SWITCH_ORDER, switchElementCommand } from "./commands.js";
 import { toBlocks, toPmDoc } from "./converters.js";
 import { elementBehaviorPlugins } from "./element-behavior-plugin.js";
 import { paginationPlugin } from "./pagination/plugin.js";
+import { generateEditorCSS, BASE_EDITOR_CSS, type WritingMode, type ThemeMode } from "./editor-styles.js";
+import {
+  focusModePlugin,
+  FOCUS_MODE_META,
+  loadTheme,
+  saveTheme,
+  loadWritingMode,
+  saveWritingMode,
+  resolveThemeAttr,
+  scrollCursorToCenter,
+} from "./writing-modes.js";
 
 export interface ScriptEditorProps {
   initialDocument: ScreenplayDocument;
-  /** Governs page geometry, spacing, and which element types auto-caps — defaults to the standard US feature profile. */
   profile?: FormatProfile;
   onChange?: (doc: ScreenplayDocument) => void;
-  /** When provided, pagination runs in this Web Worker and page-break decorations appear. The editor degrades gracefully if the worker dies. */
   paginationWorker?: Worker;
 }
 
@@ -36,14 +45,19 @@ const ELEMENT_LABELS: Record<BlockType, string> = {
   title_page: "Title Page",
 };
 
-/**
- * The framework-thin screenplay editor (§Epic E2). Mounts a ProseMirror
- * `EditorView` with the full E2-2 element-behavior bundle (Tab/Enter,
- * Backspace-merge, ⌘1–⌘9, smart-type, auto-caps) and renders a gutter
- * showing the current block's element type plus a dropdown for explicit
- * switching — the mouse-driven equivalent of ⌘1–⌘9, not a replacement for
- * it, since the ticket's exit test is "zero mouse interactions required."
- */
+const THEME_LABELS: Record<ThemeMode, string> = {
+  system: "Auto",
+  light: "Light",
+  dark: "Dark",
+};
+
+const MODE_LABELS: Record<WritingMode, string> = {
+  normal: "Normal",
+  focus: "Focus",
+  typewriter: "Typewriter",
+  zen: "Zen",
+};
+
 export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onChange, paginationWorker }: ScriptEditorProps) {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const viewRef = useRef<EditorView | null>(null);
@@ -51,12 +65,21 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
   onChangeRef.current = onChange;
   const [currentType, setCurrentType] = useState<BlockType>(initialDocument.blocks[0]?.type ?? "action");
 
+  const [theme, setTheme] = useState<ThemeMode>(() => loadTheme());
+  const [writingMode, setWritingMode] = useState<WritingMode>(() => loadWritingMode());
+
+  const editorCSS = useMemo(() => generateEditorCSS(profile), [profile]);
+
+  const writingModeRef = useRef(writingMode);
+  writingModeRef.current = writingMode;
+
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
 
     const doc = toPmDoc(initialDocument.blocks.length > 0 ? initialDocument.blocks : [{ id: crypto.randomUUID(), type: "action", text: "", marks: [], attrs: {} }]);
     const plugins = elementBehaviorPlugins(profile);
+    plugins.push(focusModePlugin());
     if (paginationWorker) plugins.push(paginationPlugin(paginationWorker));
     const state = EditorState.create({ doc, plugins });
 
@@ -70,19 +93,63 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
         if ($from.depth > 0) setCurrentType($from.node($from.depth).type.name as BlockType);
 
         if (tr.docChanged) onChangeRef.current?.({ blocks: toBlocks(newState.doc) });
+
+        if (writingModeRef.current === "typewriter" && (tr.selectionSet || tr.docChanged)) {
+          requestAnimationFrame(() => {
+            scrollCursorToCenter(mount);
+          });
+        }
       },
     });
     viewRef.current = view;
+
+    if (writingModeRef.current === "focus") {
+      const initTr = view.state.tr.setMeta(FOCUS_MODE_META, true);
+      view.dispatch(initTr);
+    }
 
     return () => {
       view.destroy();
       viewRef.current = null;
     };
-    // Mounts once; initialDocument/profile are only read at mount time —
-    // this is an uncontrolled component (like a plain <textarea defaultValue>),
-    // matching how every ProseMirror-in-React integration works.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleThemeChange = useCallback((t: ThemeMode) => {
+    setTheme(t);
+    saveTheme(t);
+  }, []);
+
+  const handleModeChange = useCallback((m: WritingMode) => {
+    setWritingMode(m);
+    saveWritingMode(m);
+
+    const view = viewRef.current;
+    if (view) {
+      const tr = view.state.tr.setMeta(FOCUS_MODE_META, m === "focus");
+      view.dispatch(tr);
+    }
+
+    if (m === "zen") {
+      document.documentElement.requestFullscreen?.().catch(() => {});
+    } else {
+      if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
+    }
+
+    if (view) {
+      requestAnimationFrame(() => view.focus());
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && writingMode === "zen") {
+        handleModeChange("normal");
+      }
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [writingMode, handleModeChange]);
 
   function handleSwitch(type: BlockType): void {
     const view = viewRef.current;
@@ -91,8 +158,17 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
     view.focus();
   }
 
+  const themeAttr = resolveThemeAttr(theme);
+
   return (
-    <div className="script-editor" data-testid="script-editor">
+    <div
+      className="script-editor"
+      data-testid="script-editor"
+      data-theme={themeAttr}
+      data-writing-mode={writingMode}
+    >
+      <style>{BASE_EDITOR_CSS}</style>
+      <style>{editorCSS}</style>
       <div className="script-editor-gutter" data-testid="element-indicator">
         <span data-testid="current-element-label">{ELEMENT_LABELS[currentType]}</span>
         <select
@@ -107,6 +183,29 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
             </option>
           ))}
         </select>
+        <div className="mode-toolbar" data-testid="mode-toolbar">
+          <select
+            aria-label="Theme"
+            data-testid="theme-select"
+            value={theme}
+            onChange={(e) => handleThemeChange(e.target.value as ThemeMode)}
+          >
+            {(Object.keys(THEME_LABELS) as ThemeMode[]).map((t) => (
+              <option key={t} value={t}>{THEME_LABELS[t]}</option>
+            ))}
+          </select>
+          {(Object.keys(MODE_LABELS) as WritingMode[]).map((m) => (
+            <button
+              key={m}
+              type="button"
+              data-testid={`mode-${m}`}
+              data-active={writingMode === m ? "true" : undefined}
+              onClick={() => handleModeChange(m)}
+            >
+              {MODE_LABELS[m]}
+            </button>
+          ))}
+        </div>
       </div>
       <div ref={mountRef} className="script-editor-content" data-testid="script-editor-content" />
     </div>
