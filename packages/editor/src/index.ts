@@ -62,3 +62,13 @@ export {
   type ScriptYDoc,
   type CreateScriptYDocOptions,
 } from "./yjs-binding.js";
+export {
+  createScriptPersistence,
+  clearScriptStorage,
+  hydrateFromIdb,
+  dbNameForScript,
+  type ScriptPersistence,
+  type CreatePersistenceOptions,
+  type PersistenceStatus,
+  type StoragePressureWarning,
+} from "./idb-persistence.js";
