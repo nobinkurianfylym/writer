@@ -3,13 +3,23 @@
 import type { Node as PMNode } from "prosemirror-model";
 import { EditorState, Plugin, PluginKey, TextSelection, type Transaction } from "prosemirror-state";
 import { Decoration, DecorationSet, EditorView } from "prosemirror-view";
-import { useEffect, useRef, useState } from "react";
-import type { Block, FormatProfile, PageMap, ScreenplayDocument } from "@fylym/screenplay-core";
+import { useEffect, useRef, useState, useMemo } from "react";
+import type { Block, BlockType, FormatProfile, PageMap, ScreenplayDocument } from "@fylym/screenplay-core";
 import { usFeatureProfile } from "@fylym/screenplay-core";
 import { elementBehaviorPlugins } from "./element-behavior-plugin.js";
 import type { PaginateRequest, PaginateResponse } from "./pagination/protocol.js";
 import { screenplaySchema } from "./schema.js";
 import { VirtualViewport } from "./virtualization/viewport.js";
+import {
+  findInBlocks,
+  listSceneHeadings,
+  findHighlightPlugin,
+  buildFindDecorations,
+  FIND_HIGHLIGHTS_META,
+  type FindMatch,
+} from "./find-navigate.js";
+import { FindBar } from "./FindBar.js";
+import { ScenePalette } from "./ScenePalette.js";
 
 export interface VirtualizedScriptEditorProps {
   initialDocument: ScreenplayDocument;
@@ -150,12 +160,6 @@ function virtualDecoPlugin(): Plugin<DecorationSet> {
   });
 }
 
-interface FindMatch {
-  blockIndex: number;
-  charStart: number;
-  charEnd: number;
-}
-
 interface EditorHandle {
   vp: VirtualViewport;
   view: EditorView;
@@ -213,8 +217,13 @@ function doScrollToBlock(h: EditorHandle, blockIndex: number): void {
   h.scrollEl.scrollTop = targetOffset;
 }
 
-function doHighlightMatch(h: EditorHandle, match: FindMatch): void {
+function doHighlightMatch(h: EditorHandle, match: FindMatch, allMatches: FindMatch[], currentIndex: number): void {
   requestAnimationFrame(() => {
+    const decos = buildFindDecorations(h.view.state.doc, allMatches, currentIndex, h.vp.range.start);
+    const tr = h.view.state.tr.setMeta(FIND_HIGHLIGHTS_META, decos);
+    tr.setMeta("addToHistory", false);
+    h.view.dispatch(tr);
+
     const pmIndex = match.blockIndex - h.vp.range.start;
     if (pmIndex < 0 || pmIndex >= h.view.state.doc.childCount) return;
     let pos = 0;
@@ -247,9 +256,11 @@ export function VirtualizedScriptEditor({
 
   const [findVisible, setFindVisible] = useState(false);
   const [findQuery, setFindQuery] = useState("");
+  const [findElementFilter, setFindElementFilter] = useState<BlockType | null>(null);
   const [findMatches, setFindMatches] = useState<FindMatch[]>([]);
   const [findCurrent, setFindCurrent] = useState(0);
-  const findInputRef = useRef<HTMLInputElement | null>(null);
+
+  const [scenePaletteVisible, setScenePaletteVisible] = useState(false);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -270,6 +281,7 @@ export function VirtualizedScriptEditor({
 
     const plugins = elementBehaviorPlugins(profile);
     plugins.push(virtualDecoPlugin());
+    plugins.push(findHighlightPlugin());
     const state = EditorState.create({ doc, plugins });
 
     const h: EditorHandle = {
@@ -333,7 +345,7 @@ export function VirtualizedScriptEditor({
       sendPagination();
     }
 
-    // Scroll — throttled to one update per frame via rAF with setTimeout fallback
+    // Scroll
     let scrollPending = false;
     const onScroll = () => {
       if (scrollPending) return;
@@ -350,14 +362,15 @@ export function VirtualizedScriptEditor({
     };
     scroll.addEventListener("scroll", onScroll, { passive: true });
 
-    // ⌘F intercept
+    // ⌘F / ⌘K intercept
     const onKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "f") {
         e.preventDefault();
-        setFindVisible((v) => {
-          if (!v) setTimeout(() => findInputRef.current?.focus(), 0);
-          return !v;
-        });
+        setFindVisible((v) => !v);
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setScenePaletteVisible((v) => !v);
       }
     };
     document.addEventListener("keydown", onKeyDown);
@@ -373,33 +386,26 @@ export function VirtualizedScriptEditor({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Run find when query changes
   useEffect(() => {
     const h = handleRef.current;
     if (!h || !findQuery) {
       setFindMatches([]);
       setFindCurrent(0);
+      if (h) {
+        const tr = h.view.state.tr.setMeta(FIND_HIGHLIGHTS_META, undefined);
+        tr.setMeta("addToHistory", false);
+        h.view.dispatch(tr);
+      }
       return;
     }
-    const lower = findQuery.toLowerCase();
-    const matches: FindMatch[] = [];
-    for (let i = 0; i < h.vp.blocks.length; i++) {
-      const text = h.vp.blocks[i]!.text.toLowerCase();
-      let pos = 0;
-      while (pos < text.length) {
-        const idx = text.indexOf(lower, pos);
-        if (idx === -1) break;
-        matches.push({ blockIndex: i, charStart: idx, charEnd: idx + findQuery.length });
-        pos = idx + 1;
-      }
-    }
+    const matches = findInBlocks(h.vp.blocks, findQuery, findElementFilter);
     setFindMatches(matches);
     setFindCurrent(0);
     if (matches.length > 0) {
       doScrollToBlock(h, matches[0]!.blockIndex);
-      doHighlightMatch(h, matches[0]!);
+      doHighlightMatch(h, matches[0]!, matches, 0);
     }
-  }, [findQuery]);
+  }, [findQuery, findElementFilter]);
 
   function navigateMatch(delta: number): void {
     const h = handleRef.current;
@@ -408,15 +414,48 @@ export function VirtualizedScriptEditor({
     setFindCurrent(next);
     const match = findMatches[next]!;
     doScrollToBlock(h, match.blockIndex);
-    doHighlightMatch(h, match);
+    doHighlightMatch(h, match, findMatches, next);
   }
 
   function closeFind(): void {
     setFindVisible(false);
     setFindQuery("");
+    setFindElementFilter(null);
     setFindMatches([]);
-    handleRef.current?.view.focus();
+    setFindCurrent(0);
+    const h = handleRef.current;
+    if (h) {
+      const tr = h.view.state.tr.setMeta(FIND_HIGHLIGHTS_META, undefined);
+      tr.setMeta("addToHistory", false);
+      h.view.dispatch(tr);
+      h.view.focus();
+    }
   }
+
+  function handleSceneSelect(blockIndex: number): void {
+    const h = handleRef.current;
+    if (!h) return;
+    doScrollToBlock(h, blockIndex);
+    requestAnimationFrame(() => {
+      const pmIndex = blockIndex - h.vp.range.start;
+      if (pmIndex < 0 || pmIndex >= h.view.state.doc.childCount) return;
+      let pos = 0;
+      for (let i = 0; i < pmIndex; i++) pos += h.view.state.doc.child(i).nodeSize;
+      try {
+        const sel = TextSelection.create(h.view.state.doc, pos + 1);
+        h.view.dispatch(h.view.state.tr.setSelection(sel).scrollIntoView());
+        h.view.focus();
+      } catch {
+        // position out of range
+      }
+    });
+  }
+
+  const scenes = useMemo(() => {
+    const h = handleRef.current;
+    if (!h) return [];
+    return listSceneHeadings(h.vp.blocks);
+  }, [scenePaletteVisible]);
 
   return (
     <div className="script-editor virtualized" data-testid="script-editor">
@@ -427,55 +466,32 @@ export function VirtualizedScriptEditor({
         style={{ position: "relative", height: "80vh", overflow: "auto" }}
       >
         {findVisible && (
-          <div
-            data-testid="find-bar"
-            style={{
-              display: "flex",
-              position: "sticky",
-              top: 0,
-              zIndex: 10,
-              background: "#fff",
-              borderBottom: "1px solid #ddd",
-              padding: "4px 8px",
-              alignItems: "center",
-              gap: "4px",
-            }}
-          >
-            <input
-              ref={findInputRef}
-              data-testid="find-input"
-              type="text"
-              placeholder="Find..."
-              value={findQuery}
-              onChange={(e) => setFindQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") { e.preventDefault(); navigateMatch(e.shiftKey ? -1 : 1); }
-                else if (e.key === "Escape") { e.preventDefault(); closeFind(); }
-              }}
-              style={{ padding: "2px 6px", fontSize: "13px", minWidth: "200px" }}
-            />
-            <button data-testid="find-prev" onClick={() => navigateMatch(-1)} style={{ fontSize: "12px", padding: "2px 6px" }}>
-              ▲
-            </button>
-            <button data-testid="find-next" onClick={() => navigateMatch(1)} style={{ fontSize: "12px", padding: "2px 6px" }}>
-              ▼
-            </button>
-            <span data-testid="find-count" style={{ fontSize: "12px", color: "#888", marginLeft: "4px" }}>
-              {findMatches.length > 0 ? `${findCurrent + 1}/${findMatches.length}` : "No results"}
-            </span>
-            <button
-              data-testid="find-close"
-              onClick={closeFind}
-              style={{ fontSize: "12px", padding: "2px 6px", marginLeft: "auto" }}
-            >
-              ✕
-            </button>
-          </div>
+          <FindBar
+            query={findQuery}
+            onQueryChange={setFindQuery}
+            elementFilter={findElementFilter}
+            onElementFilterChange={setFindElementFilter}
+            matchCount={findMatches.length}
+            currentMatch={findCurrent}
+            onPrev={() => navigateMatch(-1)}
+            onNext={() => navigateMatch(1)}
+            onClose={closeFind}
+          />
         )}
         <div ref={topSpacerRef} data-testid="spacer-top" style={{ height: 0 }} />
         <div ref={mountRef} className="script-editor-content" data-testid="script-editor-content" />
         <div ref={bottomSpacerRef} data-testid="spacer-bottom" style={{ height: 0 }} />
       </div>
+      {scenePaletteVisible && (
+        <ScenePalette
+          scenes={scenes}
+          onSelect={handleSceneSelect}
+          onClose={() => {
+            setScenePaletteVisible(false);
+            handleRef.current?.view.focus();
+          }}
+        />
+      )}
     </div>
   );
 }

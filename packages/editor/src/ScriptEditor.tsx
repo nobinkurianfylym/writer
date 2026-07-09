@@ -1,6 +1,6 @@
 "use client";
 
-import { EditorState } from "prosemirror-state";
+import { EditorState, TextSelection } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { usFeatureProfile, type BlockType, type FormatProfile, type ScreenplayDocument } from "@fylym/screenplay-core";
@@ -19,6 +19,16 @@ import {
   resolveThemeAttr,
   scrollCursorToCenter,
 } from "./writing-modes.js";
+import {
+  findInBlocks,
+  listSceneHeadings,
+  findHighlightPlugin,
+  buildFindDecorations,
+  FIND_HIGHLIGHTS_META,
+  type FindMatch,
+} from "./find-navigate.js";
+import { FindBar } from "./FindBar.js";
+import { ScenePalette } from "./ScenePalette.js";
 
 export interface ScriptEditorProps {
   initialDocument: ScreenplayDocument;
@@ -68,10 +78,21 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
   const [theme, setTheme] = useState<ThemeMode>(() => loadTheme());
   const [writingMode, setWritingMode] = useState<WritingMode>(() => loadWritingMode());
 
+  const [findVisible, setFindVisible] = useState(false);
+  const [findQuery, setFindQuery] = useState("");
+  const [findElementFilter, setFindElementFilter] = useState<BlockType | null>(null);
+  const [findMatches, setFindMatches] = useState<FindMatch[]>([]);
+  const [findCurrent, setFindCurrent] = useState(0);
+
+  const [scenePaletteVisible, setScenePaletteVisible] = useState(false);
+
   const editorCSS = useMemo(() => generateEditorCSS(profile), [profile]);
 
   const writingModeRef = useRef(writingMode);
   writingModeRef.current = writingMode;
+
+  const findStateRef = useRef({ query: findQuery, filter: findElementFilter, matches: findMatches, current: findCurrent });
+  findStateRef.current = { query: findQuery, filter: findElementFilter, matches: findMatches, current: findCurrent };
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -80,6 +101,7 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
     const doc = toPmDoc(initialDocument.blocks.length > 0 ? initialDocument.blocks : [{ id: crypto.randomUUID(), type: "action", text: "", marks: [], attrs: {} }]);
     const plugins = elementBehaviorPlugins(profile);
     plugins.push(focusModePlugin());
+    plugins.push(findHighlightPlugin());
     if (paginationWorker) plugins.push(paginationPlugin(paginationWorker));
     const state = EditorState.create({ doc, plugins });
 
@@ -115,6 +137,99 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const view = viewRef.current;
+    if (!view) return;
+
+    if (!findQuery) {
+      setFindMatches([]);
+      setFindCurrent(0);
+      const tr = view.state.tr.setMeta(FIND_HIGHLIGHTS_META, undefined);
+      tr.setMeta("addToHistory", false);
+      view.dispatch(tr);
+      return;
+    }
+
+    const blocks = toBlocks(view.state.doc);
+    const matches = findInBlocks(blocks, findQuery, findElementFilter);
+    setFindMatches(matches);
+    const current = 0;
+    setFindCurrent(current);
+
+    const decos = buildFindDecorations(view.state.doc, matches, current);
+    const tr = view.state.tr.setMeta(FIND_HIGHLIGHTS_META, decos);
+    tr.setMeta("addToHistory", false);
+    view.dispatch(tr);
+
+    if (matches.length > 0) {
+      navigateToMatch(view, matches[0]!);
+    }
+  }, [findQuery, findElementFilter]);
+
+  function navigateToMatch(view: EditorView, match: FindMatch): void {
+    let pos = 0;
+    for (let j = 0; j < match.blockIndex; j++) {
+      pos += view.state.doc.child(j).nodeSize;
+    }
+    const from = pos + 1 + match.charStart;
+    const to = pos + 1 + match.charEnd;
+    try {
+      const sel = TextSelection.create(view.state.doc, from, to);
+      const tr = view.state.tr.setSelection(sel).scrollIntoView();
+      tr.setMeta("addToHistory", false);
+      view.dispatch(tr);
+    } catch {
+      // position out of range
+    }
+  }
+
+  function handleFindNavigate(delta: number): void {
+    const view = viewRef.current;
+    if (!view || findMatches.length === 0) return;
+    const next = ((findCurrent + delta) % findMatches.length + findMatches.length) % findMatches.length;
+    setFindCurrent(next);
+
+    const decos = buildFindDecorations(view.state.doc, findMatches, next);
+    const tr = view.state.tr.setMeta(FIND_HIGHLIGHTS_META, decos);
+    tr.setMeta("addToHistory", false);
+    view.dispatch(tr);
+
+    navigateToMatch(view, findMatches[next]!);
+  }
+
+  function handleFindClose(): void {
+    setFindVisible(false);
+    setFindQuery("");
+    setFindElementFilter(null);
+    setFindMatches([]);
+    setFindCurrent(0);
+    const view = viewRef.current;
+    if (view) {
+      const tr = view.state.tr.setMeta(FIND_HIGHLIGHTS_META, undefined);
+      tr.setMeta("addToHistory", false);
+      view.dispatch(tr);
+      view.focus();
+    }
+  }
+
+  function handleSceneSelect(blockIndex: number): void {
+    const view = viewRef.current;
+    if (!view) return;
+    let pos = 0;
+    for (let j = 0; j < blockIndex && j < view.state.doc.childCount; j++) {
+      pos += view.state.doc.child(j).nodeSize;
+    }
+    try {
+      const sel = TextSelection.create(view.state.doc, pos + 1);
+      const tr = view.state.tr.setSelection(sel).scrollIntoView();
+      tr.setMeta("addToHistory", false);
+      view.dispatch(tr);
+      view.focus();
+    } catch {
+      // position out of range
+    }
+  }
+
   const handleThemeChange = useCallback((t: ThemeMode) => {
     setTheme(t);
     saveTheme(t);
@@ -145,6 +260,22 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && writingMode === "zen") {
         handleModeChange("normal");
+        return;
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === "f") {
+        e.preventDefault();
+        setFindVisible((v) => {
+          if (v) {
+            handleFindClose();
+            return false;
+          }
+          return true;
+        });
+        return;
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setScenePaletteVisible((v) => !v);
       }
     };
     document.addEventListener("keydown", handleKey);
@@ -157,6 +288,12 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
     switchElementCommand(type)(view.state, view.dispatch);
     view.focus();
   }
+
+  const scenes = useMemo(() => {
+    const view = viewRef.current;
+    if (!view) return [];
+    return listSceneHeadings(toBlocks(view.state.doc));
+  }, [scenePaletteVisible]);
 
   const themeAttr = resolveThemeAttr(theme);
 
@@ -207,7 +344,30 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
           ))}
         </div>
       </div>
+      {findVisible && (
+        <FindBar
+          query={findQuery}
+          onQueryChange={setFindQuery}
+          elementFilter={findElementFilter}
+          onElementFilterChange={setFindElementFilter}
+          matchCount={findMatches.length}
+          currentMatch={findCurrent}
+          onPrev={() => handleFindNavigate(-1)}
+          onNext={() => handleFindNavigate(1)}
+          onClose={handleFindClose}
+        />
+      )}
       <div ref={mountRef} className="script-editor-content" data-testid="script-editor-content" />
+      {scenePaletteVisible && (
+        <ScenePalette
+          scenes={scenes}
+          onSelect={handleSceneSelect}
+          onClose={() => {
+            setScenePaletteVisible(false);
+            viewRef.current?.focus();
+          }}
+        />
+      )}
     </div>
   );
 }

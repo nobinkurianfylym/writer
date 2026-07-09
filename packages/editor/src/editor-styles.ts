@@ -193,4 +193,151 @@ export const BASE_EDITOR_CSS = `
   color: var(--editor-bg, hsl(var(--background)));
   border-color: transparent;
 }
+
+.find-match {
+  background: rgba(255, 213, 0, 0.4);
+  border-radius: 1px;
+}
+
+.find-match-current {
+  background: rgba(255, 150, 0, 0.6);
+  outline: 1px solid rgba(255, 120, 0, 0.8);
+}
+
+@media (prefers-color-scheme: dark) {
+  .script-editor:not([data-theme="light"]) .find-match {
+    background: rgba(255, 213, 0, 0.25);
+  }
+  .script-editor:not([data-theme="light"]) .find-match-current {
+    background: rgba(255, 150, 0, 0.45);
+    outline-color: rgba(255, 120, 0, 0.6);
+  }
+}
+
+.script-editor[data-theme="dark"] .find-match {
+  background: rgba(255, 213, 0, 0.25);
+}
+.script-editor[data-theme="dark"] .find-match-current {
+  background: rgba(255, 150, 0, 0.45);
+  outline-color: rgba(255, 120, 0, 0.6);
+}
+
+.find-bar {
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--editor-bg, hsl(var(--background)));
+  border-bottom: 1px solid var(--editor-border, hsl(var(--border)));
+  padding: 4px 8px;
+  align-items: center;
+  gap: 4px;
+}
+
+.find-bar input,
+.find-bar select {
+  padding: 2px 6px;
+  font-size: 13px;
+  border: 1px solid var(--editor-border, hsl(var(--border)));
+  border-radius: 4px;
+  background: var(--editor-bg, hsl(var(--background)));
+  color: var(--editor-fg, hsl(var(--foreground)));
+}
+
+.find-bar input { min-width: 180px; }
+
+.find-bar button {
+  font-size: 12px;
+  padding: 2px 6px;
+  border: 1px solid var(--editor-border, hsl(var(--border)));
+  border-radius: 4px;
+  background: transparent;
+  color: var(--editor-fg, hsl(var(--foreground)));
+  cursor: pointer;
+}
+
+.find-bar button:hover {
+  background: var(--editor-border, hsl(var(--border)));
+}
+
+.find-bar .find-count {
+  font-size: 12px;
+  color: var(--editor-gutter-fg, hsl(var(--muted-foreground)));
+  margin-left: 4px;
+  white-space: nowrap;
+}
+
+.find-bar .find-close {
+  margin-left: auto;
+}
+
+.scene-palette-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  padding-top: 15vh;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.scene-palette {
+  width: 440px;
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+  background: var(--editor-bg, hsl(var(--background)));
+  border: 1px solid var(--editor-border, hsl(var(--border)));
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  align-self: flex-start;
+}
+
+.scene-palette input {
+  padding: 10px 14px;
+  font-size: 14px;
+  border: none;
+  border-bottom: 1px solid var(--editor-border, hsl(var(--border)));
+  background: transparent;
+  color: var(--editor-fg, hsl(var(--foreground)));
+  outline: none;
+}
+
+.scene-palette-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.scene-palette-list li {
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--editor-fg, hsl(var(--foreground)));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scene-palette-list li[data-selected="true"] {
+  background: var(--editor-border, hsl(var(--border)));
+}
+
+.scene-palette-list li:hover {
+  background: var(--editor-border, hsl(var(--border)));
+}
+
+.scene-palette-list .scene-palette-empty {
+  color: var(--editor-gutter-fg, hsl(var(--muted-foreground)));
+  cursor: default;
+}
+
+.scene-palette-list .scene-number {
+  color: var(--editor-gutter-fg, hsl(var(--muted-foreground)));
+  margin-right: 8px;
+  font-size: 12px;
+}
 `;

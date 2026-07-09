@@ -34,3 +34,15 @@ export { HeightCache, estimateBlockHeight } from "./virtualization/height-estima
 export { TitlePageEditor, type TitlePageEditorProps } from "./TitlePageEditor.js";
 export { generateEditorCSS, BASE_EDITOR_CSS, type WritingMode, type ThemeMode } from "./editor-styles.js";
 export { focusModePlugin, focusModeKey, FOCUS_MODE_META, loadTheme, saveTheme, loadWritingMode, saveWritingMode } from "./writing-modes.js";
+export {
+  findInBlocks,
+  listSceneHeadings,
+  findHighlightPlugin,
+  findHighlightKey,
+  buildFindDecorations,
+  FIND_HIGHLIGHTS_META,
+  type FindMatch,
+  type SceneEntry,
+} from "./find-navigate.js";
+export { FindBar, type FindBarProps } from "./FindBar.js";
+export { ScenePalette, type ScenePaletteProps } from "./ScenePalette.js";
