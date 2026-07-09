@@ -72,3 +72,13 @@ export {
   type PersistenceStatus,
   type StoragePressureWarning,
 } from "./idb-persistence.js";
+export {
+  takeSnapshot,
+  listSnapshots,
+  restoreSnapshot,
+  clearSnapshots,
+  startAutoSnapshots,
+  type SnapshotEntry,
+  type SnapshotListItem,
+  type AutoSnapshotHandle,
+} from "./local-snapshots.js";
