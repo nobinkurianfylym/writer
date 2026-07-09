@@ -41,3 +41,9 @@ export { parseFountain } from "./fountain/parse.js";
 export { serializeFountain } from "./fountain/serialize.js";
 export { parseFdx } from "./fdx/parse.js";
 export { serializeFdx } from "./fdx/serialize.js";
+export {
+  parseTitlePageFields,
+  serializeTitlePageFields,
+  emptyTitlePageFields,
+  type TitlePageFields,
+} from "./title-page.js";

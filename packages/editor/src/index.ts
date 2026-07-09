@@ -31,3 +31,4 @@ export type { PaginateRequest, PaginateResponse } from "./pagination/protocol.js
 export { VirtualizedScriptEditor, type VirtualizedScriptEditorProps } from "./VirtualizedScriptEditor.js";
 export { VirtualViewport } from "./virtualization/viewport.js";
 export { HeightCache, estimateBlockHeight } from "./virtualization/height-estimator.js";
+export { TitlePageEditor, type TitlePageEditorProps } from "./TitlePageEditor.js";

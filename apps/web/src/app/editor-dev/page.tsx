@@ -1,8 +1,8 @@
 "use client";
 
-import { ScriptEditor, VirtualizedScriptEditor } from "@fylym/editor";
+import { ScriptEditor, VirtualizedScriptEditor, TitlePageEditor } from "@fylym/editor";
 import type { Block, ScreenplayDocument } from "@fylym/screenplay-core";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const EMPTY_DOCUMENT: ScreenplayDocument = {
   blocks: [{ id: "seed", type: "action", text: "", marks: [], attrs: {} }],
@@ -38,14 +38,26 @@ function generateLargeDoc(targetPages: number): ScreenplayDocument {
 }
 
 export default function EditorDevPage() {
-  const [state, setState] = useState<{ doc: ScreenplayDocument; worker: Worker | null; virtualized: boolean } | null>(
+  const [state, setState] = useState<{ doc: ScreenplayDocument; worker: Worker | null; virtualized: boolean; titlePageBlock: Block | null } | null>(
     null,
   );
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const pages = parseInt(params.get("pages") ?? "0", 10);
+    const withTitlePage = params.has("titlepage");
     const doc = pages > 0 ? generateLargeDoc(pages) : EMPTY_DOCUMENT;
+
+    if (withTitlePage && !doc.blocks.some((b) => b.type === "title_page")) {
+      doc.blocks.unshift({
+        id: crypto.randomUUID(),
+        type: "title_page",
+        text: "Title: Untitled Screenplay\nCredit: written by\nAuthor: Author Name\nDraft date: July 2026",
+        marks: [],
+        attrs: {},
+      });
+    }
+
     const virtualized = doc.blocks.length > VIRTUALIZATION_THRESHOLD;
 
     let worker: Worker | null = null;
@@ -55,9 +67,21 @@ export default function EditorDevPage() {
       // Worker creation failed — editor degrades gracefully (no page indicators)
     }
 
-    setState({ doc, worker, virtualized });
+    const titlePageBlock = doc.blocks.find((b) => b.type === "title_page") ?? null;
+    setState({ doc, worker, virtualized, titlePageBlock });
     return () => worker?.terminate();
   }, []);
+
+  const handleTitlePageChange = useCallback(
+    (updated: Block) => {
+      setState((prev) => {
+        if (!prev) return prev;
+        const blocks = prev.doc.blocks.map((b) => (b.type === "title_page" ? updated : b));
+        return { ...prev, doc: { ...prev.doc, blocks }, titlePageBlock: updated };
+      });
+    },
+    [],
+  );
 
   if (!state) {
     return (
@@ -71,6 +95,12 @@ export default function EditorDevPage() {
   return (
     <main className="mx-auto max-w-3xl px-6 py-12">
       <h1 className="mb-6 text-2xl font-semibold">Editor dev harness</h1>
+      {state.titlePageBlock && (
+        <TitlePageEditor
+          block={state.titlePageBlock}
+          onChange={handleTitlePageChange}
+        />
+      )}
       {state.virtualized ? (
         <VirtualizedScriptEditor
           initialDocument={state.doc}
