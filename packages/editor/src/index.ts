@@ -46,3 +46,19 @@ export {
 } from "./find-navigate.js";
 export { FindBar, type FindBarProps } from "./FindBar.js";
 export { ScenePalette, type ScenePaletteProps } from "./ScenePalette.js";
+export {
+  createScriptYDoc,
+  initContentFromPmDoc,
+  yjsPlugins,
+  setTitlePageFields,
+  getTitlePageFields,
+  setMeta,
+  getMeta,
+  setFormatProfileName,
+  getFormatProfileName,
+  observeMeta,
+  yjsUndo,
+  yjsRedo,
+  type ScriptYDoc,
+  type CreateScriptYDocOptions,
+} from "./yjs-binding.js";
