@@ -18,9 +18,13 @@
     "@fylym/screenplay-core": "workspace:*",
     "@fylym/ui": "workspace:*",
     "@tanstack/react-query": "^5.101.2",
+    "fzstd": "^0.1.1",
+    "idb": "^8.0.3",
     "next": "^15.1.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "y-prosemirror": "^1.3.7",
+    "yjs": "^13.6.31"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",
@@ -34,6 +38,7 @@
     "autoprefixer": "^10.4.20",
     "eslint": "^9.17.0",
     "eslint-config-next": "^15.1.4",
+    "fake-indexeddb": "^6.2.5",
     "jsdom": "^25.0.1",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",

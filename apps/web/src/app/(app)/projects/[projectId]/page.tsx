@@ -84,9 +84,7 @@ export default function ProjectPage({
               </div>
               <div className="flex shrink-0 items-center gap-2">
                 <Button asChild variant="outline" size="sm">
-                  <Link href={`/editor-dev?script=${script.id}`}>
-                    Open in editor
-                  </Link>
+                  <Link href={`/editor/${script.id}`}>Open in editor</Link>
                 </Button>
                 <Button
                   variant="ghost"
