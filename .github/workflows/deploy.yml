@@ -1,0 +1,174 @@
+name: Deploy
+
+# On merge to main: build + push images, migrate the DB (expand-and-contract),
+# deploy to staging, run the smoke suite (ECS rolls back automatically on
+# failure), then a manual one-click promote to prod.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      promote_prod:
+        description: "Promote the current staging image to prod"
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: us-east-1
+  IMAGE_TAG: ${{ github.sha }}
+
+permissions:
+  id-token: write # OIDC to assume the deploy role
+  contents: read
+
+jobs:
+  build:
+    name: build & push images
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    strategy:
+      matrix:
+        service: [api, worker, web]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: infra/docker/Dockerfile.${{ matrix.service }}
+          push: true
+          tags: ${{ steps.ecr.outputs.registry }}/fylym/${{ matrix.service }}:${{ env.IMAGE_TAG }}
+          build-args: |
+            NEXT_PUBLIC_API_URL=https://api.staging.fylym.app
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}
+
+  migrate:
+    name: migrate staging db (expand-and-contract)
+    runs-on: ubuntu-latest
+    needs: build
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Verify migrations are expand-and-contract safe
+        working-directory: packages/db
+        env:
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+        run: |
+          # `migrate deploy` only applies forward, additive migrations; a
+          # migration that drops/renames in the same deploy as the code that
+          # still needs it would break zero-downtime. `migrate status` must be
+          # clean (no failed/pending drift) before we apply.
+          pnpm prisma migrate status
+          pnpm prisma migrate deploy
+
+  deploy-staging:
+    name: deploy staging
+    runs-on: ubuntu-latest
+    needs: migrate
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - uses: hashicorp/setup-terraform@v3
+      - name: Terraform apply (staging workspace)
+        working-directory: infra/terraform
+        env:
+          TF_VAR_image_tag: ${{ env.IMAGE_TAG }}
+          TF_VAR_db_password: ${{ secrets.STAGING_DB_PASSWORD }}
+        run: |
+          terraform init -backend-config="key=fylym/staging.tfstate"
+          terraform workspace select staging || terraform workspace new staging
+          terraform apply -auto-approve -var-file=staging.tfvars
+      - name: Wait for ECS services to stabilize
+        run: |
+          for svc in api worker web; do
+            aws ecs wait services-stable \
+              --cluster fylym-staging \
+              --services "fylym-staging-$svc"
+          done
+
+  smoke:
+    name: smoke staging
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run smoke suite
+        run: |
+          bash infra/deploy/smoke.sh \
+            https://api.staging.fylym.app \
+            https://staging.fylym.app
+      # The ECS deployment circuit breaker (rollback = true) reverts a service
+      # that never goes healthy on its own. A smoke failure here additionally
+      # forces the previous task set back for services that came up but fail
+      # a behavioral check.
+      - name: Roll back on smoke failure
+        if: failure()
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Force previous deployment
+        if: failure()
+        run: |
+          for svc in api worker web; do
+            aws ecs update-service --cluster fylym-staging \
+              --service "fylym-staging-$svc" --force-new-deployment \
+              --task-definition "$(aws ecs describe-services --cluster fylym-staging \
+                --services fylym-staging-$svc \
+                --query 'services[0].deployments[?rolloutState==`COMPLETED`]|[0].taskDefinition' \
+                --output text)"
+          done
+          exit 1
+
+  promote-prod:
+    name: promote to prod
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && inputs.promote_prod
+    environment: production # requires a manual reviewer approval
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - uses: hashicorp/setup-terraform@v3
+      - name: Migrate prod db
+        working-directory: packages/db
+        env:
+          DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm prisma migrate deploy
+      - name: Terraform apply (prod workspace)
+        working-directory: infra/terraform
+        env:
+          TF_VAR_image_tag: ${{ github.sha }}
+          TF_VAR_db_password: ${{ secrets.PROD_DB_PASSWORD }}
+        run: |
+          terraform init -backend-config="key=fylym/prod.tfstate"
+          terraform workspace select prod || terraform workspace new prod
+          terraform apply -auto-approve -var-file=prod.tfvars
+      - name: Smoke prod
+        run: bash infra/deploy/smoke.sh https://api.fylym.app https://fylym.app

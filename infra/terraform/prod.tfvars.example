@@ -1,0 +1,15 @@
+# Copy to prod.tfvars (gitignored) and fill in. `image_tag` and
+# `db_password` are supplied by CI at apply time via -var.
+aws_region          = "us-east-1"
+app_domain          = "fylym.app"
+acm_certificate_arn = "arn:aws:acm:us-east-1:000000000000:certificate/REPLACE"
+# JWT keypair, SMTP, Google OAuth, etc. — one Secrets Manager ARN per env var.
+app_secret_arns = {
+  JWT_PRIVATE_KEY      = "arn:aws:secretsmanager:us-east-1:000000000000:secret:fylym-prod/jwt-private"
+  JWT_PUBLIC_KEY       = "arn:aws:secretsmanager:us-east-1:000000000000:secret:fylym-prod/jwt-public"
+  SMTP_HOST            = "arn:aws:secretsmanager:us-east-1:000000000000:secret:fylym-prod/smtp-host"
+  SMTP_PORT            = "arn:aws:secretsmanager:us-east-1:000000000000:secret:fylym-prod/smtp-port"
+  GOOGLE_CLIENT_ID     = "arn:aws:secretsmanager:us-east-1:000000000000:secret:fylym-prod/google-id"
+  GOOGLE_CLIENT_SECRET = "arn:aws:secretsmanager:us-east-1:000000000000:secret:fylym-prod/google-secret"
+  GOOGLE_REDIRECT_URI  = "arn:aws:secretsmanager:us-east-1:000000000000:secret:fylym-prod/google-redirect"
+}

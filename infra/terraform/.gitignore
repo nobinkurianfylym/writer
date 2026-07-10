@@ -1,0 +1,7 @@
+# Local state, vars with secrets, and provider plugins
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.terraform/
+.terraform.lock.hcl

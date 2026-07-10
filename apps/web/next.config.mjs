@@ -2,6 +2,8 @@ import { fileURLToPath } from "node:url";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Self-contained server bundle for the Docker runtime image (E6-4).
+  output: "standalone",
   transpilePackages: ["@fylym/ui", "@fylym/editor", "@fylym/screenplay-core"],
   outputFileTracingRoot: fileURLToPath(new URL("../..", import.meta.url)),
   // Linting is centralized via `pnpm lint` (turbo + our flat eslint config);
