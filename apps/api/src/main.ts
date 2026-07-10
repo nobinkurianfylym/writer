@@ -30,6 +30,14 @@ async function bootstrap() {
   app.use(cookieParser());
   app.useGlobalFilters(new HttpErrorFilter());
 
+  // Credentialed CORS for the browser app: the refresh-token cookie and
+  // Bearer requests come from a different origin (web on :3000, api on :3001).
+  app.enableCors({
+    origin: env.CORS_ORIGIN ?? env.APP_URL,
+    credentials: true,
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
+  });
+
   await app.listen(env.PORT);
   app.get(Logger).log(`Listening on :${env.PORT}`);
 }

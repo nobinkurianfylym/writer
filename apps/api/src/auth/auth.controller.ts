@@ -95,7 +95,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const rawToken =
-      body.refreshToken ?? this.extractRefreshCookie(req);
+      body?.refreshToken ?? this.extractRefreshCookie(req);
 
     if (!rawToken) {
       res.status(HttpStatus.UNAUTHORIZED).json({
@@ -127,7 +127,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const rawToken =
-      body.refreshToken ?? this.extractRefreshCookie(req);
+      body?.refreshToken ?? this.extractRefreshCookie(req);
     if (rawToken) {
       await this.auth.logout(rawToken);
     }
@@ -158,6 +158,18 @@ export class AuthController {
     }
     await this.auth.sendVerificationEmail(user.email, user.id);
     return { message: "Verification email sent" };
+  }
+
+  @Get("me")
+  @UseGuards(JwtGuard)
+  async me(@Req() req: Request) {
+    const user = await this.auth.getUserById(req.user!.sub);
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      emailVerified: user.emailVerified !== null,
+    };
   }
 
   /* ── Magic Links ── */

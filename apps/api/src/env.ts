@@ -8,7 +8,10 @@ const schema = z.object({
   JWT_PUBLIC_KEY: z.string().min(1),
   SMTP_HOST: z.string().default("localhost"),
   SMTP_PORT: z.coerce.number().int().positive().default(1025),
-  APP_URL: z.string().url().default("http://localhost:5173"),
+  // Web app origin — used for verification/magic-link email links and CORS.
+  APP_URL: z.string().url().default("http://localhost:3000"),
+  // Allowed browser origin for credentialed CORS (defaults to APP_URL).
+  CORS_ORIGIN: z.string().url().optional(),
   GOOGLE_CLIENT_ID: z.string().min(1).optional(),
   GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
   GOOGLE_REDIRECT_URI: z.string().url().optional(),

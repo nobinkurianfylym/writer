@@ -154,7 +154,7 @@ test("find on 300-page doc returns results under 50ms", async ({ page }) => {
   await page.waitForTimeout(1000);
 
   const elapsed = await page.evaluate(() => {
-    const blocks = (window as Record<string, unknown>).__blocks as { text: string; type: string }[] | undefined;
+    const blocks = (window as unknown as Record<string, unknown>).__blocks as { text: string; type: string }[] | undefined;
     if (blocks) {
       const start = performance.now();
       const lower = "location";

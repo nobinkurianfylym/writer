@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { gotoLargeEditor } from "./helpers.js";
 
 test("5,000-page document opens in under 5 seconds (virtualized)", async ({ page }) => {
   const start = Date.now();
