@@ -1,6 +1,9 @@
 import { Module } from "@nestjs/common";
 import { LoggerModule } from "nestjs-pino";
 import { PrismaModule } from "./prisma/prisma.module";
+import { OrgModule } from "./org/org.module";
+import { AuditModule } from "./audit/audit.module";
+import { RbacModule } from "./rbac/rbac.module";
 import { AuthModule } from "./auth/auth.module";
 import { HealthController } from "./health/health.controller";
 
@@ -24,6 +27,9 @@ import { HealthController } from "./health/health.controller";
       },
     }),
     PrismaModule,
+    OrgModule,
+    AuditModule,
+    RbacModule,
     AuthModule,
   ],
   controllers: [HealthController],

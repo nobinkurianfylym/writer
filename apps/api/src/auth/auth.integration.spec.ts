@@ -194,15 +194,24 @@ function createTestServices() {
     sendMagicLinkEmail: vi.fn().mockResolvedValue(undefined),
   } as unknown as ConstructorParameters<typeof AuthService>[3];
 
+  const mockOrg = {
+    createPersonalOrg: vi.fn().mockResolvedValue(randomUUID()),
+  } as unknown as ConstructorParameters<typeof AuthService>[4];
+  const mockAudit = {
+    log: vi.fn().mockResolvedValue(undefined),
+  } as unknown as ConstructorParameters<typeof AuthService>[5];
+
   const jwtService = new JwtService();
   const authService = new AuthService(
     mockPrisma,
     jwtService,
     mockRedisService,
     mockMail,
+    mockOrg,
+    mockAudit,
   );
 
-  return { authService, jwtService, fakeRedis, mockDb, mockMail };
+  return { authService, jwtService, fakeRedis, mockDb, mockMail, mockOrg, mockAudit };
 }
 
 /* ---------- Test suite ---------- */

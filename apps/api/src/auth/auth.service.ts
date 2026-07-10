@@ -8,6 +8,8 @@ import {
 import { hash, verify } from "argon2";
 import { randomBytes, createHash, randomUUID } from "node:crypto";
 import { PrismaService } from "../prisma/prisma.service";
+import { OrgService } from "../org/org.service";
+import { AuditService } from "../audit/audit.service";
 import { JwtService } from "./jwt.service";
 import { RedisService } from "./redis.service";
 import { MailService } from "./mail.service";
@@ -48,6 +50,8 @@ export class AuthService {
     private readonly jwt: JwtService,
     private readonly redis: RedisService,
     private readonly mail: MailService,
+    private readonly org: OrgService,
+    private readonly audit: AuditService,
   ) {}
 
   async register(
@@ -78,6 +82,15 @@ export class AuthService {
     });
 
     this.logger.log(`User registered: ${user.id}`);
+
+    const orgId = await this.org.createPersonalOrg(user.id, name);
+    await this.audit.log({
+      orgId,
+      actorId: user.id,
+      action: "auth.register",
+      target: user.id,
+    });
+
     await this.sendVerificationEmail(user.email, user.id);
     return { userId: user.id };
   }
@@ -238,14 +251,23 @@ export class AuthService {
     });
 
     if (!user) {
+      const displayName = email.split("@")[0] ?? email;
       user = await this.prisma.db.user.create({
         data: {
           email,
-          name: email.split("@")[0] ?? email,
+          name: displayName,
           emailVerified: new Date(),
         },
       });
       this.logger.log(`User created via magic link: ${user.id}`);
+
+      const orgId = await this.org.createPersonalOrg(user.id, displayName);
+      await this.audit.log({
+        orgId,
+        actorId: user.id,
+        action: "auth.register.magic_link",
+        target: user.id,
+      });
     } else if (!user.emailVerified) {
       await this.prisma.db.user.update({
         where: { id: user.id },
@@ -411,6 +433,17 @@ export class AuthService {
         },
       });
       this.logger.log(`User created via Google OAuth: ${user.id}`);
+
+      const orgId = await this.org.createPersonalOrg(
+        user.id,
+        payload.name ?? email.split("@")[0] ?? email,
+      );
+      await this.audit.log({
+        orgId,
+        actorId: user.id,
+        action: "auth.register.google",
+        target: user.id,
+      });
     }
 
     return this.createSession(user.id, ip, userAgent);
