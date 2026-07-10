@@ -16,6 +16,26 @@ export interface ArtifactStore {
   signedDownloadUrl(key: string, ttlSec?: number): Promise<string>;
 }
 
+export function s3ConfigFromEnv(env: {
+  S3_ENDPOINT: string;
+  S3_REGION: string;
+  S3_BUCKET: string;
+  S3_ACCESS_KEY_ID: string;
+  S3_SECRET_ACCESS_KEY: string;
+  S3_FORCE_PATH_STYLE: boolean;
+  SIGNED_URL_TTL_SEC: number;
+}): S3Config {
+  return {
+    endpoint: env.S3_ENDPOINT,
+    region: env.S3_REGION,
+    bucket: env.S3_BUCKET,
+    accessKeyId: env.S3_ACCESS_KEY_ID,
+    secretAccessKey: env.S3_SECRET_ACCESS_KEY,
+    forcePathStyle: env.S3_FORCE_PATH_STYLE,
+    signedUrlTtlSec: env.SIGNED_URL_TTL_SEC,
+  };
+}
+
 export function createS3Client(config: S3Config): S3Client {
   return new S3Client({
     endpoint: config.endpoint,

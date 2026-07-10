@@ -47,3 +47,6 @@ export {
   emptyTitlePageFields,
   type TitlePageFields,
 } from "./title-page.js";
+// The golden conformance corpus (E1-9), exported for cross-package reuse —
+// E5-2 runs the same fixtures through the full export service path.
+export { CORPUS, type CorpusEntry } from "./golden/corpus.js";

@@ -1,11 +1,14 @@
 import { loadDotEnvIfPresent, reportEnvErrorAndExit } from "@fylym/config/env";
+import { createPrismaClient } from "@fylym/db";
 import { getWorkerEnv, type WorkerEnv } from "./env.js";
 import {
   createConnection,
   createDeadLetterQueue,
 } from "./queue.js";
 import { createExportWorker } from "./worker.js";
+import { createS3Client, createArtifactStore, s3ConfigFromEnv } from "./s3.js";
 import type { AlertHook } from "./dlq.js";
+import type { ScriptStateReader } from "./processors/export-job.js";
 
 function main() {
   loadDotEnvIfPresent();
@@ -28,7 +31,17 @@ function main() {
     );
   };
 
-  const worker = createExportWorker({ connection, deadLetter, alert, env });
+  const prisma = createPrismaClient(env.DATABASE_URL);
+  const s3Config = s3ConfigFromEnv(env);
+  const store = createArtifactStore(createS3Client(s3Config), s3Config);
+
+  const worker = createExportWorker({
+    connection,
+    deadLetter,
+    alert,
+    env,
+    exportDeps: { db: prisma as unknown as ScriptStateReader, store },
+  });
 
   worker.on("completed", (job) => {
     console.log(`[worker] job ${job.id} completed`);
@@ -42,6 +55,7 @@ function main() {
     await worker.close();
     await deadLetter.close();
     await connection.quit();
+    await prisma.$disconnect();
     process.exit(0);
   };
   process.on("SIGTERM", () => void shutdown());

@@ -26,12 +26,23 @@ export {
 } from "./dlq.js";
 export { runDemoJob, type ProgressReporter } from "./processors/demo.js";
 export {
+  runExportJob,
+  type ExportProcessorDeps,
+  type ScriptStateReader,
+} from "./processors/export-job.js";
+export {
+  runExport,
+  resolveProfile,
+  type ExportArtifact,
+  type ExportRunOptions,
+} from "./export.js";
+export {
   createConnection,
   createExportQueue,
   createDeadLetterQueue,
 } from "./queue.js";
 export {
   createExportWorker,
-  processJob,
+  makeProcessJob,
   type WorkerDeps,
 } from "./worker.js";

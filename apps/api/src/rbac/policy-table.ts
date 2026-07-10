@@ -72,6 +72,10 @@ export const POLICY_TABLE: Record<string, PolicyRule> = {
     orgRoles: ["OWNER", "ADMIN"],
     projectRoles: ["OWNER", "WRITER"],
   },
+  "script.export": {
+    orgRoles: ["OWNER", "ADMIN"],
+    projectRoles: ["OWNER", "WRITER", "EDITOR", "COMMENTER", "READER"],
+  },
 };
 
 export function evaluatePolicy(

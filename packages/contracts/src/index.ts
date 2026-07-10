@@ -59,4 +59,14 @@ export {
   type JobStatus,
   type Job,
 } from "./jobs.js";
+export {
+  ExportFormatSchema,
+  ExportOptionsSchema,
+  CreateExportSchema,
+  ExportAcceptedSchema,
+  type ExportFormat,
+  type ExportOptions,
+  type CreateExport,
+  type ExportAccepted,
+} from "./export.js";
 import "./paths.js";

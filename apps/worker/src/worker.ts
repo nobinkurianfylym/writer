@@ -4,6 +4,10 @@ import { EXPORT_QUEUE, type JobData } from "@fylym/contracts";
 import type { WorkerEnv } from "./env.js";
 import { runDemoJob } from "./processors/demo.js";
 import {
+  runExportJob,
+  type ExportProcessorDeps,
+} from "./processors/export-job.js";
+import {
   handleFailedJob,
   type AlertHook,
   type DeadLetterSink,
@@ -14,28 +18,45 @@ export interface WorkerDeps {
   deadLetter: DeadLetterSink;
   alert: AlertHook;
   env: WorkerEnv;
+  /** Provides DB + S3 for export jobs; omit to run a demo-only worker. */
+  exportDeps?: ExportProcessorDeps;
 }
 
-/** Route a job to its processor by kind. */
-export async function processJob(job: Job<JobData>): Promise<unknown> {
-  const data = job.data;
-  switch (data.kind) {
-    case "demo":
-      return runDemoJob(data, job);
-    case "export":
-    case "derive":
-      // Real processors land in E5-2 / E5-3.
-      throw new Error(`No processor registered for kind: ${data.kind}`);
-    default:
-      throw new Error("Unknown job kind");
-  }
+/**
+ * Build the kind-routed processor. Export jobs require DB + S3 deps; when
+ * absent (e.g. a demo-only worker) they fail fast rather than silently.
+ */
+export function makeProcessJob(
+  exportDeps?: ExportProcessorDeps,
+): (job: Job<JobData>) => Promise<unknown> {
+  return async (job) => {
+    const data = job.data;
+    switch (data.kind) {
+      case "demo":
+        return runDemoJob(data, job);
+      case "export":
+        if (!exportDeps) {
+          throw new Error("Export processor is not configured");
+        }
+        return runExportJob(data, job, exportDeps);
+      case "derive":
+        // Real derive processor lands in E5-3.
+        throw new Error(`No processor registered for kind: ${data.kind}`);
+      default:
+        throw new Error("Unknown job kind");
+    }
+  };
 }
 
 export function createExportWorker(deps: WorkerDeps): Worker<JobData> {
-  const worker = new Worker<JobData>(EXPORT_QUEUE, processJob, {
-    connection: deps.connection,
-    concurrency: 4,
-  });
+  const worker = new Worker<JobData>(
+    EXPORT_QUEUE,
+    makeProcessJob(deps.exportDeps),
+    {
+      connection: deps.connection,
+      concurrency: 4,
+    },
+  );
 
   worker.on("failed", (job, err) => {
     if (!job) return;

@@ -21,6 +21,7 @@ import {
   SnapshotPageSchema,
 } from "./script-state.js";
 import { JobSchema } from "./jobs.js";
+import { CreateExportSchema, ExportAcceptedSchema } from "./export.js";
 
 const UuidParam = (name: string) =>
   z.object({ [name]: z.string().uuid() });
@@ -353,6 +354,28 @@ registry.registerPath({
     200: {
       description: "State restored from snapshot",
       content: { "application/json": { schema: SnapshotSchema } },
+    },
+    ...errorResponses,
+  },
+});
+
+/* ── Exports ── */
+
+registry.registerPath({
+  method: "post",
+  path: "/v1/scripts/{scriptId}/exports",
+  tags: ["exports"],
+  summary: "Request an async export (PDF/FDX/Fountain); returns a job id",
+  request: {
+    params: z.object({ scriptId: z.string().uuid() }),
+    body: {
+      content: { "application/json": { schema: CreateExportSchema } },
+    },
+  },
+  responses: {
+    202: {
+      description: "Export accepted; poll GET /v1/jobs/:jobId",
+      content: { "application/json": { schema: ExportAcceptedSchema } },
     },
     ...errorResponses,
   },

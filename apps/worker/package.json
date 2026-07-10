@@ -25,12 +25,19 @@
     "@fylym/config": "workspace:*",
     "@fylym/contracts": "workspace:*",
     "@fylym/db": "workspace:*",
+    "@fylym/editor": "workspace:*",
+    "@fylym/pdf-typesetter": "workspace:*",
+    "@fylym/screenplay-core": "workspace:*",
     "bullmq": "^5.79.3",
-    "ioredis": "^5.11.1"
+    "ioredis": "^5.11.1",
+    "prosemirror-model": "^1.25.10",
+    "y-prosemirror": "^1.3.7",
+    "yjs": "^13.6.31"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
     "eslint": "^9.17.0",
+    "pdf-lib": "^1.17.1",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0",
     "vitest": "^2.1.0"

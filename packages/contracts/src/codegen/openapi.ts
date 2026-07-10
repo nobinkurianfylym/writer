@@ -9,6 +9,7 @@ import "../project.js";
 import "../script.js";
 import "../script-state.js";
 import "../jobs.js";
+import "../export.js";
 import "../paths.js";
 
 const generator = new OpenApiGeneratorV31(registry.definitions);
