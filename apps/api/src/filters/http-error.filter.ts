@@ -7,6 +7,7 @@ import {
   Logger,
 } from "@nestjs/common";
 import type { Response } from "express";
+import { captureError } from "../observability";
 
 @Catch()
 export class HttpErrorFilter implements ExceptionFilter {
@@ -44,6 +45,11 @@ export class HttpErrorFilter implements ExceptionFilter {
       this.logger.error(
         exception instanceof Error ? exception.stack : exception,
       );
+    }
+
+    // Report unexpected (5xx) failures to Sentry, tagged with the release.
+    if (status >= 500) {
+      captureError(exception);
     }
 
     response.status(status).json({

@@ -7,6 +7,7 @@ import {
 import { Queue, type Job as BullJob } from "bullmq";
 import { Redis } from "ioredis";
 import { EXPORT_QUEUE, type JobData } from "@fylym/contracts";
+import { injectTraceContext } from "@fylym/worker";
 import { getApiEnv } from "../env";
 
 /**
@@ -36,7 +37,12 @@ export class QueueService implements OnModuleInit, OnModuleDestroy {
   }
 
   async enqueue(name: string, data: JobData): Promise<string> {
-    const job = await this.queue.add(name, data);
+    // Carry the active trace context onto the payload so the worker's span
+    // joins this request's trace (§11 one-trace-across-services).
+    const job = await this.queue.add(name, {
+      ...data,
+      _trace: injectTraceContext(),
+    });
     return job.id ?? "";
   }
 

@@ -16,6 +16,7 @@ import {
   type AlertHook,
   type DeadLetterSink,
 } from "./dlq.js";
+import { runWithTraceContext } from "./telemetry.js";
 
 export interface WorkerDeps {
   connection: Redis;
@@ -38,22 +39,26 @@ export function makeProcessJob(
 ): (job: Job<JobData>) => Promise<unknown> {
   return async (job) => {
     const data = job.data;
-    switch (data.kind) {
-      case "demo":
-        return runDemoJob(data, job);
-      case "export":
-        if (!exportDeps) {
-          throw new Error("Export processor is not configured");
-        }
-        return runExportJob(data, job, exportDeps);
-      case "derive":
-        if (!deriveDeps) {
-          throw new Error("Derive processor is not configured");
-        }
-        return runDeriveJob(data, job, deriveDeps);
-      default:
-        throw new Error("Unknown job kind");
-    }
+    // Continue the API request's trace inside the worker (§11): the job runs
+    // in a span parented to the context the producer injected on the payload.
+    return runWithTraceContext(data._trace, `job.${data.kind}`, async () => {
+      switch (data.kind) {
+        case "demo":
+          return runDemoJob(data, job);
+        case "export":
+          if (!exportDeps) {
+            throw new Error("Export processor is not configured");
+          }
+          return runExportJob(data, job, exportDeps);
+        case "derive":
+          if (!deriveDeps) {
+            throw new Error("Derive processor is not configured");
+          }
+          return runDeriveJob(data, job, deriveDeps);
+        default:
+          throw new Error("Unknown job kind");
+      }
+    });
   };
 }
 

@@ -1,6 +1,10 @@
 import { loadDotEnvIfPresent, reportEnvErrorAndExit } from "@fylym/config/env";
 import { createPrismaClient } from "@fylym/db";
+import { initTelemetry } from "./telemetry.js";
 import { getWorkerEnv, type WorkerEnv } from "./env.js";
+
+// Start tracing before anything else so auto-instrumentation hooks in early.
+initTelemetry("fylym-worker");
 import {
   createConnection,
   createDeadLetterQueue,

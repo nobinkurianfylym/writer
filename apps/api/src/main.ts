@@ -1,4 +1,9 @@
 import "reflect-metadata";
+import { initObservability } from "./observability";
+
+// Tracing + Sentry must initialize before Nest/instrumented libraries load.
+initObservability();
+
 import { NestFactory } from "@nestjs/core";
 import { Logger } from "nestjs-pino";
 import cookieParser from "cookie-parser";

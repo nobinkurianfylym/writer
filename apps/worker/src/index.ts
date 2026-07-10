@@ -53,3 +53,9 @@ export {
   makeProcessJob,
   type WorkerDeps,
 } from "./worker.js";
+export {
+  initTelemetry,
+  injectTraceContext,
+  runWithTraceContext,
+  type TraceCarrier,
+} from "./telemetry.js";

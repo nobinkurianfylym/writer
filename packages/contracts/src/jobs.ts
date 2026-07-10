@@ -10,6 +10,12 @@ export const DEAD_LETTER_QUEUE = "fylym-dead-letter";
 export const JOB_KINDS = ["export", "derive", "demo"] as const;
 export type JobKind = (typeof JOB_KINDS)[number];
 
+/**
+ * W3C trace-context carrier propagated on the job payload so the worker's
+ * spans join the API request's trace (§11 observability).
+ */
+export type TraceCarrier = Record<string, string>;
+
 /** Payload enqueued for an export job (E5-2 fills in the processor). */
 export interface ExportJobData {
   kind: "export";
@@ -21,12 +27,14 @@ export interface ExportJobData {
     titlePage?: boolean;
   };
   requestedBy: string;
+  _trace?: TraceCarrier;
 }
 
 /** Payload for the SceneIndex derive job (E5-3). */
 export interface DeriveJobData {
   kind: "derive";
   scriptId: string;
+  _trace?: TraceCarrier;
 }
 
 /** A trivial job used to exercise the pipeline in tests. */
@@ -34,6 +42,7 @@ export interface DemoJobData {
   kind: "demo";
   steps?: number;
   crash?: boolean;
+  _trace?: TraceCarrier;
 }
 
 export type JobData = ExportJobData | DeriveJobData | DemoJobData;

@@ -6,9 +6,11 @@ overrides:
 allowBuilds:
   '@nestjs/core': true
   '@prisma/engines': true
+  '@sentry/cli': false
   argon2: true
   esbuild: true
   msgpackr-extract: false
   prisma: true
+  protobufjs: false
   sharp: true
   unrs-resolver: true
