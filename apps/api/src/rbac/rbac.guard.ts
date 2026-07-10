@@ -37,9 +37,19 @@ export class RbacGuard implements CanActivate {
       (request.params.orgId as string | undefined) ??
       (request.body as Record<string, unknown>)?.orgId as string | undefined;
 
-    const projectId =
+    let projectId =
       (request.params.projectId as string | undefined) ??
       (request.params.id as string | undefined);
+
+    // Script routes carry a scriptId — resolve it to the owning project
+    const scriptId = request.params.scriptId as string | undefined;
+    if (!projectId && scriptId) {
+      const script = await this.prisma.db.script.findUnique({
+        where: { id: scriptId },
+        select: { projectId: true },
+      });
+      projectId = script?.projectId;
+    }
 
     let orgRole: OrgRole | null = null;
     let projectRole: ProjectRole | null = null;

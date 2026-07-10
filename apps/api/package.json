@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@fylym/config": "workspace:*",
+    "@fylym/contracts": "workspace:*",
     "@fylym/db": "workspace:*",
     "@nestjs/common": "^10.4.15",
     "@nestjs/core": "^10.4.15",
@@ -25,7 +26,8 @@
     "pino": "^10.3.1",
     "pino-http": "^11.0.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.4.9",

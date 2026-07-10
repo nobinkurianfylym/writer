@@ -5,7 +5,9 @@ import { OpenApiGeneratorV31 } from "@asteasolutions/zod-to-openapi";
 import { registry } from "../registry.js";
 import "../envelope.js";
 import "../pagination.js";
-import "../examples/project.js";
+import "../project.js";
+import "../script.js";
+import "../paths.js";
 
 const generator = new OpenApiGeneratorV31(registry.definitions);
 
