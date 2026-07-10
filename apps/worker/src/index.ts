@@ -1,21 +1,37 @@
-import { loadDotEnvIfPresent, reportEnvErrorAndExit } from "@fylym/config/env";
-import { getWorkerEnv } from "./env.js";
-
-function main() {
-  loadDotEnvIfPresent();
-
-  let env;
-  try {
-    env = getWorkerEnv();
-  } catch (error) {
-    reportEnvErrorAndExit(error);
-  }
-
-  console.log(`[worker] booted, redis=${env.REDIS_URL}`);
-
-  // The BullMQ job pattern (queues, processors, DLQ) lands in E5-1.
-  // Keep the process alive so `pnpm dev` behaves like a long-running service.
-  setInterval(() => {}, 1 << 30);
-}
-
-main();
+// Library surface: pure helpers and factories reused by the API service.
+export { getWorkerEnv, type WorkerEnv } from "./env.js";
+export {
+  createS3Client,
+  createArtifactStore,
+  type ArtifactStore,
+  type S3Config,
+} from "./s3.js";
+export {
+  getPresignedUrlExpiry,
+  isPresignedUrlExpired,
+  parseAmzDate,
+  type PresignExpiry,
+} from "./signed-url.js";
+export {
+  mapBullState,
+  mapJobToContract,
+  safeFailureMessage,
+  type BullJobLike,
+} from "./job-status.js";
+export {
+  handleFailedJob,
+  type AlertHook,
+  type DeadLetterSink,
+  type FailedJobLike,
+} from "./dlq.js";
+export { runDemoJob, type ProgressReporter } from "./processors/demo.js";
+export {
+  createConnection,
+  createExportQueue,
+  createDeadLetterQueue,
+} from "./queue.js";
+export {
+  createExportWorker,
+  processJob,
+  type WorkerDeps,
+} from "./worker.js";

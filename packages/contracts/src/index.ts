@@ -44,4 +44,19 @@ export {
   type CreateSnapshot,
   type SnapshotPage,
 } from "./script-state.js";
+export {
+  EXPORT_QUEUE,
+  DEAD_LETTER_QUEUE,
+  JOB_KINDS,
+  JobStatusSchema,
+  JobSchema,
+  type JobKind,
+  type ExportJobData,
+  type DeriveJobData,
+  type DemoJobData,
+  type JobData,
+  type JobResult,
+  type JobStatus,
+  type Job,
+} from "./jobs.js";
 import "./paths.js";

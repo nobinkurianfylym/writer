@@ -7,6 +7,7 @@ import { RbacModule } from "./rbac/rbac.module";
 import { AuthModule } from "./auth/auth.module";
 import { ProjectsModule } from "./projects/projects.module";
 import { ScriptsModule } from "./scripts/scripts.module";
+import { JobsModule } from "./jobs/jobs.module";
 import { HealthController } from "./health/health.controller";
 
 @Module({
@@ -35,6 +36,7 @@ import { HealthController } from "./health/health.controller";
     AuthModule,
     ProjectsModule,
     ScriptsModule,
+    JobsModule,
   ],
   controllers: [HealthController],
 })

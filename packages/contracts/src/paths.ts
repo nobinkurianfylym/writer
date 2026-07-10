@@ -20,6 +20,7 @@ import {
   CreateSnapshotSchema,
   SnapshotPageSchema,
 } from "./script-state.js";
+import { JobSchema } from "./jobs.js";
 
 const UuidParam = (name: string) =>
   z.object({ [name]: z.string().uuid() });
@@ -352,6 +353,25 @@ registry.registerPath({
     200: {
       description: "State restored from snapshot",
       content: { "application/json": { schema: SnapshotSchema } },
+    },
+    ...errorResponses,
+  },
+});
+
+/* ── Jobs ── */
+
+registry.registerPath({
+  method: "get",
+  path: "/v1/jobs/{jobId}",
+  tags: ["jobs"],
+  summary: "Poll an async job's status, progress, and result URL",
+  request: {
+    params: z.object({ jobId: z.string() }),
+  },
+  responses: {
+    200: {
+      description: "Job status",
+      content: { "application/json": { schema: JobSchema } },
     },
     ...errorResponses,
   },
