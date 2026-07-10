@@ -13,6 +13,13 @@ import {
   PatchScriptSchema,
   ScriptPageSchema,
 } from "./script.js";
+import {
+  PutScriptStateSchema,
+  ScriptStateSchema,
+  SnapshotSchema,
+  CreateSnapshotSchema,
+  SnapshotPageSchema,
+} from "./script-state.js";
 
 const UuidParam = (name: string) =>
   z.object({ [name]: z.string().uuid() });
@@ -240,6 +247,111 @@ registry.registerPath({
     200: {
       description: "Restored script",
       content: { "application/json": { schema: ScriptSchema } },
+    },
+    ...errorResponses,
+  },
+});
+
+/* ── Script state ── */
+
+registry.registerPath({
+  method: "put",
+  path: "/v1/scripts/{scriptId}/state",
+  tags: ["script-state"],
+  summary: "Upload the Yjs document state (optionally zstd-compressed)",
+  request: {
+    params: UuidParam("scriptId"),
+    body: {
+      content: { "application/json": { schema: PutScriptStateSchema } },
+    },
+  },
+  responses: {
+    200: {
+      description: "State stored",
+      content: {
+        "application/json": {
+          schema: z.object({ scriptId: z.string().uuid(), bytes: z.number().int() }),
+        },
+      },
+    },
+    413: {
+      description: "State exceeds the plan's size ceiling",
+      content: { "application/json": { schema: ErrorEnvelopeSchema } },
+    },
+    ...errorResponses,
+  },
+});
+
+registry.registerPath({
+  method: "get",
+  path: "/v1/scripts/{scriptId}/state",
+  tags: ["script-state"],
+  summary: "Download the Yjs document state (zstd-compressed)",
+  request: { params: UuidParam("scriptId") },
+  responses: {
+    200: {
+      description: "Current state",
+      content: { "application/json": { schema: ScriptStateSchema } },
+    },
+    ...errorResponses,
+  },
+});
+
+/* ── Snapshots ── */
+
+registry.registerPath({
+  method: "post",
+  path: "/v1/scripts/{scriptId}/snapshots",
+  tags: ["snapshots"],
+  summary: "Create a MANUAL snapshot of the current script state",
+  request: {
+    params: UuidParam("scriptId"),
+    body: {
+      content: { "application/json": { schema: CreateSnapshotSchema } },
+    },
+  },
+  responses: {
+    201: {
+      description: "Snapshot created",
+      content: { "application/json": { schema: SnapshotSchema } },
+    },
+    ...errorResponses,
+  },
+});
+
+registry.registerPath({
+  method: "get",
+  path: "/v1/scripts/{scriptId}/snapshots",
+  tags: ["snapshots"],
+  summary: "List snapshots (cursor-paginated, newest first)",
+  request: {
+    params: UuidParam("scriptId"),
+    query: CursorQuery,
+  },
+  responses: {
+    200: {
+      description: "Page of snapshots",
+      content: { "application/json": { schema: SnapshotPageSchema } },
+    },
+    ...errorResponses,
+  },
+});
+
+registry.registerPath({
+  method: "post",
+  path: "/v1/scripts/{scriptId}/snapshots/{snapshotId}/restore",
+  tags: ["snapshots"],
+  summary: "Restore the script state from a snapshot",
+  request: {
+    params: z.object({
+      scriptId: z.string().uuid(),
+      snapshotId: z.string().uuid(),
+    }),
+  },
+  responses: {
+    200: {
+      description: "State restored from snapshot",
+      content: { "application/json": { schema: SnapshotSchema } },
     },
     ...errorResponses,
   },

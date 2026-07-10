@@ -67,6 +67,8 @@ export class HttpErrorFilter implements ExceptionFilter {
         return "NOT_FOUND";
       case 409:
         return "CONFLICT";
+      case 413:
+        return "PAYLOAD_TOO_LARGE";
       case 422:
         return "UNPROCESSABLE_ENTITY";
       case 429:

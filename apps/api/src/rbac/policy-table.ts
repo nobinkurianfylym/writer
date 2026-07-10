@@ -68,6 +68,10 @@ export const POLICY_TABLE: Record<string, PolicyRule> = {
     orgRoles: ["OWNER", "ADMIN"],
     projectRoles: ["OWNER", "WRITER", "EDITOR", "COMMENTER", "READER"],
   },
+  "script.snapshot.restore": {
+    orgRoles: ["OWNER", "ADMIN"],
+    projectRoles: ["OWNER", "WRITER"],
+  },
 };
 
 export function evaluatePolicy(

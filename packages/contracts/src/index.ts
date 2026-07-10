@@ -28,4 +28,20 @@ export {
   type PatchScript,
   type ScriptPage,
 } from "./script.js";
+export {
+  CompressionSchema,
+  PutScriptStateSchema,
+  ScriptStateSchema,
+  SnapshotKindSchema,
+  SnapshotSchema,
+  CreateSnapshotSchema,
+  SnapshotPageSchema,
+  type Compression,
+  type PutScriptState,
+  type ScriptState,
+  type SnapshotKind,
+  type Snapshot,
+  type CreateSnapshot,
+  type SnapshotPage,
+} from "./script-state.js";
 import "./paths.js";

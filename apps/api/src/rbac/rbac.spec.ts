@@ -98,6 +98,10 @@ describe("RBAC policy table", () => {
       orgRoles: ["OWNER", "ADMIN"],
       projectRoles: ["OWNER", "WRITER", "EDITOR", "COMMENTER", "READER"],
     },
+    "script.snapshot.restore": {
+      orgRoles: ["OWNER", "ADMIN"],
+      projectRoles: ["OWNER", "WRITER"],
+    },
   };
 
   describe("project-level actions — RBAC matrix (org role path)", () => {
