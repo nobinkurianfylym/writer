@@ -17,6 +17,7 @@
     "@fylym/editor": "workspace:*",
     "@fylym/screenplay-core": "workspace:*",
     "@fylym/ui": "workspace:*",
+    "@tanstack/react-query": "^5.101.2",
     "next": "^15.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

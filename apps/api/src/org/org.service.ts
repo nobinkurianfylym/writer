@@ -1,5 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { randomBytes } from "node:crypto";
+import type { Org } from "@fylym/contracts";
 import { PrismaService } from "../prisma/prisma.service";
 
 @Injectable()
@@ -7,6 +8,25 @@ export class OrgService {
   private readonly logger = new Logger(OrgService.name);
 
   constructor(private readonly prisma: PrismaService) {}
+
+  async listForUser(userId: string): Promise<Org[]> {
+    const memberships = await this.prisma.db.membership.findMany({
+      where: { userId },
+      select: {
+        role: true,
+        org: { select: { id: true, name: true, slug: true, plan: true } },
+      },
+      orderBy: { org: { createdAt: "asc" } },
+    });
+
+    return memberships.map((m) => ({
+      id: m.org.id,
+      name: m.org.name,
+      slug: m.org.slug,
+      plan: m.org.plan,
+      role: m.role,
+    }));
+  }
 
   async createPersonalOrg(
     userId: string,

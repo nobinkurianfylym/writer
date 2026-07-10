@@ -22,6 +22,7 @@ import {
 } from "./script-state.js";
 import { JobSchema } from "./jobs.js";
 import { CreateExportSchema, ExportAcceptedSchema } from "./export.js";
+import { OrgListSchema } from "./org.js";
 
 const UuidParam = (name: string) =>
   z.object({ [name]: z.string().uuid() });
@@ -45,6 +46,22 @@ const errorResponses = {
     content: { "application/json": { schema: ErrorEnvelopeSchema } },
   },
 } as const;
+
+/* ── Orgs ── */
+
+registry.registerPath({
+  method: "get",
+  path: "/v1/orgs",
+  tags: ["orgs"],
+  summary: "List the organizations the caller belongs to",
+  responses: {
+    200: {
+      description: "The caller's organizations",
+      content: { "application/json": { schema: OrgListSchema } },
+    },
+    ...errorResponses,
+  },
+});
 
 /* ── Projects ── */
 

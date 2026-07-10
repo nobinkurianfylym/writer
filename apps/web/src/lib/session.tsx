@@ -10,15 +10,25 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { authApi, type AuthUser } from "./api-client";
+import { apiFetch, authApi, ApiError, type AuthUser } from "./api-client";
 
 export type SessionStatus = "loading" | "authenticated" | "unauthenticated";
+
+interface ApiRequestOptions {
+  method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
+  body?: unknown;
+}
 
 interface SessionValue {
   status: SessionStatus;
   user: AuthUser | null;
   /** Current in-memory access token (never persisted to storage). */
   getAccessToken: () => string | null;
+  /**
+   * Authenticated request against the API: injects the bearer token and, on a
+   * 401, silently refreshes once via the cookie and retries.
+   */
+  apiRequest: <T>(path: string, opts?: ApiRequestOptions) => Promise<T>;
   register: (name: string, email: string, password: string) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   loginWithMagicToken: (token: string) => Promise<void>;
@@ -101,18 +111,38 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const apiRequest = useCallback(
+    async <T,>(path: string, opts: ApiRequestOptions = {}): Promise<T> => {
+      try {
+        return await apiFetch<T>(path, {
+          ...opts,
+          accessToken: tokenRef.current,
+        });
+      } catch (err) {
+        if (err instanceof ApiError && err.status === 401) {
+          const { accessToken } = await authApi.refresh();
+          tokenRef.current = accessToken;
+          return await apiFetch<T>(path, { ...opts, accessToken });
+        }
+        throw err;
+      }
+    },
+    [],
+  );
+
   const value = useMemo<SessionValue>(
     () => ({
       status,
       user,
       getAccessToken,
+      apiRequest,
       register,
       login,
       loginWithMagicToken,
       logout,
       refreshUser,
     }),
-    [status, user, getAccessToken, register, login, loginWithMagicToken, logout, refreshUser],
+    [status, user, getAccessToken, apiRequest, register, login, loginWithMagicToken, logout, refreshUser],
   );
 
   return (
