@@ -9,6 +9,7 @@ import { createExportWorker } from "./worker.js";
 import { createS3Client, createArtifactStore, s3ConfigFromEnv } from "./s3.js";
 import type { AlertHook } from "./dlq.js";
 import type { ScriptStateReader } from "./processors/export-job.js";
+import type { SceneIndexWriter } from "./processors/derive-job.js";
 
 function main() {
   loadDotEnvIfPresent();
@@ -41,6 +42,7 @@ function main() {
     alert,
     env,
     exportDeps: { db: prisma as unknown as ScriptStateReader, store },
+    deriveDeps: { db: prisma as unknown as SceneIndexWriter },
   });
 
   worker.on("completed", (job) => {

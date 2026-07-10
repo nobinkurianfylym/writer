@@ -31,6 +31,13 @@ export {
   type ScriptStateReader,
 } from "./processors/export-job.js";
 export {
+  runDeriveJob,
+  type DeriveProcessorDeps,
+  type SceneIndexWriter,
+  type SceneIndexRow,
+} from "./processors/derive-job.js";
+export { deriveSceneIndex, type DerivedScene } from "./derive.js";
+export {
   runExport,
   resolveProfile,
   type ExportArtifact,

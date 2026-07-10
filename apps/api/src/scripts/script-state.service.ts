@@ -8,6 +8,7 @@ import { zstdCompressSync, zstdDecompressSync } from "node:zlib";
 import type { Plan } from "@fylym/db";
 import type { PutScriptState, ScriptState } from "@fylym/contracts";
 import { PrismaService } from "../prisma/prisma.service";
+import { QueueService } from "../jobs/queue.service";
 
 export const STATE_CEILING_BYTES: Record<Plan, number> = {
   FREE: 10 * 1024 * 1024,
@@ -18,7 +19,10 @@ export const STATE_CEILING_BYTES: Record<Plan, number> = {
 
 @Injectable()
 export class ScriptStateService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly queue: QueueService,
+  ) {}
 
   async putState(
     scriptId: string,
@@ -53,6 +57,9 @@ export class ScriptStateService {
         ydocVector: vector ? new Uint8Array(vector) : null,
       },
     });
+
+    // Rebuild the SceneIndex read-model from the new state (§3, E5-3).
+    await this.queue.enqueue("derive", { kind: "derive", scriptId });
 
     return { scriptId, bytes: state.byteLength };
   }

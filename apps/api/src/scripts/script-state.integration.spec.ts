@@ -109,13 +109,18 @@ function createTestServices(plan = "FREE") {
     log: auditLog,
   } as unknown as ConstructorParameters<typeof SnapshotsService>[1];
 
-  const stateService = new ScriptStateService(mockPrisma);
+  const enqueue = vi.fn().mockResolvedValue("derive-job-1");
+  const mockQueue = {
+    enqueue,
+  } as unknown as ConstructorParameters<typeof ScriptStateService>[1];
+
+  const stateService = new ScriptStateService(mockPrisma, mockQueue);
   const snapshotsService = new SnapshotsService(
     mockPrisma as unknown as ConstructorParameters<typeof SnapshotsService>[0],
     mockAudit,
   );
 
-  return { stateService, snapshotsService, scriptStore, snapshotStore, auditLog };
+  return { stateService, snapshotsService, scriptStore, snapshotStore, auditLog, enqueue };
 }
 
 function seedScript(store: FakeScriptStore): string {
@@ -161,6 +166,17 @@ describe("Script state endpoints", () => {
       Buffer.from(state.ydocState, "base64"),
     );
     expect(roundTripped.equals(original)).toBe(true);
+  });
+
+  it("enqueues a SceneIndex derive job after storing state", async () => {
+    await svc.stateService.putState(scriptId, {
+      ydocState: Buffer.from("state").toString("base64"),
+      compression: "none",
+    });
+    expect(svc.enqueue).toHaveBeenCalledWith("derive", {
+      kind: "derive",
+      scriptId,
+    });
   });
 
   it("accepts a zstd-compressed upload and stores decompressed bytes", async () => {

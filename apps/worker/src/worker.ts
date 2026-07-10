@@ -8,6 +8,10 @@ import {
   type ExportProcessorDeps,
 } from "./processors/export-job.js";
 import {
+  runDeriveJob,
+  type DeriveProcessorDeps,
+} from "./processors/derive-job.js";
+import {
   handleFailedJob,
   type AlertHook,
   type DeadLetterSink,
@@ -20,6 +24,8 @@ export interface WorkerDeps {
   env: WorkerEnv;
   /** Provides DB + S3 for export jobs; omit to run a demo-only worker. */
   exportDeps?: ExportProcessorDeps;
+  /** Provides DB for SceneIndex derive jobs; omit to skip derive support. */
+  deriveDeps?: DeriveProcessorDeps;
 }
 
 /**
@@ -28,6 +34,7 @@ export interface WorkerDeps {
  */
 export function makeProcessJob(
   exportDeps?: ExportProcessorDeps,
+  deriveDeps?: DeriveProcessorDeps,
 ): (job: Job<JobData>) => Promise<unknown> {
   return async (job) => {
     const data = job.data;
@@ -40,8 +47,10 @@ export function makeProcessJob(
         }
         return runExportJob(data, job, exportDeps);
       case "derive":
-        // Real derive processor lands in E5-3.
-        throw new Error(`No processor registered for kind: ${data.kind}`);
+        if (!deriveDeps) {
+          throw new Error("Derive processor is not configured");
+        }
+        return runDeriveJob(data, job, deriveDeps);
       default:
         throw new Error("Unknown job kind");
     }
@@ -51,7 +60,7 @@ export function makeProcessJob(
 export function createExportWorker(deps: WorkerDeps): Worker<JobData> {
   const worker = new Worker<JobData>(
     EXPORT_QUEUE,
-    makeProcessJob(deps.exportDeps),
+    makeProcessJob(deps.exportDeps, deps.deriveDeps),
     {
       connection: deps.connection,
       concurrency: 4,
