@@ -2,6 +2,7 @@ import {
   Injectable,
   ConflictException,
   UnauthorizedException,
+  BadRequestException,
   Logger,
 } from "@nestjs/common";
 import { hash, verify } from "argon2";
@@ -10,6 +11,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { JwtService } from "./jwt.service";
 import { RedisService } from "./redis.service";
 import { MailService } from "./mail.service";
+import { getApiEnv } from "../env";
 
 export interface AuthTokens {
   accessToken: string;
@@ -17,9 +19,25 @@ export interface AuthTokens {
   expiresIn: number;
 }
 
+interface GoogleTokenResponse {
+  id_token: string;
+  access_token: string;
+}
+
+interface GoogleIdTokenPayload {
+  sub: string;
+  email: string;
+  email_verified: boolean;
+  name?: string;
+}
+
 const REFRESH_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 const VERIFY_EMAIL_TTL_SEC = 86400; // 24 hours
 const VERIFY_EMAIL_PREFIX = "email-verify:";
+const MAGIC_LINK_TTL_SEC = 600; // 10 minutes
+const MAGIC_LINK_PREFIX = "magic-link:";
+const OAUTH_STATE_PREFIX = "oauth-state:";
+const OAUTH_STATE_TTL_SEC = 600; // 10 minutes
 
 @Injectable()
 export class AuthService {
@@ -183,6 +201,219 @@ export class AuthService {
     await this.redis.client.del(key);
     this.logger.log(`Email verified for user ${userId}`);
     return { userId };
+  }
+
+  /* ── Magic Links ── */
+
+  async sendMagicLink(email: string): Promise<void> {
+    const normalizedEmail = email.toLowerCase();
+    const token = randomBytes(32).toString("base64url");
+    const hashedToken = this.hashToken(token);
+    const key = `${MAGIC_LINK_PREFIX}${hashedToken}`;
+    await this.redis.client.set(key, normalizedEmail, "EX", MAGIC_LINK_TTL_SEC);
+    await this.mail.sendMagicLinkEmail(normalizedEmail, token);
+    this.logger.log(`Magic link sent to ${normalizedEmail}`);
+  }
+
+  async verifyMagicLink(
+    token: string,
+    ip?: string,
+    userAgent?: string,
+  ): Promise<AuthTokens> {
+    const hashedToken = this.hashToken(token);
+    const key = `${MAGIC_LINK_PREFIX}${hashedToken}`;
+    const email = await this.redis.client.get(key);
+
+    if (!email) {
+      throw new UnauthorizedException(
+        "Invalid or expired magic link",
+      );
+    }
+
+    // Single-use: delete immediately
+    await this.redis.client.del(key);
+
+    let user = await this.prisma.db.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      user = await this.prisma.db.user.create({
+        data: {
+          email,
+          name: email.split("@")[0] ?? email,
+          emailVerified: new Date(),
+        },
+      });
+      this.logger.log(`User created via magic link: ${user.id}`);
+    } else if (!user.emailVerified) {
+      await this.prisma.db.user.update({
+        where: { id: user.id },
+        data: { emailVerified: new Date() },
+      });
+    }
+
+    return this.createSession(user.id, ip, userAgent);
+  }
+
+  /* ── Google OAuth ── */
+
+  async getGoogleAuthUrl(): Promise<{ url: string; state: string }> {
+    const env = getApiEnv();
+    if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_REDIRECT_URI) {
+      throw new BadRequestException("Google OAuth is not configured");
+    }
+
+    const state = randomBytes(32).toString("base64url");
+    const codeVerifier = randomBytes(32).toString("base64url");
+    const codeChallenge = createHash("sha256")
+      .update(codeVerifier)
+      .digest("base64url");
+
+    // Store state → codeVerifier mapping in Redis
+    const key = `${OAUTH_STATE_PREFIX}${state}`;
+    await this.redis.client.set(key, codeVerifier, "EX", OAUTH_STATE_TTL_SEC);
+
+    const params = new URLSearchParams({
+      client_id: env.GOOGLE_CLIENT_ID,
+      redirect_uri: env.GOOGLE_REDIRECT_URI,
+      response_type: "code",
+      scope: "openid email profile",
+      state,
+      code_challenge: codeChallenge,
+      code_challenge_method: "S256",
+      access_type: "offline",
+      prompt: "consent",
+    });
+
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+    return { url, state };
+  }
+
+  async handleGoogleCallback(
+    code: string,
+    state: string,
+    ip?: string,
+    userAgent?: string,
+  ): Promise<AuthTokens> {
+    const env = getApiEnv();
+    if (
+      !env.GOOGLE_CLIENT_ID ||
+      !env.GOOGLE_CLIENT_SECRET ||
+      !env.GOOGLE_REDIRECT_URI
+    ) {
+      throw new BadRequestException("Google OAuth is not configured");
+    }
+
+    // Retrieve and consume stored code_verifier
+    const stateKey = `${OAUTH_STATE_PREFIX}${state}`;
+    const codeVerifier = await this.redis.client.get(stateKey);
+    if (!codeVerifier) {
+      throw new UnauthorizedException("Invalid or expired OAuth state");
+    }
+    await this.redis.client.del(stateKey);
+
+    // Exchange authorization code for tokens
+    const tokenResponse = await fetch(
+      "https://oauth2.googleapis.com/token",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          code,
+          client_id: env.GOOGLE_CLIENT_ID,
+          client_secret: env.GOOGLE_CLIENT_SECRET,
+          redirect_uri: env.GOOGLE_REDIRECT_URI,
+          grant_type: "authorization_code",
+          code_verifier: codeVerifier,
+        }),
+      },
+    );
+
+    if (!tokenResponse.ok) {
+      this.logger.warn(`Google token exchange failed: ${tokenResponse.status}`);
+      throw new UnauthorizedException("Google authentication failed");
+    }
+
+    const tokenData = (await tokenResponse.json()) as GoogleTokenResponse;
+
+    // Decode and verify the ID token claims
+    const payload = this.decodeGoogleIdToken(tokenData.id_token);
+    if (!payload.email || !payload.sub) {
+      throw new UnauthorizedException("Invalid Google ID token");
+    }
+
+    return this.findOrCreateGoogleUser(payload, ip, userAgent);
+  }
+
+  private decodeGoogleIdToken(idToken: string): GoogleIdTokenPayload {
+    const parts = idToken.split(".");
+    if (parts.length !== 3) {
+      throw new UnauthorizedException("Malformed ID token");
+    }
+    const payloadJson = Buffer.from(parts[1]!, "base64url").toString("utf-8");
+    return JSON.parse(payloadJson) as GoogleIdTokenPayload;
+  }
+
+  private async findOrCreateGoogleUser(
+    payload: GoogleIdTokenPayload,
+    ip?: string,
+    userAgent?: string,
+  ): Promise<AuthTokens> {
+    const email = payload.email.toLowerCase();
+
+    // Check if OAuthAccount already exists
+    const existingOAuth = await this.prisma.db.oAuthAccount.findUnique({
+      where: {
+        provider_providerId: { provider: "google", providerId: payload.sub },
+      },
+    });
+
+    if (existingOAuth) {
+      return this.createSession(existingOAuth.userId, ip, userAgent);
+    }
+
+    // Check if user exists by email (account linking)
+    let user = await this.prisma.db.user.findUnique({
+      where: { email },
+    });
+
+    if (user) {
+      // Link Google account to existing user
+      await this.prisma.db.oAuthAccount.create({
+        data: {
+          userId: user.id,
+          provider: "google",
+          providerId: payload.sub,
+        },
+      });
+
+      // Mark email as verified if Google says it is
+      if (payload.email_verified && !user.emailVerified) {
+        await this.prisma.db.user.update({
+          where: { id: user.id },
+          data: { emailVerified: new Date() },
+        });
+      }
+    } else {
+      // Create new user + OAuthAccount
+      user = await this.prisma.db.user.create({
+        data: {
+          email,
+          name: payload.name ?? email.split("@")[0] ?? email,
+          emailVerified: payload.email_verified ? new Date() : null,
+          oauthAccounts: {
+            create: {
+              provider: "google",
+              providerId: payload.sub,
+            },
+          },
+        },
+      });
+      this.logger.log(`User created via Google OAuth: ${user.id}`);
+    }
+
+    return this.createSession(user.id, ip, userAgent);
   }
 
   private async createSession(

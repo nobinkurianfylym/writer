@@ -9,6 +9,9 @@ const schema = z.object({
   SMTP_HOST: z.string().default("localhost"),
   SMTP_PORT: z.coerce.number().int().positive().default(1025),
   APP_URL: z.string().url().default("http://localhost:5173"),
+  GOOGLE_CLIENT_ID: z.string().min(1).optional(),
+  GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
+  GOOGLE_REDIRECT_URI: z.string().url().optional(),
 });
 
 export type ApiEnv = z.infer<typeof schema>;

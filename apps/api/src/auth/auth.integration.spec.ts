@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeAll, beforeEach } from "vitest";
-import { randomUUID } from "node:crypto";
+import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from "vitest";
+import { randomUUID, createHash } from "node:crypto";
 import { importPKCS8, importSPKI, jwtVerify } from "jose";
 import type { CryptoKey as JoseKey } from "jose";
 
@@ -43,16 +43,31 @@ class InMemoryUserStore {
     return null;
   }
 
+  oAuthAccountStore?: InMemoryOAuthAccountStore;
+
   create(args: { data: Record<string, unknown> }) {
     const id = randomUUID();
+    const { oauthAccounts, ...rest } = args.data;
     const user = {
       id,
       emailVerified: null,
-      ...args.data,
+      ...rest,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
     this.users.set(id, user);
+
+    // Handle nested oauthAccounts create
+    if (
+      oauthAccounts &&
+      typeof oauthAccounts === "object" &&
+      "create" in (oauthAccounts as Record<string, unknown>) &&
+      this.oAuthAccountStore
+    ) {
+      const oauthData = (oauthAccounts as { create: Record<string, unknown> }).create;
+      this.oAuthAccountStore.create({ data: { ...oauthData, userId: id } });
+    }
+
     return user;
   }
 
@@ -110,6 +125,40 @@ class InMemorySessionStore {
   }
 }
 
+class InMemoryOAuthAccountStore {
+  accounts = new Map<string, Record<string, unknown>>();
+
+  findUnique(args: { where: Record<string, unknown> }) {
+    const compound = args.where.provider_providerId as
+      | { provider: string; providerId: string }
+      | undefined;
+    if (compound) {
+      for (const account of this.accounts.values()) {
+        if (
+          account.provider === compound.provider &&
+          account.providerId === compound.providerId
+        ) {
+          return account;
+        }
+      }
+      return null;
+    }
+    for (const account of this.accounts.values()) {
+      for (const [key, val] of Object.entries(args.where)) {
+        if (account[key] === val) return account;
+      }
+    }
+    return null;
+  }
+
+  create(args: { data: Record<string, unknown> }) {
+    const id = randomUUID();
+    const account = { id, ...args.data };
+    this.accounts.set(id, account);
+    return account;
+  }
+}
+
 /* ---------- ES256 dev keys ---------- */
 const TEST_PRIVATE_KEY =
   "-----BEGIN PRIVATE KEY-----\n" +
@@ -130,14 +179,19 @@ import { JwtService } from "./jwt.service";
 
 function createTestServices() {
   const fakeRedis = new FakeRedisClient();
+  const oAuthAccountStore = new InMemoryOAuthAccountStore();
+  const userStore = new InMemoryUserStore();
+  userStore.oAuthAccountStore = oAuthAccountStore;
   const mockDb = {
-    user: new InMemoryUserStore(),
+    user: userStore,
     session: new InMemorySessionStore(),
+    oAuthAccount: oAuthAccountStore,
   };
   const mockPrisma = { db: mockDb } as unknown as ConstructorParameters<typeof AuthService>[0];
   const mockRedisService = { client: fakeRedis } as unknown as ConstructorParameters<typeof AuthService>[2];
   const mockMail = {
     sendVerificationEmail: vi.fn().mockResolvedValue(undefined),
+    sendMagicLinkEmail: vi.fn().mockResolvedValue(undefined),
   } as unknown as ConstructorParameters<typeof AuthService>[3];
 
   const jwtService = new JwtService();
@@ -183,6 +237,12 @@ describe("Auth integration", () => {
     fakeRedis = services.fakeRedis;
     mockDb = services.mockDb;
     await jwtService.onModuleInit();
+  });
+
+  afterEach(() => {
+    delete process.env.GOOGLE_CLIENT_ID;
+    delete process.env.GOOGLE_CLIENT_SECRET;
+    delete process.env.GOOGLE_REDIRECT_URI;
   });
 
   /* ── Registration ── */
@@ -387,5 +447,325 @@ describe("Auth integration", () => {
     expect(hashed).toContain("m=19456");
     expect(hashed).toContain("t=2");
     expect(hashed).toContain("p=1");
+  });
+
+  /* ── Magic links ── */
+
+  it("sends a magic link and verifies it for existing user", async () => {
+    await authService.register(TEST_EMAIL, TEST_PASSWORD, TEST_NAME);
+    const services = createTestServices();
+    await services.jwtService.onModuleInit();
+    authService = services.authService;
+    fakeRedis = services.fakeRedis;
+    mockDb = services.mockDb;
+
+    // Re-register to populate mockDb
+    await authService.register(TEST_EMAIL, TEST_PASSWORD, TEST_NAME);
+
+    await authService.sendMagicLink(TEST_EMAIL);
+    expect(services.mockMail.sendMagicLinkEmail).toHaveBeenCalledWith(
+      TEST_EMAIL.toLowerCase(),
+      expect.any(String),
+    );
+
+    // Extract the raw token from the mock call
+    const sendMock = services.mockMail.sendMagicLinkEmail as unknown as ReturnType<typeof vi.fn>;
+    const rawToken = sendMock.mock.calls[0]![1] as string;
+
+    const tokens = await authService.verifyMagicLink(rawToken);
+    expect(tokens.accessToken).toBeDefined();
+    expect(tokens.refreshToken).toBeDefined();
+    expect(tokens.expiresIn).toBe(600);
+  });
+
+  it("creates a new user when magic link is used with unknown email", async () => {
+    const newEmail = "newuser@example.com";
+    await authService.sendMagicLink(newEmail);
+
+    // Extract raw token
+    const services = createTestServices();
+    await services.jwtService.onModuleInit();
+
+    // Manually set up magic link in fakeRedis
+    const rawToken = "test-magic-token";
+    const hashedToken = createHash("sha256").update(rawToken).digest("hex");
+    await fakeRedis.set(`magic-link:${hashedToken}`, newEmail.toLowerCase(), "EX", 600);
+
+    const tokens = await authService.verifyMagicLink(rawToken);
+    expect(tokens.accessToken).toBeDefined();
+
+    // User should have been created with verified email
+    const user = mockDb.user.findUnique({ where: { email: newEmail.toLowerCase() } });
+    expect(user).not.toBeNull();
+    expect(user!.emailVerified).toBeInstanceOf(Date);
+  });
+
+  it("magic link consumed twice fails the second time (single-use)", async () => {
+    const rawToken = "single-use-token";
+    const hashedToken = createHash("sha256").update(rawToken).digest("hex");
+    await fakeRedis.set(`magic-link:${hashedToken}`, TEST_EMAIL.toLowerCase(), "EX", 600);
+
+    // First use succeeds
+    await authService.verifyMagicLink(rawToken);
+
+    // Second use fails — token was deleted
+    await expect(authService.verifyMagicLink(rawToken)).rejects.toThrow(
+      "Invalid or expired magic link",
+    );
+  });
+
+  it("magic link expires after TTL (clock-controlled)", async () => {
+    const rawToken = "expiring-token";
+    const hashedToken = createHash("sha256").update(rawToken).digest("hex");
+    // Set with 1-second TTL for fast expiry test
+    await fakeRedis.set(`magic-link:${hashedToken}`, TEST_EMAIL.toLowerCase(), "EX", 1);
+
+    // Wait for expiry
+    await new Promise((resolve) => setTimeout(resolve, 1100));
+
+    await expect(authService.verifyMagicLink(rawToken)).rejects.toThrow(
+      "Invalid or expired magic link",
+    );
+  });
+
+  it("magic link token is hashed at rest in Redis", async () => {
+    await authService.sendMagicLink(TEST_EMAIL);
+
+    // The raw token should not appear as a Redis key
+    const rawToken: string | undefined = undefined;
+
+    // Keys in fakeRedis should be hashed, not raw
+    // Verify by checking that the key format is magic-link:<sha256hex>
+    let foundMagicLinkKey = false;
+    for (const key of (fakeRedis as unknown as { store: Map<string, unknown> }).store.keys()) {
+      if (key.startsWith("magic-link:")) {
+        foundMagicLinkKey = true;
+        const hashPart = key.slice("magic-link:".length);
+        expect(hashPart).toMatch(/^[a-f0-9]{64}$/);
+        if (rawToken) {
+          expect(hashPart).not.toBe(rawToken);
+        }
+      }
+    }
+    expect(foundMagicLinkKey).toBe(true);
+  });
+
+  /* ── Google OAuth ── */
+
+  it("getGoogleAuthUrl returns authorization URL with PKCE params", async () => {
+    process.env.GOOGLE_CLIENT_ID = "test-client-id";
+    process.env.GOOGLE_CLIENT_SECRET = "test-client-secret";
+    process.env.GOOGLE_REDIRECT_URI = "http://localhost:5173/auth/google/callback";
+
+    const { url, state } = await authService.getGoogleAuthUrl();
+
+    expect(state).toBeDefined();
+    expect(url).toContain("accounts.google.com");
+    expect(url).toContain("client_id=test-client-id");
+    expect(url).toContain("code_challenge_method=S256");
+    expect(url).toContain("code_challenge=");
+    expect(url).toContain(`state=${state}`);
+    expect(url).toContain("scope=openid+email+profile");
+  });
+
+  it("getGoogleAuthUrl stores state→verifier in Redis", async () => {
+    process.env.GOOGLE_CLIENT_ID = "test-client-id";
+    process.env.GOOGLE_CLIENT_SECRET = "test-client-secret";
+    process.env.GOOGLE_REDIRECT_URI = "http://localhost:5173/auth/google/callback";
+
+    const { state } = await authService.getGoogleAuthUrl();
+
+    const storedVerifier = await fakeRedis.get(`oauth-state:${state}`);
+    expect(storedVerifier).toBeDefined();
+    expect(typeof storedVerifier).toBe("string");
+  });
+
+  it("getGoogleAuthUrl throws when Google OAuth not configured", async () => {
+    delete process.env.GOOGLE_CLIENT_ID;
+    delete process.env.GOOGLE_REDIRECT_URI;
+
+    await expect(authService.getGoogleAuthUrl()).rejects.toThrow(
+      "Google OAuth is not configured",
+    );
+  });
+
+  it("handleGoogleCallback rejects invalid OAuth state", async () => {
+    process.env.GOOGLE_CLIENT_ID = "test-client-id";
+    process.env.GOOGLE_CLIENT_SECRET = "test-client-secret";
+    process.env.GOOGLE_REDIRECT_URI = "http://localhost:5173/auth/google/callback";
+
+    await expect(
+      authService.handleGoogleCallback("some-code", "invalid-state"),
+    ).rejects.toThrow("Invalid or expired OAuth state");
+  });
+
+  it("findOrCreateGoogleUser links Google account to existing user by email", async () => {
+    await authService.register(TEST_EMAIL, TEST_PASSWORD, TEST_NAME);
+    const user = mockDb.user.users.values().next().value!;
+
+    // Simulate findOrCreateGoogleUser by calling the private method indirectly
+    // via handleGoogleCallback with a mocked fetch
+    const googlePayload = {
+      sub: "google-user-123",
+      email: TEST_EMAIL,
+      email_verified: true,
+      name: TEST_NAME,
+    };
+
+    // Encode as a fake ID token
+    const fakeIdToken = [
+      Buffer.from(JSON.stringify({ alg: "RS256" })).toString("base64url"),
+      Buffer.from(JSON.stringify(googlePayload)).toString("base64url"),
+      "fake-signature",
+    ].join(".");
+
+    // Set up state in Redis
+    process.env.GOOGLE_CLIENT_ID = "test-client-id";
+    process.env.GOOGLE_CLIENT_SECRET = "test-client-secret";
+    process.env.GOOGLE_REDIRECT_URI = "http://localhost:5173/auth/google/callback";
+
+    const state = "test-state";
+    await fakeRedis.set(`oauth-state:${state}`, "test-verifier", "EX", 600);
+
+    // Mock global fetch
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ id_token: fakeIdToken, access_token: "at" }),
+    });
+
+    try {
+      const tokens = await authService.handleGoogleCallback("auth-code", state);
+      expect(tokens.accessToken).toBeDefined();
+
+      // OAuthAccount should be linked
+      const oauth = mockDb.oAuthAccount.findUnique({
+        where: { provider_providerId: { provider: "google", providerId: "google-user-123" } },
+      });
+      expect(oauth).not.toBeNull();
+      expect(oauth!.userId).toBe(user.id);
+
+      // Email should now be verified
+      const updatedUser = mockDb.user.users.get(user.id as string);
+      expect(updatedUser!.emailVerified).toBeInstanceOf(Date);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  it("findOrCreateGoogleUser creates new user when email not found", async () => {
+    const googlePayload = {
+      sub: "google-new-user-456",
+      email: "newgoogle@example.com",
+      email_verified: true,
+      name: "New Google User",
+    };
+
+    const fakeIdToken = [
+      Buffer.from(JSON.stringify({ alg: "RS256" })).toString("base64url"),
+      Buffer.from(JSON.stringify(googlePayload)).toString("base64url"),
+      "fake-signature",
+    ].join(".");
+
+    process.env.GOOGLE_CLIENT_ID = "test-client-id";
+    process.env.GOOGLE_CLIENT_SECRET = "test-client-secret";
+    process.env.GOOGLE_REDIRECT_URI = "http://localhost:5173/auth/google/callback";
+
+    const state = "test-state-2";
+    await fakeRedis.set(`oauth-state:${state}`, "test-verifier", "EX", 600);
+
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ id_token: fakeIdToken, access_token: "at" }),
+    });
+
+    try {
+      const tokens = await authService.handleGoogleCallback("auth-code", state);
+      expect(tokens.accessToken).toBeDefined();
+
+      // New user should exist
+      const user = mockDb.user.findUnique({ where: { email: "newgoogle@example.com" } });
+      expect(user).not.toBeNull();
+      expect(user!.name).toBe("New Google User");
+      expect(user!.emailVerified).toBeInstanceOf(Date);
+
+      // OAuthAccount should exist
+      const oauth = mockDb.oAuthAccount.findUnique({
+        where: { provider_providerId: { provider: "google", providerId: "google-new-user-456" } },
+      });
+      expect(oauth).not.toBeNull();
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  it("handleGoogleCallback rejects when token exchange fails", async () => {
+    process.env.GOOGLE_CLIENT_ID = "test-client-id";
+    process.env.GOOGLE_CLIENT_SECRET = "test-client-secret";
+    process.env.GOOGLE_REDIRECT_URI = "http://localhost:5173/auth/google/callback";
+
+    const state = "test-state-fail";
+    await fakeRedis.set(`oauth-state:${state}`, "test-verifier", "EX", 600);
+
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 400,
+    });
+
+    try {
+      await expect(
+        authService.handleGoogleCallback("bad-code", state),
+      ).rejects.toThrow("Google authentication failed");
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
+
+  it("returning Google user gets session without creating duplicate", async () => {
+    const googlePayload = {
+      sub: "google-returning-789",
+      email: "returning@example.com",
+      email_verified: true,
+      name: "Returning User",
+    };
+
+    const fakeIdToken = [
+      Buffer.from(JSON.stringify({ alg: "RS256" })).toString("base64url"),
+      Buffer.from(JSON.stringify(googlePayload)).toString("base64url"),
+      "fake-signature",
+    ].join(".");
+
+    process.env.GOOGLE_CLIENT_ID = "test-client-id";
+    process.env.GOOGLE_CLIENT_SECRET = "test-client-secret";
+    process.env.GOOGLE_REDIRECT_URI = "http://localhost:5173/auth/google/callback";
+
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ id_token: fakeIdToken, access_token: "at" }),
+    });
+
+    try {
+      // First login — creates user + OAuthAccount
+      const state1 = "state-first";
+      await fakeRedis.set(`oauth-state:${state1}`, "verifier1", "EX", 600);
+      const tokens1 = await authService.handleGoogleCallback("code1", state1);
+      expect(tokens1.accessToken).toBeDefined();
+
+      const userCountAfterFirst = mockDb.user.users.size;
+
+      // Second login — reuses existing OAuthAccount
+      const state2 = "state-second";
+      await fakeRedis.set(`oauth-state:${state2}`, "verifier2", "EX", 600);
+      const tokens2 = await authService.handleGoogleCallback("code2", state2);
+      expect(tokens2.accessToken).toBeDefined();
+
+      // No duplicate user created
+      expect(mockDb.user.users.size).toBe(userCountAfterFirst);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
   });
 });

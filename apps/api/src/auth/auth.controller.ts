@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -157,6 +158,66 @@ export class AuthController {
     }
     await this.auth.sendVerificationEmail(user.email, user.id);
     return { message: "Verification email sent" };
+  }
+
+  /* ── Magic Links ── */
+
+  @Post("magic-link")
+  @HttpCode(HttpStatus.OK)
+  async sendMagicLink(@Body() body: { email: string }) {
+    await this.auth.sendMagicLink(body.email);
+    return { message: "If that email is registered or valid, a sign-in link has been sent" };
+  }
+
+  @Post("magic-link/verify")
+  @HttpCode(HttpStatus.OK)
+  async verifyMagicLink(
+    @Body() body: { token: string },
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const tokens = await this.auth.verifyMagicLink(
+      body.token,
+      req.ip,
+      req.headers["user-agent"],
+    );
+
+    this.setRefreshCookie(res, tokens.refreshToken);
+
+    return {
+      accessToken: tokens.accessToken,
+      expiresIn: tokens.expiresIn,
+    };
+  }
+
+  /* ── Google OAuth ── */
+
+  @Get("google")
+  async googleAuthUrl() {
+    const { url } = await this.auth.getGoogleAuthUrl();
+    return { url };
+  }
+
+  @Post("oauth/google/callback")
+  @HttpCode(HttpStatus.OK)
+  async googleCallback(
+    @Body() body: { code: string; state: string },
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const tokens = await this.auth.handleGoogleCallback(
+      body.code,
+      body.state,
+      req.ip,
+      req.headers["user-agent"],
+    );
+
+    this.setRefreshCookie(res, tokens.refreshToken);
+
+    return {
+      accessToken: tokens.accessToken,
+      expiresIn: tokens.expiresIn,
+    };
   }
 
   private setRefreshCookie(res: Response, token: string) {
