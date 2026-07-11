@@ -35,8 +35,12 @@ async function bootstrap() {
   // removed so we don't advertise the stack.
   const httpAdapter = app.getHttpAdapter().getInstance() as {
     disable: (setting: string) => void;
+    set: (setting: string, value: unknown) => void;
   };
   httpAdapter.disable("x-powered-by");
+  // Behind Railway/Cloudflare/ALB: trust the first proxy hop so req.ip (used
+  // by the rate limiter) and the Secure-cookie/HTTPS detection are correct.
+  httpAdapter.set("trust proxy", 1);
   app.use(
     helmet({
       contentSecurityPolicy: {

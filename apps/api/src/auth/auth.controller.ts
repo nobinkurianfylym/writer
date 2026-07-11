@@ -32,6 +32,20 @@ interface RefreshBody {
 const REFRESH_COOKIE = "fylym_refresh";
 const COOKIE_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
 
+/**
+ * Refresh-cookie SameSite policy. Defaults to "strict" (web + API on one
+ * site). When the web app is on a different site than the API (e.g. web on
+ * *.workers.dev, API on *.railway.app) set COOKIE_SAMESITE=none so the
+ * browser sends the cookie cross-site — which the spec requires to be Secure.
+ */
+function cookieSameSite(): "strict" | "lax" | "none" {
+  const value = process.env.COOKIE_SAMESITE?.toLowerCase();
+  return value === "none" || value === "lax" ? value : "strict";
+}
+function cookieSecure(): boolean {
+  return cookieSameSite() === "none" || process.env.NODE_ENV === "production";
+}
+
 @Controller("auth")
 @UseGuards(RateLimitGuard)
 export class AuthController {
@@ -235,8 +249,8 @@ export class AuthController {
   private setRefreshCookie(res: Response, token: string) {
     res.cookie(REFRESH_COOKIE, token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: cookieSecure(),
+      sameSite: cookieSameSite(),
       path: "/auth",
       maxAge: COOKIE_MAX_AGE_MS,
     });
@@ -245,8 +259,8 @@ export class AuthController {
   private clearRefreshCookie(res: Response) {
     res.clearCookie(REFRESH_COOKIE, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: cookieSecure(),
+      sameSite: cookieSameSite(),
       path: "/auth",
     });
   }

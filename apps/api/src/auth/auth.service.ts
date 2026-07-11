@@ -91,7 +91,16 @@ export class AuthService {
       target: user.id,
     });
 
-    await this.sendVerificationEmail(user.email, user.id);
+    // Best-effort: a mail outage (or no SMTP configured) must not fail
+    // signup — the account is created and password login works regardless;
+    // the user can re-request verification later.
+    try {
+      await this.sendVerificationEmail(user.email, user.id);
+    } catch (err) {
+      this.logger.warn(
+        `Verification email failed for ${user.id}: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
     return { userId: user.id };
   }
 
