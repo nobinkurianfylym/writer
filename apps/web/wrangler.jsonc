@@ -11,6 +11,11 @@
 		"directory": ".open-next/assets",
 		"binding": "ASSETS"
 	},
+	"vars": {
+		// API origin — read at runtime by the middleware CSP connect-src.
+		// The client fetch base is inlined at build time from the same env var.
+		"NEXT_PUBLIC_API_URL": "https://fylymapi-production.up.railway.app"
+	},
 	"services": [
 		{
 			// Self-reference service binding, the service name must match the worker name
