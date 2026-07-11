@@ -132,3 +132,21 @@ The Workers runtime has no persistent Node process, no long-lived TCP to
 Postgres/Redis (Prisma/ioredis), no native addons (argon2), and no place for a
 long-running BullMQ consumer. Railway (or any container host) runs the Nest
 API and the worker as-is from the existing `infra/docker/Dockerfile.{api,worker}`.
+
+---
+
+## Auto-deploy the web on every push
+
+`.github/workflows/deploy-web.yml` rebuilds + redeploys the web to Cloudflare
+whenever you push to `main` (touching `apps/web/**` or `packages/**`), so you
+never rebuild by hand. Set these once in the GitHub repo:
+
+- **Settings → Secrets and variables → Actions → Variables**
+  - `NEXT_PUBLIC_API_URL` = your Railway API URL (e.g. `https://fylym-api-production.up.railway.app`)
+- **Settings → Secrets and variables → Actions → Secrets**
+  - `CLOUDFLARE_API_TOKEN` — a token with the *Workers Scripts: Edit* permission
+  - `CLOUDFLARE_ACCOUNT_ID` — your Cloudflare account id
+
+After the API is live on Railway, set `NEXT_PUBLIC_API_URL` and push (or run
+the workflow manually via **Actions → Deploy Web → Run workflow**) — the app
+goes live pointing at the real backend, with the CSP allowing it.
