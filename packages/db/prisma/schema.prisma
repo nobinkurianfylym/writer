@@ -166,6 +166,10 @@ model Script {
   pagesLocked   Boolean @default(false)
   ydocState     Bytes?
   ydocVector    Bytes?
+  // Beat board: an ordered list of planning cards ({id, act, title, summary,
+  // color}). Stored as JSON since it's a small per-script list edited as a
+  // whole, independent of the Yjs screenplay document.
+  beats         Json    @default("[]")
 
   project   Project      @relation(fields: [projectId], references: [id])
   scenes    SceneIndex[]

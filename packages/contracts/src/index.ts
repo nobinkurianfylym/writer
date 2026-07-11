@@ -1,6 +1,14 @@
 export { registry } from "./registry.js";
 export { ErrorEnvelopeSchema, type ErrorEnvelope } from "./envelope.js";
 export {
+  BeatColorSchema,
+  BeatSchema,
+  BeatsSchema,
+  type BeatColor,
+  type Beat,
+  type Beats,
+} from "./beats.js";
+export {
   CursorPageParamsSchema,
   cursorPageResponseSchema,
   type CursorPageParams,

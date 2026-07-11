@@ -9,6 +9,7 @@ import { SyncIndicator } from "@/components/editor/sync-indicator";
 import { TitlePageSheet } from "@/components/editor/title-page-sheet";
 import { SnapshotMenu } from "@/components/editor/snapshot-menu";
 import { ExportDialog } from "@/components/editor/export-dialog";
+import { BeatBoard } from "@/components/editor/beat-board";
 
 export default function EditorPage({
   params,
@@ -94,6 +95,8 @@ function EditorSurface({
     [saveMerged],
   );
 
+  const [view, setView] = useState<"script" | "beats">("script");
+
   // Pagination worker (page ruler); the editor degrades gracefully without it.
   const [worker, setWorker] = useState<Worker | null>(null);
   useEffect(() => {
@@ -120,6 +123,36 @@ function EditorSurface({
             ← Projects
           </Link>
           <SyncIndicator status={status} />
+          <div
+            role="tablist"
+            aria-label="Editor view"
+            className="ml-2 flex items-center rounded-full border bg-card p-0.5 text-sm"
+          >
+            <button
+              role="tab"
+              aria-selected={view === "script"}
+              onClick={() => setView("script")}
+              className={`rounded-full px-3 py-1 transition ${
+                view === "script"
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Script
+            </button>
+            <button
+              role="tab"
+              aria-selected={view === "beats"}
+              onClick={() => setView("beats")}
+              className={`rounded-full px-3 py-1 transition ${
+                view === "beats"
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Beats
+            </button>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <TitlePageSheet block={titleBlock} onChange={handleTitleChange} />
@@ -128,13 +161,20 @@ function EditorSurface({
         </div>
       </div>
 
-      <div className="flex-1 px-4 py-6">
+      {/* Keep the editor mounted (hidden) so switching views never drops its
+          in-memory document state. */}
+      <div className={`flex-1 px-4 py-6 ${view === "script" ? "" : "hidden"}`}>
         <ScriptEditor
           initialDocument={bodyDocument}
           paginationWorker={worker ?? undefined}
           onChange={handleBodyChange}
         />
       </div>
+      {view === "beats" && (
+        <div className="flex-1 px-4 py-6">
+          <BeatBoard scriptId={scriptId} />
+        </div>
+      )}
     </div>
   );
 }

@@ -6,13 +6,42 @@ import type {
   Snapshot,
   ExportFormat,
   ExportOptions,
+  Beat,
+  Beats,
 } from "@fylym/contracts";
 import { useSession } from "./session";
 import { API_URL } from "./api-client";
 
 export const editorQk = {
   snapshots: (scriptId: string) => ["snapshots", scriptId] as const,
+  beats: (scriptId: string) => ["beats", scriptId] as const,
 };
+
+/** Loads a script's beat board. */
+export function useBeats(scriptId: string) {
+  const { apiRequest } = useSession();
+  return useQuery({
+    queryKey: editorQk.beats(scriptId),
+    queryFn: () => apiRequest<Beats>(`/v1/scripts/${scriptId}/beats`),
+    select: (data) => data.beats,
+  });
+}
+
+/** Replaces the whole beat board (the board autosaves the full list). */
+export function useSaveBeats(scriptId: string) {
+  const { apiRequest } = useSession();
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (beats: Beat[]) =>
+      apiRequest<Beats>(`/v1/scripts/${scriptId}/beats`, {
+        method: "PUT",
+        body: { beats },
+      }),
+    onSuccess: (data) => {
+      client.setQueryData(editorQk.beats(scriptId), data);
+    },
+  });
+}
 
 export function useSnapshots(scriptId: string) {
   const { apiRequest } = useSession();
