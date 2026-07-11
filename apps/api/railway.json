@@ -6,7 +6,7 @@
   },
   "deploy": {
     "startCommand": "node apps/api/dist/main.js",
-    "preDeployCommand": "pnpm --filter @fylym/db exec prisma db push --skip-generate --accept-data-loss",
+    "preDeployCommand": "pnpm --filter @fylym/db exec prisma db push --accept-data-loss",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 60,
     "restartPolicyType": "ON_FAILURE"
