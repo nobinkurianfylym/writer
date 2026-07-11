@@ -7,6 +7,7 @@ initObservability();
 import { NestFactory } from "@nestjs/core";
 import { Logger } from "nestjs-pino";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
 import { json, urlencoded } from "express";
 import { loadDotEnvIfPresent, reportEnvErrorAndExit } from "@fylym/config/env";
 import { AppModule } from "./app.module";
@@ -28,6 +29,24 @@ async function bootstrap() {
     bodyParser: false,
   });
   app.useLogger(app.get(Logger));
+
+  // Security headers (§9). The API serves JSON only, so a locked-down CSP is
+  // safe; nosniff/frame-deny/referrer/HSTS harden the rest. x-powered-by is
+  // removed so we don't advertise the stack.
+  const httpAdapter = app.getHttpAdapter().getInstance() as {
+    disable: (setting: string) => void;
+  };
+  httpAdapter.disable("x-powered-by");
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: { defaultSrc: ["'none'"], frameAncestors: ["'none'"] },
+      },
+      hsts: process.env.NODE_ENV === "production",
+      crossOriginResourcePolicy: { policy: "same-site" },
+    }),
+  );
+
   // Script state uploads carry base64 Yjs payloads well past the 100kb
   // express default; ceiling enforcement happens per-plan in the service.
   app.use(json({ limit: "64mb" }));

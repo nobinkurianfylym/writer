@@ -25,6 +25,7 @@
     "bullmq": "^5.79.3",
     "cookie-parser": "^1.4.7",
     "express": "^5.2.1",
+    "helmet": "^8.2.0",
     "ioredis": "^5.11.1",
     "jose": "^6.2.3",
     "nestjs-pino": "^4.6.1",
