@@ -4,8 +4,12 @@ const schema = z.object({
   PORT: z.coerce.number().int().positive().default(3001),
   DATABASE_URL: z.string().min(1),
   REDIS_URL: z.string().url(),
-  JWT_PRIVATE_KEY: z.string().min(1),
-  JWT_PUBLIC_KEY: z.string().min(1),
+  // Optional: an ES256 PKCS8/SPKI PEM pair for signing access tokens. When
+  // unset or unparseable, the API generates an ephemeral keypair at boot
+  // (safe because refresh tokens live in Redis, not in the JWT). Set both to
+  // pin a stable signing key across restarts.
+  JWT_PRIVATE_KEY: z.string().optional(),
+  JWT_PUBLIC_KEY: z.string().optional(),
   SMTP_HOST: z.string().default("localhost"),
   SMTP_PORT: z.coerce.number().int().positive().default(1025),
   // Web app origin — used for verification/magic-link email links and CORS.
