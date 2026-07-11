@@ -1,0 +1,60 @@
+name: Deploy Web (Cloudflare)
+
+# Builds the Next.js app with OpenNext and deploys it to Cloudflare Workers
+# on every push to main. The API origin is injected from the repo variable
+# NEXT_PUBLIC_API_URL — at build time (the client fetch base is inlined) and
+# as a Worker var (the middleware CSP connect-src reads it at runtime).
+#
+# Required repo settings:
+#   Variables → NEXT_PUBLIC_API_URL   e.g. https://fylym-api-production.up.railway.app
+#   Secrets   → CLOUDFLARE_API_TOKEN  (Workers Scripts: Edit)
+#   Secrets   → CLOUDFLARE_ACCOUNT_ID
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/web/**"
+      - "packages/**"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/deploy-web.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-web
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # Build the workspace packages the web imports (contracts is not
+      # transpiled by Next, so it needs its dist); then OpenNext runs
+      # `next build` itself.
+      - name: Build web dependencies
+        run: pnpm turbo run build --filter="@fylym/web^..."
+
+      - name: OpenNext build
+        run: pnpm --filter @fylym/web build:cf
+
+      - name: Deploy to Cloudflare
+        working-directory: apps/web
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          pnpm exec wrangler deploy \
+            --var "NEXT_PUBLIC_API_URL:${{ vars.NEXT_PUBLIC_API_URL }}"

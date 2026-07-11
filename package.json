@@ -20,8 +20,10 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\" --ignore-unknown"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.1",
+    "esbuild": "^0.28.1",
+    "prettier": "^3.4.0",
     "turbo": "^2.3.0",
-    "typescript": "^5.7.0",
-    "prettier": "^3.4.0"
+    "typescript": "^5.7.0"
   }
 }
