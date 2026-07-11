@@ -23,38 +23,32 @@ export function ExportDialog({ scriptId }: { scriptId: string }) {
   const [open, setOpen] = useState(false);
   const [format, setFormat] = useState<ExportFormat>("pdf");
   const [sceneNumbers, setSceneNumbers] = useState(false);
-  const [progress, setProgress] = useState<number | null>(null);
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const runExport = useExport(scriptId);
 
   async function onExport() {
-    setDownloadUrl(null);
-    setProgress(0);
     try {
-      const { url } = await runExport.mutateAsync({
+      const { blob, filename } = await runExport.mutateAsync({
         format,
         options: { sceneNumbers, titlePage: true },
-        onProgress: setProgress,
       });
-      setDownloadUrl(url);
-      setProgress(100);
+      // Stream the file straight to the browser's downloads.
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      toast.success(`Exported ${filename}`);
+      setOpen(false);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Export failed");
-      setProgress(null);
     }
   }
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(next) => {
-        setOpen(next);
-        if (!next) {
-          setProgress(null);
-          setDownloadUrl(null);
-        }
-      }}
-    >
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="sm">Export</Button>
       </DialogTrigger>
@@ -90,32 +84,14 @@ export function ExportDialog({ scriptId }: { scriptId: string }) {
           </label>
         )}
 
-        {progress !== null && (
-          <div className="mt-4" role="status" aria-live="polite">
-            <div className="h-2 w-full overflow-hidden rounded bg-muted">
-              <div
-                className="h-full bg-primary transition-all"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {downloadUrl ? "Ready" : `Exporting… ${progress}%`}
-            </p>
-          </div>
-        )}
-
         <div className="mt-4 flex justify-end gap-2">
-          {downloadUrl ? (
-            <Button asChild>
-              <a href={downloadUrl} download data-testid="download-link">
-                Download
-              </a>
-            </Button>
-          ) : (
-            <Button onClick={onExport} disabled={runExport.isPending}>
-              {runExport.isPending ? "Exporting…" : "Export"}
-            </Button>
-          )}
+          <Button
+            onClick={onExport}
+            disabled={runExport.isPending}
+            data-testid="export-button"
+          >
+            {runExport.isPending ? "Exporting…" : "Export"}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

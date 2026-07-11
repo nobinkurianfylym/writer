@@ -6,10 +6,9 @@ import type {
   Snapshot,
   ExportFormat,
   ExportOptions,
-  ExportAccepted,
-  Job,
 } from "@fylym/contracts";
 import { useSession } from "./session";
+import { API_URL } from "./api-client";
 
 export const editorQk = {
   snapshots: (scriptId: string) => ["snapshots", scriptId] as const,
@@ -52,36 +51,43 @@ export function useRestoreSnapshot(scriptId: string) {
 }
 
 /**
- * Requests an export, polls the job to completion, and resolves with the
- * signed download URL. `onProgress` fires with 0–100 as the job advances.
+ * Renders an export server-side (in-process) and resolves with the file
+ * blob + a suggested filename, ready to save straight to the user's machine.
  */
 export function useExport(scriptId: string) {
-  const { apiRequest } = useSession();
+  const { getAccessToken } = useSession();
 
   return useMutation({
     mutationFn: async (args: {
       format: ExportFormat;
       options?: ExportOptions;
-      onProgress?: (progress: number) => void;
-    }) => {
-      const { jobId } = await apiRequest<ExportAccepted>(
-        `/v1/scripts/${scriptId}/exports`,
-        { method: "POST", body: { format: args.format, options: args.options } },
-      );
+    }): Promise<{ blob: Blob; filename: string }> => {
+      const token = getAccessToken();
+      const res = await fetch(`${API_URL}/v1/scripts/${scriptId}/export`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ format: args.format, options: args.options }),
+      });
 
-      // Poll the job until it completes or fails.
-      for (let i = 0; i < 120; i++) {
-        const job = await apiRequest<Job>(`/v1/jobs/${jobId}`);
-        args.onProgress?.(job.progress);
-        if (job.status === "completed" && job.resultUrl) {
-          return { url: job.resultUrl };
+      if (!res.ok) {
+        let message = "Export failed";
+        try {
+          const body = (await res.json()) as { message?: string };
+          if (body.message) message = body.message;
+        } catch {
+          // non-JSON error body; keep the generic message
         }
-        if (job.status === "failed") {
-          throw new Error(job.error ?? "Export failed");
-        }
-        await new Promise((r) => setTimeout(r, 500));
+        throw new Error(message);
       }
-      throw new Error("Export timed out");
+
+      const blob = await res.blob();
+      const disposition = res.headers.get("Content-Disposition") ?? "";
+      const match = /filename="?([^";]+)"?/.exec(disposition);
+      const filename = match?.[1] ?? `screenplay.${args.format}`;
+      return { blob, filename };
     },
   });
 }

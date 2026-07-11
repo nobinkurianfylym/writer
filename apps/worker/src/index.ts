@@ -43,6 +43,7 @@ export {
   type ExportArtifact,
   type ExportRunOptions,
 } from "./export.js";
+export { exportFromYState } from "./export-inline.js";
 export {
   createConnection,
   createExportQueue,

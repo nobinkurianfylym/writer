@@ -73,16 +73,15 @@ test.describe("editor", () => {
     await page.getByRole("menuitem", { name: "Save a snapshot" }).click();
     await expect(page.getByText("Snapshot saved")).toBeVisible();
 
-    // Export a PDF and download it.
+    // Export a PDF — rendered in-process and streamed straight to a download.
     await page.getByRole("button", { name: "Export" }).click();
-    await page.getByRole("dialog").getByRole("button", { name: "Export" }).click();
-
-    const downloadLink = page.getByTestId("download-link");
-    await expect(downloadLink).toBeVisible({ timeout: 30_000 });
 
     const [download] = await Promise.all([
-      page.waitForEvent("download"),
-      downloadLink.click(),
+      page.waitForEvent("download", { timeout: 30_000 }),
+      page
+        .getByRole("dialog")
+        .getByTestId("export-button")
+        .click(),
     ]);
     expect(await download.path()).toBeTruthy();
   });

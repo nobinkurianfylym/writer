@@ -64,6 +64,8 @@ async function bootstrap() {
     origin: env.CORS_ORIGIN ?? env.APP_URL,
     credentials: true,
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
+    // Let the browser read the download filename for in-process exports.
+    exposedHeaders: ["Content-Disposition"],
   });
 
   await app.listen(env.PORT);

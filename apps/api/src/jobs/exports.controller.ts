@@ -6,9 +6,10 @@ import {
   Param,
   Post,
   Req,
+  Res,
   UseGuards,
 } from "@nestjs/common";
-import type { Request } from "express";
+import type { Request, Response } from "express";
 import { CreateExportSchema } from "@fylym/contracts";
 import { JwtGuard } from "../auth/jwt.guard";
 import { RateLimitGuard } from "../auth/rate-limit.guard";
@@ -34,5 +35,32 @@ export class ExportsController {
   ) {
     const input = zodParse(CreateExportSchema, body);
     return this.exports.requestExport(scriptId, req.user!.sub, input);
+  }
+
+  // Synchronous export: renders the file in-process and streams it straight
+  // back as a download. No worker or object storage — the browser saves it
+  // to the user's machine.
+  @Post("v1/scripts/:scriptId/export")
+  @RequirePermission("script.export")
+  async exportInline(
+    @Param("scriptId") scriptId: string,
+    @Body() body: unknown,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    const input = zodParse(CreateExportSchema, body);
+    const artifact = await this.exports.exportInline(
+      scriptId,
+      req.user!.sub,
+      input,
+    );
+    res
+      .status(HttpStatus.OK)
+      .setHeader("Content-Type", artifact.contentType)
+      .setHeader(
+        "Content-Disposition",
+        `attachment; filename="${artifact.filename}"`,
+      )
+      .send(Buffer.from(artifact.bytes));
   }
 }
