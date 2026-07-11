@@ -1,7 +1,13 @@
 import { degrees, PDFDocument, rgb, type PDFPage } from "pdf-lib";
 import type { Block, FormatProfile, LayoutLine, Page, PageMap, ScreenplayDocument } from "@fylym/screenplay-core";
 import { resolveRevisionColor } from "./color.js";
-import { embedCourierFonts, fontForKinds, type CourierFonts } from "./fonts.js";
+import {
+  embedCourierFonts,
+  fontForKinds,
+  measureText,
+  drawText as drawFallbackText,
+  type CourierFonts,
+} from "./fonts.js";
 import { splitIntoRuns } from "./runs.js";
 import { addTitlePage } from "./title-page.js";
 
@@ -35,7 +41,10 @@ function drawContentLine(page: PDFPage, line: LayoutLine, rowIndex: number, prof
   const areaWidthPts = style.width * POINTS_PER_INCH;
 
   const runs = splitIntoRuns(line.text, line.marks ?? []);
-  const totalWidth = runs.reduce((sum, r) => sum + fontForKinds(fonts, r.kinds).widthOfTextAtSize(r.text, FONT_SIZE), 0);
+  const totalWidth = runs.reduce(
+    (sum, r) => sum + measureText(r.text, FONT_SIZE, fontForKinds(fonts, r.kinds), fonts.fallback),
+    0,
+  );
 
   let x = areaXPts;
   if (style.align === "center") x = areaXPts + (areaWidthPts - totalWidth) / 2;
@@ -44,9 +53,12 @@ function drawContentLine(page: PDFPage, line: LayoutLine, rowIndex: number, prof
   for (const run of runs) {
     const font = fontForKinds(fonts, run.kinds);
     const color = run.kinds.has("revision") ? resolveRevisionColor(run.revisionColor) : BLACK;
-    const runWidth = font.widthOfTextAtSize(run.text, FONT_SIZE);
-
-    page.drawText(run.text, { x, y, size: FONT_SIZE, font, color });
+    const runWidth = drawFallbackText(page, run.text, font, fonts.fallback, {
+      x,
+      y,
+      size: FONT_SIZE,
+      color,
+    });
     if (run.kinds.has("underline")) {
       page.drawLine({ start: { x, y: y - 1.5 }, end: { x: x + runWidth, y: y - 1.5 }, thickness: 0.7, color });
     }
@@ -63,10 +75,10 @@ function drawSceneNumber(page: PDFPage, rowIndex: number, sceneNumber: string, p
   const widthPts = profile.page.width * POINTS_PER_INCH;
   const marginLeftPts = profile.page.margins.left * POINTS_PER_INCH;
   const marginRightPts = profile.page.margins.right * POINTS_PER_INCH;
-  const textWidth = fonts.regular.widthOfTextAtSize(sceneNumber, FONT_SIZE);
+  const textWidth = measureText(sceneNumber, FONT_SIZE, fonts.regular, fonts.fallback);
 
-  page.drawText(sceneNumber, { x: marginLeftPts - textWidth - 10, y, size: FONT_SIZE, font: fonts.regular });
-  page.drawText(sceneNumber, { x: widthPts - marginRightPts + 10, y, size: FONT_SIZE, font: fonts.regular });
+  drawFallbackText(page, sceneNumber, fonts.regular, fonts.fallback, { x: marginLeftPts - textWidth - 10, y, size: FONT_SIZE });
+  drawFallbackText(page, sceneNumber, fonts.regular, fonts.fallback, { x: widthPts - marginRightPts + 10, y, size: FONT_SIZE });
 }
 
 function drawPageNumber(page: PDFPage, pageNumber: number, profile: FormatProfile, fonts: CourierFonts): void {
@@ -96,13 +108,21 @@ function drawWatermark(page: PDFPage, text: string, profile: FormatProfile, font
   const widthPts = profile.page.width * POINTS_PER_INCH;
   const heightPts = profile.page.height * POINTS_PER_INCH;
   const size = 48;
-  const textWidth = fonts.bold.widthOfTextAtSize(text, size);
+  // Watermark is rotated, so it's drawn as one run rather than per-character
+  // segmented — pick the whole-string font (fallback if Courier can't take it).
+  let wmFont = fonts.bold;
+  try {
+    fonts.bold.widthOfTextAtSize(text, size);
+  } catch {
+    wmFont = fonts.fallback;
+  }
+  const textWidth = wmFont.widthOfTextAtSize(text, size);
 
   page.drawText(text, {
     x: (widthPts - textWidth) / 2,
     y: heightPts / 2,
     size,
-    font: fonts.bold,
+    font: wmFont,
     color: rgb(0.75, 0.75, 0.75),
     opacity: 0.4,
     rotate: degrees(45),

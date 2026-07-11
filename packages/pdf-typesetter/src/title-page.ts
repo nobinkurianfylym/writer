@@ -1,6 +1,6 @@
 import type { PDFDocument } from "pdf-lib";
 import type { Block, FormatProfile } from "@fylym/screenplay-core";
-import type { CourierFonts } from "./fonts.js";
+import { measureText, drawText as drawFallbackText, type CourierFonts } from "./fonts.js";
 
 const POINTS_PER_INCH = 72;
 
@@ -31,12 +31,11 @@ export function addTitlePage(
 
   let y = heightPts * 0.6;
   for (const line of lines) {
-    const textWidth = fonts.regular.widthOfTextAtSize(line, fontSize);
-    page.drawText(line, {
+    const textWidth = measureText(line, fontSize, fonts.regular, fonts.fallback);
+    drawFallbackText(page, line, fonts.regular, fonts.fallback, {
       x: (widthPts - textWidth) / 2,
       y,
       size: fontSize,
-      font: fonts.regular,
     });
     y -= lineHeight;
   }
