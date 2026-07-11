@@ -57,7 +57,11 @@ export function FindBar({
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault();
-            e.shiftKey ? onPrev() : onNext();
+            if (e.shiftKey) {
+              onPrev();
+            } else {
+              onNext();
+            }
           } else if (e.key === "Escape") {
             e.preventDefault();
             onClose();
