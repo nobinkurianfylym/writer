@@ -29,12 +29,23 @@ import {
 } from "./find-navigate.js";
 import { FindBar } from "./FindBar.js";
 import { ScenePalette } from "./ScenePalette.js";
+import {
+  manglishPlugin,
+  MANGLISH_TOGGLE,
+  type FetchCandidates,
+} from "./manglish/plugin.js";
+import { transliterate } from "./manglish/transliterate.js";
 
 export interface ScriptEditorProps {
   initialDocument: ScreenplayDocument;
   profile?: FormatProfile;
   onChange?: (doc: ScreenplayDocument) => void;
   paginationWorker?: Worker;
+  /**
+   * Manglish IME: given a Latin token, returns ordered Malayalam candidates.
+   * Defaults to an offline rule-based transliterator when omitted.
+   */
+  transliterate?: FetchCandidates;
 }
 
 const ELEMENT_LABELS: Record<BlockType, string> = {
@@ -68,11 +79,14 @@ const MODE_LABELS: Record<WritingMode, string> = {
   zen: "Zen",
 };
 
-export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onChange, paginationWorker }: ScriptEditorProps) {
+export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onChange, paginationWorker, transliterate: fetchCandidates }: ScriptEditorProps) {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const viewRef = useRef<EditorView | null>(null);
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
+  const fetchCandidatesRef = useRef<FetchCandidates | undefined>(fetchCandidates);
+  fetchCandidatesRef.current = fetchCandidates;
+  const [manglishOn, setManglishOn] = useState(false);
   const [currentType, setCurrentType] = useState<BlockType>(initialDocument.blocks[0]?.type ?? "action");
   const [announcement, setAnnouncement] = useState("");
 
@@ -104,6 +118,14 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
     plugins.push(focusModePlugin());
     plugins.push(findHighlightPlugin());
     if (paginationWorker) plugins.push(paginationPlugin(paginationWorker));
+    // Manglish IME goes to the FRONT so its key handling (Space/Enter/1-9)
+    // preempts the element-behavior keymap while a candidate is pending.
+    plugins.unshift(
+      manglishPlugin((latin) => {
+        const fn = fetchCandidatesRef.current;
+        return fn ? fn(latin) : Promise.resolve([transliterate(latin)]);
+      }),
+    );
     const state = EditorState.create({ doc, plugins });
 
     const view = new EditorView(mount, {
@@ -298,6 +320,18 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
     view.focus();
   }
 
+  const handleManglishToggle = useCallback(() => {
+    setManglishOn((on) => {
+      const next = !on;
+      const view = viewRef.current;
+      if (view) {
+        view.dispatch(view.state.tr.setMeta(MANGLISH_TOGGLE, next));
+        requestAnimationFrame(() => view.focus());
+      }
+      return next;
+    });
+  }, []);
+
   const scenes = useMemo(() => {
     const view = viewRef.current;
     if (!view) return [];
@@ -353,6 +387,17 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
               {MODE_LABELS[m]}
             </button>
           ))}
+          <button
+            type="button"
+            aria-label="Manglish input (type Malayalam phonetically)"
+            aria-pressed={manglishOn}
+            data-testid="manglish-toggle"
+            data-active={manglishOn ? "true" : undefined}
+            onClick={handleManglishToggle}
+            title="Type Malayalam by spelling it in English"
+          >
+            {manglishOn ? "മംഗ്ലീഷ്" : "Manglish"}
+          </button>
         </div>
       </div>
       <div className="sr-only" role="status" aria-live="polite" aria-atomic="true" data-testid="sr-announcement">

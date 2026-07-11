@@ -82,3 +82,11 @@ export {
   type SnapshotListItem,
   type AutoSnapshotHandle,
 } from "./local-snapshots.js";
+export {
+  manglishPlugin,
+  manglishKey,
+  MANGLISH_TOGGLE,
+  type FetchCandidates,
+  type ManglishState,
+} from "./manglish/plugin.js";
+export { transliterate, transliterateWord } from "./manglish/transliterate.js";

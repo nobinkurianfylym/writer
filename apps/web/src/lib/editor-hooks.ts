@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
   SnapshotPage,
@@ -16,6 +17,24 @@ export const editorQk = {
   snapshots: (scriptId: string) => ["snapshots", scriptId] as const,
   beats: (scriptId: string) => ["beats", scriptId] as const,
 };
+
+/**
+ * Returns a Manglish IME candidate fetcher backed by the API's Google Input
+ * Tools proxy. On any failure the editor falls back to its offline rule-based
+ * transliterator.
+ */
+export function useTransliterate() {
+  const { apiRequest } = useSession();
+  return useCallback(
+    async (latin: string): Promise<string[]> => {
+      const res = await apiRequest<{ candidates: string[] }>(
+        `/v1/transliterate?text=${encodeURIComponent(latin)}`,
+      );
+      return res.candidates;
+    },
+    [apiRequest],
+  );
+}
 
 /** Loads a script's beat board. */
 export function useBeats(scriptId: string) {

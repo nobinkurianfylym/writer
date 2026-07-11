@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ScriptEditor } from "@fylym/editor";
 import type { Block, ScreenplayDocument } from "@fylym/screenplay-core";
 import { useScriptDoc } from "@/lib/use-script-doc";
+import { useTransliterate } from "@/lib/editor-hooks";
 import { SyncIndicator } from "@/components/editor/sync-indicator";
 import { TitlePageSheet } from "@/components/editor/title-page-sheet";
 import { SnapshotMenu } from "@/components/editor/snapshot-menu";
@@ -96,6 +97,7 @@ function EditorSurface({
   );
 
   const [view, setView] = useState<"script" | "beats">("script");
+  const transliterate = useTransliterate();
 
   // Pagination worker (page ruler); the editor degrades gracefully without it.
   const [worker, setWorker] = useState<Worker | null>(null);
@@ -168,6 +170,7 @@ function EditorSurface({
           initialDocument={bodyDocument}
           paginationWorker={worker ?? undefined}
           onChange={handleBodyChange}
+          transliterate={transliterate}
         />
       </div>
       {view === "beats" && (
