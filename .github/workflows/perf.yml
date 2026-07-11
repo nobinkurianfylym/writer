@@ -1,0 +1,103 @@
+name: Performance
+
+# §10 backend budgets as a required check (E7-2): boots the API against
+# service containers, seeds a ~380-page script, and runs k6 natively with
+# hard thresholds — hot REST reads p95 < 120 ms, cold script open p95 <
+# 800 ms. The editor-side budgets (E2-4/E2-5) already gate CI via the
+# Playwright suite in ci.yml. The k6 summary uploads as an artifact so
+# p95s can be trended across runs.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  api-budgets:
+    name: k6 api budgets (§10)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: fylym
+          POSTGRES_PASSWORD: fylym
+          POSTGRES_DB: fylym
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U fylym -d fylym"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://fylym:fylym@localhost:5432/fylym
+      REDIS_URL: redis://localhost:6379
+      # Throwaway ES256 dev keypair — CI only, never a real environment's.
+      JWT_PRIVATE_KEY: ${{ secrets.CI_JWT_PRIVATE_KEY }}
+      JWT_PUBLIC_KEY: ${{ secrets.CI_JWT_PUBLIC_KEY }}
+      APP_URL: http://localhost:3000
+      NODE_ENV: production
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build api + worker deps
+        run: pnpm turbo run build --filter=@fylym/api --filter=@fylym/worker
+
+      - name: Migrate database
+        run: pnpm --filter @fylym/db db:migrate:deploy
+
+      - name: Boot API
+        working-directory: apps/api
+        run: |
+          node dist/main.js &
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:3001/health && break
+            sleep 1
+          done
+
+      - name: Seed perf fixture (~380-page script)
+        run: |
+          cp infra/perf/seed.mjs apps/worker/.perf-seed.mjs
+          (cd apps/worker && node .perf-seed.mjs) > perf-seed.json
+          rm apps/worker/.perf-seed.mjs
+
+      - uses: grafana/setup-k6-action@v1
+
+      - name: Run k6 budgets
+        run: |
+          export TOKEN=$(jq -r .token perf-seed.json)
+          export ORG_ID=$(jq -r .orgId perf-seed.json)
+          export PROJECT_ID=$(jq -r .projectId perf-seed.json)
+          export SCRIPT_ID=$(jq -r .scriptId perf-seed.json)
+          export API_URL=http://localhost:3001
+          k6 run infra/perf/k6-api.js
+
+      - name: Upload k6 summary (trend)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: k6-summary-${{ github.run_number }}
+          path: k6-summary.json
+          retention-days: 90

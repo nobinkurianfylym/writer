@@ -18,3 +18,4 @@ docs/api/
 test-results/
 playwright-report/
 blob-report/
+k6-summary.json
