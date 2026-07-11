@@ -1,0 +1,64 @@
+name: Deploy API (Railway)
+
+# Deploys the api + worker to Railway on push to main, then runs the smoke
+# suite against the live API + web. Railway builds each service from its
+# railway.json (Dockerfile + prisma migrate deploy on the api).
+#
+# Alternative: Railway's native GitHub integration auto-deploys on push with
+# zero workflow. Use this workflow instead when you want the deploy gated by
+# CI and followed by a smoke check.
+#
+# Required repo settings:
+#   Secrets   → RAILWAY_TOKEN            (Railway project token)
+#   Variables → RAILWAY_API_SERVICE      (the api service name in Railway)
+#   Variables → RAILWAY_WORKER_SERVICE   (the worker service name)
+#   Variables → NEXT_PUBLIC_API_URL      (public API URL, reused for smoke)
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/api/**"
+      - "apps/worker/**"
+      - "packages/**"
+      - "infra/docker/**"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/deploy-api.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-api
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Railway CLI
+        run: npm i -g @railway/cli
+
+      # `railway up` uploads the pushed commit and builds via each service's
+      # railway.json (the api runs `prisma migrate deploy` as its pre-deploy).
+      - name: Deploy API
+        run: railway up --service "${{ vars.RAILWAY_API_SERVICE }}" --ci
+
+      - name: Deploy worker
+        run: railway up --service "${{ vars.RAILWAY_WORKER_SERVICE }}" --ci
+
+  smoke:
+    name: smoke live
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - uses: actions/checkout@v4
+      - name: Smoke the live API + web
+        run: |
+          bash infra/deploy/smoke.sh \
+            "${{ vars.NEXT_PUBLIC_API_URL }}" \
+            "https://web.nobinkurian.workers.dev"

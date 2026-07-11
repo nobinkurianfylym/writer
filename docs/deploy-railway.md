@@ -150,3 +150,18 @@ never rebuild by hand. Set these once in the GitHub repo:
 After the API is live on Railway, set `NEXT_PUBLIC_API_URL` and push (or run
 the workflow manually via **Actions → Deploy Web → Run workflow**) — the app
 goes live pointing at the real backend, with the CSP allowing it.
+
+## Auto-deploy the API + worker
+
+Two options:
+
+1. **Railway-native (simplest):** with the GitHub repo connected to each
+   service, Railway auto-builds + deploys on every push to `main` — no
+   workflow needed. It runs the api's `prisma migrate deploy` pre-deploy and
+   the `/health` check from `railway.json`.
+2. **CI-gated (`.github/workflows/deploy-api.yml`):** deploys api + worker via
+   the Railway CLI, then runs `infra/deploy/smoke.sh` against the live API +
+   web so a bad deploy is caught. Requires secret `RAILWAY_TOKEN` and
+   variables `RAILWAY_API_SERVICE`, `RAILWAY_WORKER_SERVICE`,
+   `NEXT_PUBLIC_API_URL`. Turn off the native auto-deploy on those services if
+   you use this, so they don't both fire.
