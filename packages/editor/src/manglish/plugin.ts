@@ -138,7 +138,16 @@ export function manglishPlugin(fetchCandidates: FetchCandidates): Plugin<Manglis
       const refresh = () => {
         const st = manglishKey.getState(editorView.state);
         const pending = st?.enabled ? st.pending : null;
-        bar.render(pending);
+        let coords: { left: number; bottom: number } | null = null;
+        if (pending) {
+          try {
+            const c = editorView.coordsAtPos(pending.from);
+            coords = { left: c.left, bottom: c.bottom };
+          } catch {
+            coords = null;
+          }
+        }
+        bar.render(pending, coords);
 
         if (pending && pending.loading && pending.candidates.length === 0) {
           if (scheduledFor !== pending.latin) {
@@ -157,6 +166,9 @@ export function manglishPlugin(fetchCandidates: FetchCandidates): Plugin<Manglis
                 if (!candidates || candidates.length === 0) {
                   candidates = [transliterate(latin)];
                 }
+                // Always offer the original English word as the last choice,
+                // so a word can be kept in English straight from the list.
+                if (!candidates.includes(latin)) candidates = [...candidates, latin];
                 if (mySeq !== seq) return;
                 const cur = manglishKey.getState(editorView.state);
                 if (cur?.enabled && cur.pending && cur.pending.latin === latin) {
@@ -195,7 +207,9 @@ function commit(view: EditorView, p: Pending, index: number, insertSpace: boolea
   view.focus();
 }
 
-// A fixed candidate bar rendered at the bottom-center of the viewport.
+// A candidate dropdown anchored under the word being typed (Google
+// Transliteration style): a vertical, numbered list with the top choice
+// pre-selected. The original English word is offered as the last option.
 class CandidateBar {
   private el: HTMLDivElement;
 
@@ -204,84 +218,113 @@ class CandidateBar {
     this.el.setAttribute("data-testid", "manglish-bar");
     Object.assign(this.el.style, {
       position: "fixed",
-      left: "50%",
-      bottom: "24px",
-      transform: "translateX(-50%)",
-      zIndex: "50",
+      zIndex: "60",
       display: "none",
-      maxWidth: "min(92vw, 820px)",
-      padding: "8px 10px",
-      borderRadius: "12px",
+      minWidth: "180px",
+      maxWidth: "min(88vw, 360px)",
+      padding: "4px",
+      borderRadius: "10px",
       background: "var(--editor-bg, #fff)",
       color: "var(--editor-fg, #111)",
-      border: "1px solid rgba(120,120,130,0.35)",
-      boxShadow: "0 10px 40px -12px rgba(0,0,0,0.45)",
-      font: "14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
+      border: "1px solid rgba(120,120,130,0.3)",
+      boxShadow: "0 12px 34px -10px rgba(0,0,0,0.45)",
+      font: "14px/1.35 system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
     } as CSSStyleDeclaration);
     document.body.appendChild(this.el);
   }
 
-  render(pending: Pending | null): void {
-    if (!pending) {
+  render(pending: Pending | null, coords: { left: number; bottom: number } | null): void {
+    if (!pending || !coords) {
       this.el.style.display = "none";
       this.el.textContent = "";
       return;
     }
-    this.el.style.display = "flex";
-    this.el.style.alignItems = "center";
-    this.el.style.gap = "8px";
-    this.el.style.flexWrap = "wrap";
+    this.el.style.display = "block";
+    // Anchor just below the word; clamp to keep it on-screen.
+    const width = Math.min(360, Math.max(180, this.el.offsetWidth || 220));
+    const left = Math.max(8, Math.min(coords.left, window.innerWidth - width - 8));
+    this.el.style.left = `${left}px`;
+    this.el.style.top = `${coords.bottom + 6}px`;
 
     const frag = document.createDocumentFragment();
 
-    const latin = document.createElement("span");
-    latin.textContent = pending.latin;
-    Object.assign(latin.style, {
-      opacity: "0.6",
-      fontFamily: "ui-monospace, Menlo, monospace",
-      paddingRight: "4px",
-      borderRight: "1px solid rgba(120,120,130,0.3)",
-    } as CSSStyleDeclaration);
-    frag.appendChild(latin);
-
     if (pending.candidates.length === 0) {
-      const loading = document.createElement("span");
-      loading.textContent = pending.loading ? "Finding…" : "…";
-      loading.style.opacity = "0.6";
+      const loading = document.createElement("div");
+      loading.textContent = pending.loading ? `Finding “${pending.latin}”…` : "…";
+      Object.assign(loading.style, { padding: "6px 10px", opacity: "0.6" } as CSSStyleDeclaration);
       frag.appendChild(loading);
     } else {
       pending.candidates.forEach((c, i) => {
-        const chip = document.createElement("button");
-        chip.type = "button";
-        chip.tabIndex = -1;
-        const num = i < 9 ? `${i + 1} ` : "";
-        chip.textContent = `${num}${c}`;
+        const isEnglish = c === pending.latin;
         const activeState = i === pending.active;
-        Object.assign(chip.style, {
+        const row = document.createElement("button");
+        row.type = "button";
+        row.tabIndex = -1;
+        Object.assign(row.style, {
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          width: "100%",
+          textAlign: "left",
           cursor: "pointer",
           border: "none",
-          borderRadius: "8px",
-          padding: "4px 10px",
+          borderRadius: "7px",
+          padding: "6px 10px",
           fontSize: "16px",
           background: activeState ? "var(--editor-accent, #2b4ca6)" : "transparent",
           color: activeState ? "#fff" : "inherit",
         } as CSSStyleDeclaration);
-        chip.addEventListener("mousedown", (e) => {
+
+        const num = document.createElement("span");
+        num.textContent = i < 9 ? String(i + 1) : "·";
+        Object.assign(num.style, {
+          minWidth: "1.1em",
+          textAlign: "center",
+          fontSize: "12px",
+          opacity: activeState ? "0.85" : "0.45",
+          fontFamily: "ui-monospace, Menlo, monospace",
+        } as CSSStyleDeclaration);
+        row.appendChild(num);
+
+        const word = document.createElement("span");
+        word.textContent = c;
+        word.style.flex = "1";
+        if (isEnglish) word.style.fontFamily = "ui-monospace, Menlo, monospace";
+        row.appendChild(word);
+
+        if (isEnglish) {
+          const tag = document.createElement("span");
+          tag.textContent = "EN";
+          Object.assign(tag.style, {
+            fontSize: "9px",
+            fontWeight: "700",
+            letterSpacing: "0.06em",
+            padding: "1px 5px",
+            borderRadius: "5px",
+            border: "1px solid currentColor",
+            opacity: "0.7",
+          } as CSSStyleDeclaration);
+          row.appendChild(tag);
+        }
+
+        row.addEventListener("mousedown", (e) => {
           e.preventDefault();
           this.onPick(i);
         });
-        frag.appendChild(chip);
+        frag.appendChild(row);
       });
-    }
 
-    const hint = document.createElement("span");
-    hint.textContent = "Space/Enter pick · 1–9 alt · Esc keep Latin";
-    Object.assign(hint.style, {
-      marginLeft: "6px",
-      opacity: "0.5",
-      fontSize: "11px",
-    } as CSSStyleDeclaration);
-    frag.appendChild(hint);
+      const hint = document.createElement("div");
+      hint.textContent = "Space/Enter · 1–9 pick · Esc keep English";
+      Object.assign(hint.style, {
+        padding: "4px 10px 2px",
+        fontSize: "10px",
+        opacity: "0.45",
+        borderTop: "1px solid rgba(120,120,130,0.2)",
+        marginTop: "2px",
+      } as CSSStyleDeclaration);
+      frag.appendChild(hint);
+    }
 
     this.el.replaceChildren(frag);
   }

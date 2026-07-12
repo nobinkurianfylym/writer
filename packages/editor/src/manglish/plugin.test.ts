@@ -53,6 +53,21 @@ describe("manglish IME plugin", () => {
     view.destroy();
   });
 
+  it("offers the original English word as the last option", async () => {
+    const view = mount(async () => ["കാമറ", "കാമെറ"]);
+    view.dispatch(view.state.tr.setMeta(MANGLISH_TOGGLE, true));
+    view.dispatch(view.state.tr.insertText("camera"));
+    await wait(260);
+
+    const cands = manglishKey.getState(view.state)?.pending?.candidates ?? [];
+    expect(cands[cands.length - 1]).toBe("camera"); // English appended last
+
+    // Pick the English option by its number (3rd row).
+    view.dom.dispatchEvent(new KeyboardEvent("keydown", { key: "3", bubbles: true, cancelable: true }));
+    expect(firstText(view)).toBe("camera ");
+    view.destroy();
+  });
+
   it("Escape keeps the Latin text", async () => {
     const view = mount(async () => ["ഞാൻ"]);
     view.dispatch(view.state.tr.setMeta(MANGLISH_TOGGLE, true));
