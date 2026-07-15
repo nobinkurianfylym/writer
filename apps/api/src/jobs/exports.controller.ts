@@ -40,7 +40,8 @@ export class ExportsController {
   // Synchronous export: renders the file in-process and streams it straight
   // back as a download. No worker or object storage — the browser saves it
   // to the user's machine. Non-Latin scripts (e.g. Malayalam) render through
-  // the typesetter's embedded Unicode fallback font.
+  // the typesetter's embedded Unicode fallback font, and PDF scene numbers
+  // auto-fill missing ordinals to match the editor's live numbering.
   @Post("v1/scripts/:scriptId/export")
   @RequirePermission("script.export")
   async exportInline(

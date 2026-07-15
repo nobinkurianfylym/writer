@@ -68,8 +68,13 @@ export async function runExport(
       };
     }
     case "pdf": {
-      const pageMap = paginate(doc, profile);
-      const bytes = await renderPdf(doc, profile, pageMap, {
+      // The typesetter only draws margins for headings that carry an explicit
+      // attrs.sceneNumber; fill missing ones with their ordinal so the PDF
+      // matches the editor's live numbering (manual overrides win).
+      const numbered =
+        options.sceneNumbers === true ? withAutoSceneNumbers(doc) : doc;
+      const pageMap = paginate(numbered, profile);
+      const bytes = await renderPdf(numbered, profile, pageMap, {
         sceneNumbers: options.sceneNumbers ?? false,
         ...(options.watermark !== undefined && { watermark: options.watermark }),
       });
@@ -80,4 +85,18 @@ export async function runExport(
       throw new Error(`Unsupported export format: ${String(exhaustive)}`);
     }
   }
+}
+
+/** Fills each scene heading's missing sceneNumber with its 1-based ordinal. */
+export function withAutoSceneNumbers(doc: ScreenplayDocument): ScreenplayDocument {
+  let ordinal = 0;
+  return {
+    ...doc,
+    blocks: doc.blocks.map((block) => {
+      if (block.type !== "scene_heading") return block;
+      ordinal += 1;
+      if (block.attrs.sceneNumber) return block;
+      return { ...block, attrs: { ...block.attrs, sceneNumber: String(ordinal) } };
+    }),
+  };
 }

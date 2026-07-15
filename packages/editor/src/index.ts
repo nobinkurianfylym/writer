@@ -90,3 +90,8 @@ export {
   type ManglishState,
 } from "./manglish/plugin.js";
 export { transliterate, transliterateWord } from "./manglish/transliterate.js";
+export {
+  sceneNumbersPlugin,
+  sceneNumbersKey,
+  displaySceneNumber,
+} from "./scene-numbers.js";

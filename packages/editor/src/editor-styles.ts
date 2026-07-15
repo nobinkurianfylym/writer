@@ -125,6 +125,44 @@ export const BASE_EDITOR_CSS = `
   min-height: 60vh;
 }
 
+/* Scene numbers: a chip in the left margin of every scene heading. */
+.ProseMirror p[data-block-type="scene_heading"] {
+  position: relative;
+}
+.scene-number {
+  position: absolute;
+  left: -4.2em;
+  top: 0.1em;
+  width: 3.4em;
+  text-align: right;
+  font-size: 0.8em;
+  line-height: 1.6;
+  color: var(--editor-gutter-fg, hsl(240, 4%, 42%));
+  cursor: pointer;
+  user-select: none;
+  border-radius: 4px;
+  padding: 0 0.25em;
+}
+.scene-number:hover {
+  outline: 1px solid var(--editor-border, hsl(240, 6%, 90%));
+  color: var(--editor-fg, inherit);
+}
+.scene-number[data-custom="true"] {
+  font-weight: 700;
+  color: var(--editor-fg, inherit);
+}
+.scene-number-input {
+  width: 3.6em;
+  font: inherit;
+  text-align: right;
+  background: var(--editor-bg, #fff);
+  color: var(--editor-fg, inherit);
+  border: 1px solid var(--editor-border, hsl(240, 6%, 80%));
+  border-radius: 4px;
+  padding: 0 0.2em;
+  outline: none;
+}
+
 .script-editor[data-theme="dark"] {
   --editor-bg: hsl(240, 10%, 8%);
   --editor-fg: hsl(0, 0%, 88%);

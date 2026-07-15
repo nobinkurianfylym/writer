@@ -34,6 +34,7 @@ import {
   MANGLISH_TOGGLE,
   type FetchCandidates,
 } from "./manglish/plugin.js";
+import { sceneNumbersPlugin } from "./scene-numbers.js";
 import { transliterate } from "./manglish/transliterate.js";
 
 export interface ScriptEditorProps {
@@ -117,6 +118,7 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
     const plugins = elementBehaviorPlugins(profile);
     plugins.push(focusModePlugin());
     plugins.push(findHighlightPlugin());
+    plugins.push(sceneNumbersPlugin());
     if (paginationWorker) plugins.push(paginationPlugin(paginationWorker));
     // Manglish IME goes to the FRONT so its key handling (Space/Enter/1-9)
     // preempts the element-behavior keymap while a candidate is pending.
