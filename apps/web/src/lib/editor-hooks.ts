@@ -23,13 +23,21 @@ export const editorQk = {
  * Tools proxy. On any failure the editor falls back to its offline rule-based
  * transliterator.
  */
+const transliterateCache = new Map<string, string[]>();
+
 export function useTransliterate() {
   const { apiRequest } = useSession();
   return useCallback(
     async (latin: string): Promise<string[]> => {
+      const cached = transliterateCache.get(latin);
+      if (cached) return cached;
       const res = await apiRequest<{ candidates: string[] }>(
         `/v1/transliterate?text=${encodeURIComponent(latin)}`,
       );
+      if (res.candidates.length > 0) {
+        if (transliterateCache.size > 3000) transliterateCache.clear();
+        transliterateCache.set(latin, res.candidates);
+      }
       return res.candidates;
     },
     [apiRequest],

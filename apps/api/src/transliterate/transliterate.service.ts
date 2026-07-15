@@ -27,9 +27,9 @@ export class TransliterateService {
     try {
       const url =
         `https://inputtools.google.com/request?text=${encodeURIComponent(token)}` +
-        `&itc=${itc}&num=6&cp=0&cs=1&ie=utf-8&oe=utf-8`;
+        `&itc=${itc}&num=8&cp=0&cs=1&ie=utf-8&oe=utf-8`;
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 2500);
+      const timeout = setTimeout(() => controller.abort(), 5000);
       const res = await fetch(url, { signal: controller.signal });
       clearTimeout(timeout);
       if (!res.ok) throw new Error(`upstream ${res.status}`);

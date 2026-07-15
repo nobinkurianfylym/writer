@@ -44,6 +44,26 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   // Access token lives in a ref (memory only) — never in localStorage/cookies
   // readable by JS, to keep it out of reach of XSS.
   const tokenRef = useRef<string | null>(null);
+  // Single-flight refresh: refresh tokens ROTATE server-side, so two
+  // concurrent refresh calls make the loser present an already-rotated token,
+  // which the server treats as reuse and revokes the whole session family.
+  // All concurrent 401s must share one in-flight refresh.
+  const refreshInFlight = useRef<Promise<string> | null>(null);
+
+  const refreshAccessToken = useCallback(async (): Promise<string> => {
+    if (!refreshInFlight.current) {
+      refreshInFlight.current = authApi
+        .refresh()
+        .then(({ accessToken }) => {
+          tokenRef.current = accessToken;
+          return accessToken;
+        })
+        .finally(() => {
+          refreshInFlight.current = null;
+        });
+    }
+    return refreshInFlight.current;
+  }, []);
 
   const getAccessToken = useCallback(() => tokenRef.current, []);
 
@@ -120,14 +140,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         });
       } catch (err) {
         if (err instanceof ApiError && err.status === 401) {
-          const { accessToken } = await authApi.refresh();
-          tokenRef.current = accessToken;
+          const accessToken = await refreshAccessToken();
           return await apiFetch<T>(path, { ...opts, accessToken });
         }
         throw err;
       }
     },
-    [],
+    [refreshAccessToken],
   );
 
   const value = useMemo<SessionValue>(

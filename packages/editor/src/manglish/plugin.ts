@@ -157,13 +157,20 @@ export function manglishPlugin(fetchCandidates: FetchCandidates): Plugin<Manglis
             if (debounce) clearTimeout(debounce);
             debounce = setTimeout(() => {
               void (async () => {
+                // One retry before surrendering to the offline fallback — a
+                // transient failure (upstream timeout, token refresh) should
+                // not degrade the list to a single rule-based guess.
                 let candidates: string[] = [];
-                try {
-                  candidates = await fetchCandidates(latin);
-                } catch {
-                  candidates = [];
+                for (let attempt = 0; attempt < 2 && candidates.length === 0; attempt++) {
+                  if (attempt > 0) await new Promise((r) => setTimeout(r, 400));
+                  if (mySeq !== seq) return;
+                  try {
+                    candidates = (await fetchCandidates(latin)) ?? [];
+                  } catch {
+                    candidates = [];
+                  }
                 }
-                if (!candidates || candidates.length === 0) {
+                if (candidates.length === 0) {
                   candidates = [transliterate(latin)];
                 }
                 // Always offer the original English word as the last choice,
