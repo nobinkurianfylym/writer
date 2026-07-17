@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button, Input, toast } from "@fylym/ui";
-import { useSession } from "@/lib/session";
 import {
   useOrgs,
   useProjects,
@@ -12,10 +11,10 @@ import {
   useTrashProject,
 } from "@/lib/hooks";
 import { InlineRename } from "@/components/inline-rename";
+import { StudioSection } from "@/components/studio/studio";
 import { ApiError } from "@/lib/api-client";
 
 export default function DashboardPage() {
-  const { user } = useSession();
   const { data: orgs, isLoading: orgsLoading } = useOrgs();
   const org = orgs?.[0];
 
@@ -32,15 +31,6 @@ export default function DashboardPage() {
           Trash
         </Link>
       </div>
-
-      {user && !user.emailVerified && (
-        <div
-          role="status"
-          className="mb-6 rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900"
-        >
-          Please verify your email — check your inbox for the verification link.
-        </div>
-      )}
 
       {orgsLoading ? (
         <p className="text-sm text-muted-foreground">Loading…</p>
@@ -136,6 +126,8 @@ function ProjectsSection({ orgId }: { orgId: string }) {
           </p>
         </div>
       )}
+
+      <StudioSection />
     </div>
   );
 }

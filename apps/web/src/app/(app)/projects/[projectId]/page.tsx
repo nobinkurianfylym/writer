@@ -10,6 +10,7 @@ import {
   useTrashScript,
 } from "@/lib/hooks";
 import { InlineRename } from "@/components/inline-rename";
+import { StudioSection } from "@/components/studio/studio";
 import { ApiError } from "@/lib/api-client";
 
 export default function ProjectPage({
@@ -106,6 +107,8 @@ export default function ProjectPage({
           </p>
         </div>
       )}
+
+      <StudioSection />
     </div>
   );
 }
