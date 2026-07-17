@@ -3,7 +3,10 @@
 import { use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ScriptEditor } from "@fylym/editor";
+import { toast } from "@fylym/ui";
 import type { Block, ScreenplayDocument } from "@fylym/screenplay-core";
+import type { Beat } from "@/lib/beats";
+import { mergeOutline } from "@/lib/outline";
 import { useScriptDoc } from "@/lib/use-script-doc";
 import { useTransliterate } from "@/lib/editor-hooks";
 import { SyncIndicator } from "@/components/editor/sync-indicator";
@@ -66,9 +69,13 @@ function EditorSurface({
   );
   const [titleBlock, setTitleBlock] = useState<Block | null>(titleRef.current);
 
+  // Bumped whenever code (not typing) replaces the body wholesale — remounts
+  // the ScriptEditor so it picks up the new document.
+  const [bodyEpoch, setBodyEpoch] = useState(0);
   const bodyDocument = useMemo<ScreenplayDocument>(
     () => ({ blocks: bodyRef.current }),
-    [],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [bodyEpoch],
   );
 
   const saveMerged = useCallback(() => {
@@ -98,6 +105,35 @@ function EditorSurface({
 
   const [view, setView] = useState<"script" | "beats">("script");
   const transliterate = useTransliterate();
+
+  const handleImportToScript = useCallback(
+    (beats: Beat[]) => {
+      if (beats.length === 0) {
+        toast.error("Nothing to import — the beat board is empty.");
+        return;
+      }
+      const { blocks, added, updated, removed } = mergeOutline(
+        bodyRef.current,
+        beats,
+      );
+      if (added === 0 && updated === 0 && removed === 0) {
+        toast.success("Outline is already up to date in the script.");
+        setView("script");
+        return;
+      }
+      bodyRef.current = blocks;
+      setBodyEpoch((e) => e + 1);
+      saveMerged();
+      setView("script");
+      const parts = [
+        added > 0 && `${added} added`,
+        updated > 0 && `${updated} updated`,
+        removed > 0 && `${removed} removed`,
+      ].filter(Boolean);
+      toast.success(`Outline imported (${parts.join(", ")}).`);
+    },
+    [saveMerged],
+  );
 
   // Pagination worker (page ruler); the editor degrades gracefully without it.
   const [worker, setWorker] = useState<Worker | null>(null);
@@ -167,6 +203,7 @@ function EditorSurface({
           in-memory document state. */}
       <div className={`flex-1 px-4 py-6 ${view === "script" ? "" : "hidden"}`}>
         <ScriptEditor
+          key={bodyEpoch}
           initialDocument={bodyDocument}
           paginationWorker={worker ?? undefined}
           onChange={handleBodyChange}
@@ -175,7 +212,10 @@ function EditorSurface({
       </div>
       {view === "beats" && (
         <div className="flex-1 px-4 py-6">
-          <BeatBoard scriptId={scriptId} />
+          <BeatBoard
+            scriptId={scriptId}
+            onImportToScript={handleImportToScript}
+          />
         </div>
       )}
     </div>

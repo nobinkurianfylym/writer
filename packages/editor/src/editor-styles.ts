@@ -60,6 +60,23 @@ export function generateEditorCSS(profile: FormatProfile): string {
     rules.push(elementRule(type, style, leftMargin));
   }
 
+  // Outline markers (sections/synopses) and notes are author-facing, not part
+  // of the printed page — tint them and bar the left edge so they read as
+  // annotations layered over the script rather than script text.
+  rules.push(`.ProseMirror p[data-block-type="section"] {
+  color: var(--editor-outline, hsl(32, 75%, 38%));
+  border-left: 3px solid currentColor;
+  padding-left: 1ch;
+  letter-spacing: 0.08em;
+}`);
+
+  rules.push(`.ProseMirror p[data-block-type="synopsis"],
+.ProseMirror p[data-block-type="note"] {
+  color: var(--editor-outline-soft, hsl(240, 4%, 46%));
+  border-left: 3px solid var(--editor-border, hsl(240, 6%, 85%));
+  padding-left: 1ch;
+}`);
+
   rules.push(`.ProseMirror p[data-block-type="page_break"] {
   border-top: 1px dashed var(--editor-page-break, #ccc);
   height: 0;
@@ -164,6 +181,8 @@ export const BASE_EDITOR_CSS = `
 }
 
 .script-editor[data-theme="dark"] {
+  --editor-outline: hsl(38, 80%, 60%);
+  --editor-outline-soft: hsl(240, 5%, 60%);
   --editor-bg: hsl(240, 10%, 8%);
   --editor-fg: hsl(0, 0%, 88%);
   --editor-gutter-fg: hsl(240, 5%, 55%);
@@ -187,6 +206,8 @@ export const BASE_EDITOR_CSS = `
 
 @media (prefers-color-scheme: dark) {
   .script-editor:not([data-theme="light"]) {
+    --editor-outline: hsl(38, 80%, 60%);
+    --editor-outline-soft: hsl(240, 5%, 60%);
     --editor-bg: hsl(240, 10%, 8%);
     --editor-fg: hsl(0, 0%, 88%);
     --editor-gutter-fg: hsl(240, 5%, 55%);

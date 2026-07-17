@@ -71,8 +71,11 @@ export async function runExport(
       // The typesetter only draws margins for headings that carry an explicit
       // attrs.sceneNumber; fill missing ones with their ordinal so the PDF
       // matches the editor's live numbering (manual overrides win).
+      const printable = stripNonPrinting(doc, profile);
       const numbered =
-        options.sceneNumbers === true ? withAutoSceneNumbers(doc) : doc;
+        options.sceneNumbers === true
+          ? withAutoSceneNumbers(printable)
+          : printable;
       const pageMap = paginate(numbered, profile);
       const bytes = await renderPdf(numbered, profile, pageMap, {
         sceneNumbers: options.sceneNumbers ?? false,
@@ -85,6 +88,28 @@ export async function runExport(
       throw new Error(`Unsupported export format: ${String(exhaustive)}`);
     }
   }
+}
+
+/**
+ * Drops author-only annotation blocks from the printed page: notes and
+ * synopses never print, and sections print only in formats whose pagination
+ * honors act breaks (TV scripts print "ACT ONE" and break the page on it;
+ * features treat sections as pure outline markers). Fountain/FDX exports
+ * keep all three — they round-trip as `#`/`=`/`[[…]]` and FylymType.
+ */
+export function stripNonPrinting(
+  doc: ScreenplayDocument,
+  profile: FormatProfile,
+): ScreenplayDocument {
+  const sectionsPrint = profile.pagination.honorsActBreaks;
+  return {
+    ...doc,
+    blocks: doc.blocks.filter((b) => {
+      if (b.type === "note" || b.type === "synopsis") return false;
+      if (b.type === "section" && !sectionsPrint) return false;
+      return true;
+    }),
+  };
 }
 
 /** Fills each scene heading's missing sceneNumber with its 1-based ordinal. */

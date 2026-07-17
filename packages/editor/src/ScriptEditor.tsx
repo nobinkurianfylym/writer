@@ -67,6 +67,17 @@ const ELEMENT_LABELS: Record<BlockType, string> = {
   title_page: "Title Page",
 };
 
+/**
+ * What the element dropdown offers: the ⌘-cycle set plus the outline marker
+ * types (section/synopsis) — reachable by menu but deliberately not part of
+ * the ⌘1–⌘9 typing cycle.
+ */
+const DROPDOWN_SWITCH_ORDER: readonly BlockType[] = [
+  ...EXPLICIT_SWITCH_ORDER,
+  "section",
+  "synopsis",
+];
+
 const THEME_LABELS: Record<ThemeMode, string> = {
   system: "Auto",
   light: "Light",
@@ -359,7 +370,7 @@ export function ScriptEditor({ initialDocument, profile = usFeatureProfile, onCh
           value={currentType}
           onChange={(e) => handleSwitch(e.target.value as BlockType)}
         >
-          {EXPLICIT_SWITCH_ORDER.map((type) => (
+          {DROPDOWN_SWITCH_ORDER.map((type) => (
             <option key={type} value={type}>
               {ELEMENT_LABELS[type]}
             </option>

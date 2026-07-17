@@ -13,7 +13,13 @@ import {
   type BeatColor,
 } from "@/lib/beats";
 
-export function BeatBoard({ scriptId }: { scriptId: string }) {
+export function BeatBoard({
+  scriptId,
+  onImportToScript,
+}: {
+  scriptId: string;
+  onImportToScript?: (beats: Beat[]) => void;
+}) {
   const { data: loaded, isLoading } = useBeats(scriptId);
   const save = useSaveBeats(scriptId);
   const saveRef = useRef(save);
@@ -21,6 +27,7 @@ export function BeatBoard({ scriptId }: { scriptId: string }) {
 
   const [beats, setBeats] = useState<Beat[] | null>(null);
   const [structureOpen, setStructureOpen] = useState(false);
+  const [renamingAct, setRenamingAct] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const dirty = useRef(false);
 
@@ -92,6 +99,39 @@ export function BeatBoard({ scriptId }: { scriptId: string }) {
     next[target] = a;
     update(next);
   };
+  const renameAct = (from: string, to: string) => {
+    const name = to.trim();
+    setRenamingAct(null);
+    if (!name || name === from) return;
+    update(beats.map((b) => (b.act === from ? { ...b, act: name } : b)));
+  };
+  const deleteAct = (act: string) => {
+    const actBeats = beats.filter((b) => b.act === act);
+    const hasContent = actBeats.some(
+      (b) => b.summary.trim() || b.title !== "New beat",
+    );
+    if (
+      hasContent &&
+      !confirm(
+        `Delete "${act}" and its ${actBeats.length} beat${actBeats.length === 1 ? "" : "s"}?`,
+      )
+    ) {
+      return;
+    }
+    update(beats.filter((b) => b.act !== act));
+  };
+  const moveAct = (act: string, dir: -1 | 1) => {
+    const order = acts.slice();
+    const idx = order.indexOf(act);
+    const target = idx + dir;
+    if (idx < 0 || target < 0 || target >= order.length) return;
+    const other = order[target];
+    if (other === undefined) return;
+    order[idx] = other;
+    order[target] = act;
+    // Regroup the flat beat list to match the new act order.
+    update(order.flatMap((a) => beats.filter((b) => b.act === a)));
+  };
   const applyStructure = (id: string) => {
     const tpl = STRUCTURE_TEMPLATES.find((t) => t.id === id);
     if (!tpl) return;
@@ -158,6 +198,11 @@ export function BeatBoard({ scriptId }: { scriptId: string }) {
           <Button variant="outline" size="sm" onClick={addAct}>
             + Add act
           </Button>
+          {onImportToScript && (
+            <Button size="sm" onClick={() => onImportToScript(beats)}>
+              Import to Script
+            </Button>
+          )}
         </div>
       </div>
 
@@ -166,11 +211,55 @@ export function BeatBoard({ scriptId }: { scriptId: string }) {
           const actBeats = beats.filter((b) => b.act === act);
           return (
             <section key={act}>
-              <div className="mb-4 flex items-center gap-3">
+              <div className="group/act mb-4 flex items-center gap-3">
                 <span className="h-px flex-1 bg-border" />
-                <p className="text-lg font-medium tracking-tight">{act}</p>
+                {renamingAct === act ? (
+                  <input
+                    autoFocus
+                    defaultValue={act}
+                    aria-label={`Rename ${act}`}
+                    onBlur={(e) => renameAct(act, e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter")
+                        renameAct(act, e.currentTarget.value);
+                      if (e.key === "Escape") setRenamingAct(null);
+                    }}
+                    className="rounded border bg-transparent px-2 py-0.5 text-lg font-medium tracking-tight outline-none"
+                  />
+                ) : (
+                  <button
+                    onClick={() => setRenamingAct(act)}
+                    title="Rename act"
+                    className="rounded px-1 text-lg font-medium tracking-tight hover:bg-accent"
+                  >
+                    {act}
+                  </button>
+                )}
                 <span className="text-xs text-muted-foreground">
                   {actBeats.length} beat{actBeats.length === 1 ? "" : "s"}
+                </span>
+                <span className="flex items-center gap-1 opacity-0 transition group-hover/act:opacity-100 focus-within:opacity-100">
+                  <button
+                    onClick={() => moveAct(act, -1)}
+                    className="rounded px-1.5 py-1 text-xs text-muted-foreground hover:bg-accent"
+                    aria-label={`Move ${act} up`}
+                  >
+                    ↑
+                  </button>
+                  <button
+                    onClick={() => moveAct(act, 1)}
+                    className="rounded px-1.5 py-1 text-xs text-muted-foreground hover:bg-accent"
+                    aria-label={`Move ${act} down`}
+                  >
+                    ↓
+                  </button>
+                  <button
+                    onClick={() => deleteAct(act)}
+                    className="rounded px-1.5 py-1 text-xs text-muted-foreground hover:text-destructive"
+                    aria-label={`Delete ${act}`}
+                  >
+                    Delete
+                  </button>
                 </span>
                 <span className="h-px flex-1 bg-border" />
               </div>

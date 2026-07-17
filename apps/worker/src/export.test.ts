@@ -5,10 +5,11 @@ import {
   serializeFdx,
   paginate,
   usFeatureProfile,
+  usTvOneHourProfile,
   type ScreenplayDocument,
 } from "@fylym/screenplay-core";
 import { PDFDocument } from "pdf-lib";
-import { runExport, resolveProfile } from "./export.js";
+import { runExport, resolveProfile, stripNonPrinting } from "./export.js";
 
 const decoder = new TextDecoder();
 
@@ -106,6 +107,41 @@ describe("runExport — options", () => {
       sceneNumbers: true,
     });
     expect(artifact.bytes.byteLength).toBeGreaterThan(0);
+  });
+});
+
+describe("stripNonPrinting", () => {
+  const outlineDoc: ScreenplayDocument = {
+    blocks: [
+      { id: "00000000-0000-4000-8000-000000000011", type: "section", text: "ACT I", marks: [], attrs: {} },
+      { id: "00000000-0000-4000-8000-000000000012", type: "synopsis", text: "Setup — meet the hero.", marks: [], attrs: {} },
+      { id: "00000000-0000-4000-8000-000000000013", type: "scene_heading", text: "INT. ROOM - DAY", marks: [], attrs: {} },
+      { id: "00000000-0000-4000-8000-000000000014", type: "note", text: "fix this later", marks: [], attrs: {} },
+      { id: "00000000-0000-4000-8000-000000000015", type: "action", text: "A person sits.", marks: [], attrs: {} },
+    ],
+  };
+
+  it("drops notes, synopses, and (for features) sections from the printed page", () => {
+    const stripped = stripNonPrinting(outlineDoc, usFeatureProfile);
+    expect(stripped.blocks.map((b) => b.type)).toEqual(["scene_heading", "action"]);
+  });
+
+  it("keeps sections when the profile honors act breaks (TV act markers print)", () => {
+    const stripped = stripNonPrinting(outlineDoc, usTvOneHourProfile);
+    expect(stripped.blocks.map((b) => b.type)).toEqual(["section", "scene_heading", "action"]);
+  });
+
+  it("pdf export still renders after stripping, and fountain keeps the markers", async () => {
+    const viaExport = await runExport(outlineDoc, "pdf", usFeatureProfile);
+    const parsed = await PDFDocument.load(viaExport.bytes);
+    expect(parsed.getPageCount()).toBe(1);
+
+    const fountain = decoder.decode(
+      (await runExport(outlineDoc, "fountain", usFeatureProfile)).bytes,
+    );
+    expect(fountain).toContain("# ACT I");
+    expect(fountain).toContain("= Setup — meet the hero.");
+    expect(fountain).toContain("[[fix this later]]");
   });
 });
 
