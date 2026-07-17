@@ -155,25 +155,6 @@ export class AuthController {
     await this.auth.logoutAll(req.user!.sub);
   }
 
-  @Post("verify-email")
-  @HttpCode(HttpStatus.OK)
-  async verifyEmail(@Body() body: { token: string }) {
-    const { userId } = await this.auth.verifyEmail(body.token);
-    return { verified: true, userId };
-  }
-
-  @Post("resend-verification")
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtGuard)
-  async resendVerification(@Req() req: Request) {
-    const user = await this.auth.getUserById(req.user!.sub);
-    if (user.emailVerified) {
-      return { message: "Email already verified" };
-    }
-    await this.auth.sendVerificationEmail(user.email, user.id);
-    return { message: "Verification email sent" };
-  }
-
   @Get("me")
   @UseGuards(JwtGuard)
   async me(@Req() req: Request) {
@@ -182,7 +163,6 @@ export class AuthController {
       id: user.id,
       email: user.email,
       name: user.name,
-      emailVerified: user.emailVerified !== null,
     };
   }
 
@@ -204,36 +184,6 @@ export class AuthController {
   ) {
     const tokens = await this.auth.verifyMagicLink(
       body.token,
-      req.ip,
-      req.headers["user-agent"],
-    );
-
-    this.setRefreshCookie(res, tokens.refreshToken);
-
-    return {
-      accessToken: tokens.accessToken,
-      expiresIn: tokens.expiresIn,
-    };
-  }
-
-  /* ── Google OAuth ── */
-
-  @Get("google")
-  async googleAuthUrl() {
-    const { url } = await this.auth.getGoogleAuthUrl();
-    return { url };
-  }
-
-  @Post("oauth/google/callback")
-  @HttpCode(HttpStatus.OK)
-  async googleCallback(
-    @Body() body: { code: string; state: string },
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    const tokens = await this.auth.handleGoogleCallback(
-      body.code,
-      body.state,
       req.ip,
       req.headers["user-agent"],
     );

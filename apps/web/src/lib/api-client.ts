@@ -67,7 +67,6 @@ export interface AuthUser {
   id: string;
   email: string;
   name: string;
-  emailVerified: boolean;
 }
 
 export interface TokenResponse {
@@ -115,14 +114,5 @@ export const authApi = {
       method: "POST",
       body: { token },
     });
-  },
-  verifyEmail(token: string) {
-    return apiFetch<{ verified: boolean; userId: string }>(
-      "/auth/verify-email",
-      { method: "POST", body: { token } },
-    );
-  },
-  googleAuthUrl() {
-    return apiFetch<{ url: string }>("/auth/google");
   },
 };

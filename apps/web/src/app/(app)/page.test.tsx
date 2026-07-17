@@ -21,7 +21,7 @@ import DashboardPage from "./page";
 const org: Org = { id: "o1", name: "Ada's workspace", slug: "ada-1", plan: "FREE", role: "OWNER" };
 
 beforeEach(() => {
-  mockSession.mockReturnValue({ user: { emailVerified: true } });
+  mockSession.mockReturnValue({ user: { id: "u1", email: "ada@example.com", name: "Ada" } });
   mockUseOrgs.mockReturnValue({ data: [org], isLoading: false });
   mockUseProjects.mockReturnValue({ data: [], isLoading: false });
 });
@@ -58,9 +58,4 @@ describe("DashboardPage", () => {
     expect(screen.getByRole("link", { name: "Open" })).toHaveAttribute("href", "/projects/p1");
   });
 
-  it("prompts to verify email when unverified", () => {
-    mockSession.mockReturnValue({ user: { emailVerified: false } });
-    render(<DashboardPage />);
-    expect(screen.getByText(/Please verify your email/)).toBeInTheDocument();
-  });
 });

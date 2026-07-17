@@ -2,7 +2,7 @@ import { test, expect, type APIRequestContext } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 /**
- * Full auth-journey E2E (E6-1 accept): register → verify → login → logout →
+ * Full auth-journey E2E (E6-1 accept): register → logout → login →
  * magic link, plus the unauthenticated-deep-link redirect. Runs against the
  * compose stack — the api (:3001) and mailpit (:8025) must be up. When the
  * api isn't reachable the suite skips rather than failing, so a bare `pnpm
@@ -54,7 +54,7 @@ test.describe("auth journey", () => {
     test.skip(!(await apiUp(request)), "api not reachable");
   });
 
-  test("register → verify → logout → login → magic link", async ({
+  test("register → logout → login → magic link", async ({
     page,
     request,
   }) => {
@@ -68,14 +68,8 @@ test.describe("auth journey", () => {
     await page.getByLabel("Password").fill(password);
     await page.getByRole("button", { name: "Create account" }).click();
 
-    // Lands on the dashboard, unverified banner visible.
+    // Lands on the dashboard, signed in — no verification step.
     await expect(page.getByRole("heading", { name: /Welcome/ })).toBeVisible();
-    await expect(page.getByText(/Please verify your email/)).toBeVisible();
-
-    // ── Verify email (token from mailpit) ──
-    const verifyToken = tokenFromBody(await latestEmailBody(request, email));
-    await page.goto(`/verify-email?token=${verifyToken}`);
-    await expect(page.getByText(/verified/i)).toBeVisible();
 
     // ── Logout ──
     await page.goto("/");
@@ -106,7 +100,7 @@ test.describe("auth journey", () => {
   test("unauthenticated deep link redirects and returns after login", async ({
     page,
   }) => {
-    // Seed a verified account via a fresh register + verify.
+    // Seed an account via a fresh register.
     const email = `e2e-deep-${Date.now()}@example.com`;
     const password = "SecureP@ss123!";
     await page.goto("/register");

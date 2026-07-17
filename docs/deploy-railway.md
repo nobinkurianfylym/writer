@@ -67,9 +67,10 @@ In a new Railway project (connect the GitHub repo `nobinkurianfylym/writer`):
 - Deploy. Once healthy, **Settings → Networking → Generate Domain**. Note the
   URL, e.g. `https://fylym-api-production.up.railway.app`.
 
-Email (magic links + verification) needs SMTP; without it, **password signup
-and login still work** — the verification email is best-effort. To enable
-magic links, add `SMTP_HOST` / `SMTP_PORT` (e.g. a Resend/Mailgun SMTP).
+Email is only used for magic sign-in links, which need SMTP; without it,
+**password signup and login work fully** (there is no email-verification
+step). To enable magic links, add `SMTP_HOST` / `SMTP_PORT` (e.g. a
+Resend/Mailgun SMTP).
 
 ## 3. Worker service (enables exports + scene index)
 

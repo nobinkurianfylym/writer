@@ -18,29 +18,6 @@ export class MailService implements OnModuleInit {
     });
   }
 
-  async sendVerificationEmail(
-    to: string,
-    token: string,
-  ): Promise<void> {
-    const link = `${this.appUrl}/verify-email?token=${encodeURIComponent(token)}`;
-
-    await this.transporter.sendMail({
-      from: "FYLYM Writer <noreply@fylym.dev>",
-      to,
-      subject: "Verify your email — FYLYM Writer",
-      text: `Welcome to FYLYM Writer!\n\nPlease verify your email by visiting:\n${link}\n\nThis link expires in 24 hours.\n\nIf you didn't create this account, you can safely ignore this email.`,
-      html: `
-        <h2>Welcome to FYLYM Writer!</h2>
-        <p>Please verify your email by clicking the link below:</p>
-        <p><a href="${link}">Verify Email</a></p>
-        <p>This link expires in 24 hours.</p>
-        <p><small>If you didn't create this account, you can safely ignore this email.</small></p>
-      `.trim(),
-    });
-
-    this.logger.log(`Verification email sent to ${to}`);
-  }
-
   async sendMagicLinkEmail(
     to: string,
     token: string,

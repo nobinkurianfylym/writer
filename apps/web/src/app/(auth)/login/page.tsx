@@ -51,15 +51,6 @@ function LoginForm() {
     }
   }
 
-  async function onGoogle() {
-    try {
-      const { url } = await authApi.googleAuthUrl();
-      window.location.href = url;
-    } catch {
-      toast.error("Google sign-in is unavailable");
-    }
-  }
-
   return (
     <AuthCard
       title="Sign in"
@@ -120,14 +111,6 @@ function LoginForm() {
           disabled={magicSending}
         >
           {magicSending ? "Sending…" : "Email me a sign-in link"}
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full"
-          onClick={onGoogle}
-        >
-          Continue with Google
         </Button>
       </div>
     </AuthCard>

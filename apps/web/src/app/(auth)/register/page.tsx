@@ -26,7 +26,7 @@ export default function RegisterPage() {
     setSubmitting(true);
     try {
       await register(name, email, password);
-      toast.success("Account created — check your email to verify it");
+      toast.success("Welcome to FYLYM Writer!");
       router.replace("/");
     } catch (err) {
       const message =

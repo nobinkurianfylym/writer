@@ -59,7 +59,6 @@ describe("SessionProvider", () => {
             id: "u1",
             email: "ada@example.com",
             name: "Ada",
-            emailVerified: true,
           }),
         );
       }
@@ -86,7 +85,7 @@ describe("SessionProvider", () => {
         return Promise.resolve(jsonResponse(200, { accessToken: "tok", expiresIn: 600 }));
       if (url.endsWith("/auth/me"))
         return Promise.resolve(
-          jsonResponse(200, { id: "u1", email: "z@e.com", name: "Z", emailVerified: false }),
+          jsonResponse(200, { id: "u1", email: "z@e.com", name: "Z" }),
         );
       if (url.endsWith("/auth/logout")) return Promise.resolve({ ok: true, status: 204, text: async () => "" });
       return Promise.resolve(jsonResponse(404, {}));
