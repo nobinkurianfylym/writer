@@ -1,0 +1,7 @@
+[
+  { "id": "r1", "quote": "A nerve-shredding second half that earns every one of its silences.", "publication": "The Hindu", "critic": "Aswathy R", "rating": 4, "date": "2026-10-03" },
+  { "id": "r2", "quote": "The teaser promises the most confident Malayalam noir in a decade.", "publication": "Film Companion", "critic": "S. Devan", "rating": 4.5, "date": "2026-10-04" },
+  { "id": "r3", "quote": "Shot with the patience of a predator. Keep an eye on this one.", "publication": "OnManorama", "critic": "Meera J", "rating": 4, "date": "2026-10-05" },
+  { "id": "r4", "quote": "Stylish, sparse, and completely in control of its dread.", "publication": "The News Minute", "critic": "Vishnu P", "rating": 3.5, "date": "2026-10-06" },
+  { "id": "r5", "quote": "If the film keeps the teaser's promise, November belongs to Thira.", "publication": "Mathrubhumi", "critic": "Lakshmi S", "rating": 4.5, "date": "2026-10-08" }
+]

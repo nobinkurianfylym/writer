@@ -1,0 +1,9 @@
+[
+  { "id": "t1", "phase": "Announcement", "date": "2026-06-05", "status": "done", "summary": "Title reveal and first-look still. 2.1M combined reach in 48 hours." },
+  { "id": "t2", "phase": "Poster", "date": "2026-08-14", "status": "done", "summary": "Character posters, one per week for four weeks. Fan reprints spotted in three cities." },
+  { "id": "t3", "phase": "Trailer", "date": "2026-10-02", "status": "active", "summary": "Teaser live — 4.6M views. Main trailer cut two awaiting approval." },
+  { "id": "t4", "phase": "Music", "date": "2026-10-24", "status": "upcoming", "summary": "Two singles before release; audio launch event under negotiation." },
+  { "id": "t5", "phase": "Release", "date": "2026-11-20", "status": "upcoming", "summary": "Theatrical, 400+ screens. Premiere and press junket in the release week." },
+  { "id": "t6", "phase": "OTT", "date": "2027-01-08", "status": "upcoming", "summary": "Digital window opens ~7 weeks post-theatrical. Second publicity wave." },
+  { "id": "t7", "phase": "Awards", "date": "2027-03-15", "status": "upcoming", "summary": "State and national award submissions; festival circuit screeners." }
+]

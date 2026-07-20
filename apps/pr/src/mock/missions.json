@@ -1,0 +1,6 @@
+[
+  { "id": "m1", "title": "Approve the second trailer cut", "detail": "The edit is waiting on producer sign-off — every day of delay compresses the pre-release window.", "impact": "High", "due": "Today", "done": false },
+  { "id": "m2", "title": "Confirm poster drop date with the distributor", "detail": "Poster reveal is tentatively Friday; the street team needs 48 hours to prepare.", "impact": "High", "due": "Today", "done": false },
+  { "id": "m3", "title": "Reply to The Hindu interview request", "detail": "Feature slot for the release week — respond before Thursday to hold it.", "impact": "Medium", "due": "Tomorrow", "done": false },
+  { "id": "m4", "title": "Upload colour-graded stills to the Asset Vault", "detail": "Press outlets are reusing low-res workprint frames.", "impact": "Medium", "due": "This week", "done": true }
+]

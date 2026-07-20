@@ -1,0 +1,13 @@
+[
+  {
+    "id": "film-thira",
+    "title": "Thira",
+    "genre": "Neo-noir Thriller",
+    "language": "Malayalam",
+    "budget": 45000000,
+    "marketingBudget": 8000000,
+    "releaseDate": "2026-11-20",
+    "healthScore": 78,
+    "phase": "Trailer"
+  }
+]

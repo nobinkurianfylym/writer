@@ -1,0 +1,8 @@
+[
+  { "id": "c1", "name": "Anjali Menon K", "role": "Street Team Lead", "status": "Active", "contribution": 1240 },
+  { "id": "c2", "name": "Rahul Varma", "role": "Fan Community", "status": "Active", "contribution": 980 },
+  { "id": "c3", "name": "Sneha Pillai", "role": "Campus Ambassador", "status": "Active", "contribution": 760 },
+  { "id": "c4", "name": "Arun T S", "role": "Theatre Network", "status": "Invited", "contribution": 0 },
+  { "id": "c5", "name": "Divya Nair", "role": "Meme Unit", "status": "Active", "contribution": 1510 },
+  { "id": "c6", "name": "Jose Kurian", "role": "Regional Press", "status": "Paused", "contribution": 420 }
+]

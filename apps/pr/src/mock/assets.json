@@ -1,0 +1,8 @@
+[
+  { "id": "a1", "name": "Theatrical Poster v3", "type": "Poster", "format": "PDF · 24×36in", "updated": "2026-10-01" },
+  { "id": "a2", "name": "Main Trailer (Cut 2)", "type": "Trailer", "format": "MP4 · 4K · 2:14", "updated": "2026-10-06" },
+  { "id": "a3", "name": "Electronic Press Kit", "type": "EPK", "format": "ZIP · 340MB", "updated": "2026-09-28" },
+  { "id": "a4", "name": "Release Stills — Set A", "type": "Stills", "format": "12 × TIFF", "updated": "2026-10-02" },
+  { "id": "a5", "name": "Title Logo — Light/Dark", "type": "Logo", "format": "SVG + PNG", "updated": "2026-08-11" },
+  { "id": "a6", "name": "Character Poster Set", "type": "Poster", "format": "4 × PDF", "updated": "2026-09-05" }
+]

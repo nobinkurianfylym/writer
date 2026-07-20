@@ -4,8 +4,22 @@
     {
       "name": "web",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@fylym/web", "dev"],
+      "runtimeArgs": [
+        "--filter",
+        "@fylym/web",
+        "dev"
+      ],
       "port": 3000
+    },
+    {
+      "name": "pr",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--filter",
+        "@fylym/pr",
+        "dev"
+      ],
+      "port": 3002
     }
   ]
 }
